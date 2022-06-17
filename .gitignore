@@ -1,1 +1,3 @@
 /.idea/
+/dependency/.spack-env/
+/dependency/spack.lock
