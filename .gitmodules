@@ -1,3 +1,1 @@
-[submodule "external/hcl"]
-	path = external/hcl
-	url = git@github.com:hariharan-devarajan/hcl.git
+
