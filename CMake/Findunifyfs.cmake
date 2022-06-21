@@ -12,7 +12,7 @@ if(NOT TARGET unifyfs::unifyfs)
     message("-- UNIFYFS_ROOT_DIR: " ${UNIFYFS_ROOT_DIR})
     find_path(UNIFYFS_LIBRARY_PATH libunifyfs.so PATH_SUFFIXES lib/)
     set(UNIFYFS_LIBRARIES -L${UNIFYFS_LIBRARY_PATH} -lunifyfs )
-    set(UNIFYFS_EXEC ${UNIFYFS_ROOT_DIR}/bin/uwhich nifyfs )
+    set(UNIFYFS_EXEC ${UNIFYFS_ROOT_DIR}/bin/unifyfsd )
     set(UNIFYFS_API_LIBRARIES -L${UNIFYFS_LIBRARY_PATH} -lunifyfs_api )
 
     set(UNIFYFS_DEFINITIONS "")

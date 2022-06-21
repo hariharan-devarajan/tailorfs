@@ -37,8 +37,8 @@ if [ $error_ct -gt 0 ]; then
   exit $error_ct
 fi
 
-echo "UNIFYFS_LOGIO_SPILL_DIR=${UNIFYFS_LOGIO_SPILL_DIR} UNIFYFS_LOG_DIR=${UNIFYFS_LOG_DIR} ${UNIFYFS_EXEC} start --share-dir=${PFS} &"
-UNIFYFS_LOGIO_SPILL_DIR=${UNIFYFS_LOGIO_SPILL_DIR} UNIFYFS_LOG_DIR=${UNIFYFS_LOG_DIR} ${UNIFYFS_EXEC} start --share-dir=${PFS} &
+echo "${UNIFYFS_EXEC} start --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${UNIFYFS_LOGIO_SPILL_DIR} &"
+${UNIFYFS_EXEC} start --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${UNIFYFS_LOGIO_SPILL_DIR} &
 UNIFYFS_EXEC_PID=$!
 echo "process spawned ${UNIFYFS_EXEC_PID}"
 
