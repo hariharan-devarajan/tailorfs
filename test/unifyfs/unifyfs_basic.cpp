@@ -156,82 +156,6 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
         "n\t\t,rq\t\t,init\t\t,fin\t\t,open\t\t,close\t\t,write\t\t,"
         "awrite\t\t,flush\t\t,case\n");
   }
-  SECTION("storage.unifyfs.nobuffer") {
-    strcpy(usecase, "unifyfs.nobuffer");
-    const int n_configs = 3;
-    unifyfs_cfg_option chk_size[n_configs];
-
-    size_t io_size = args.request_size * args.iteration;
-    char logio_spill_size[256];
-    strcpy(logio_spill_size, std::to_string(io_size).c_str());
-    chk_size[0] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
-    chk_size[1] = {.opt_name = "logio.chunk_size", .opt_value = "4096"};
-        chk_size[2] = {.opt_name = "logio.spill_size", .opt_value = logio_spill_size};
-    fs::path unifyfs_path = "/unifyfs1";
-
-    unifyfs_handle fshdl;
-    init_time.resumeTime();
-    int rc =
-        unifyfs_initialize(unifyfs_path.c_str(), chk_size, n_configs, &fshdl);
-    init_time.pauseTime();
-    REQUIRE(rc == UNIFYFS_SUCCESS);
-    fs::path unifyfs_filename = unifyfs_path / args.filename;
-    int create_flags = 0;
-    unifyfs_gfid gfid;
-    open_time.resumeTime();
-    rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(), &gfid);
-    open_time.pauseTime();
-    REQUIRE(rc == UNIFYFS_SUCCESS);
-    REQUIRE(gfid != UNIFYFS_INVALID_GFID);
-    for (int i = 0; i < args.iteration; ++i) {
-      unifyfs_io_request write_req;
-      write_req.op = UNIFYFS_IOREQ_OP_WRITE;
-      write_req.gfid = gfid;
-      write_req.nbytes = args.request_size;
-      write_req.offset = i * args.request_size;
-      write_req.user_buf = write_data.data() + (i * args.request_size);
-      write_time.resumeTime();
-      async_write_time.resumeTime();
-      rc = unifyfs_dispatch_io(fshdl, 1, &write_req);
-      async_write_time.pauseTime();
-      if (rc == UNIFYFS_SUCCESS) {
-        int waitall = 1;
-        rc = unifyfs_wait_io(fshdl, 1, &write_req, waitall);
-        if (rc == UNIFYFS_SUCCESS) {
-          for (size_t i = 0; i < 1; i++) {
-            REQUIRE(write_req.result.error == 0);
-            REQUIRE(write_req.result.count == args.request_size);
-          }
-        }
-      }
-      write_time.pauseTime();
-    }
-    fs::path pfs_filename = pfs / args.filename;
-    unifyfs_transfer_request mv_req;
-    mv_req.src_path = unifyfs_filename.c_str();
-    mv_req.dst_path = pfs_filename.c_str();
-    mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
-    mv_req.use_parallel = 1;
-    flush_time.resumeTime();
-    rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
-    flush_time.pauseTime();
-    REQUIRE(rc == UNIFYFS_SUCCESS);
-    if (rc == UNIFYFS_SUCCESS) {
-      int waitall = 1;
-      flush_time.resumeTime();
-      rc = unifyfs_wait_transfer(fshdl, 1, &mv_req, waitall);
-      flush_time.pauseTime();
-      if (rc == UNIFYFS_SUCCESS) {
-        for (int i = 0; i < (int)1; i++) {
-          REQUIRE(mv_req.result.error == 0);
-        }
-      }
-    }
-    finalize_time.resumeTime();
-    rc = unifyfs_finalize(fshdl);
-    finalize_time.pauseTime();
-    REQUIRE(rc == UNIFYFS_SUCCESS);
-  }
   SECTION("storage.unifyfs.buffer") {
     strcpy(usecase, "unifyfs.buffer");
     const int options_c = 6;
@@ -241,7 +165,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     char logio_chunk_size[256];
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
     char logio_shmem_size[256];
-    strcpy(logio_shmem_size, std::to_string(io_size).c_str());
+    strcpy(logio_shmem_size, std::to_string(64*1024*1024*1024LL).c_str());
     char logio_spill_size[256];
     strcpy(logio_spill_size, std::to_string(io_size).c_str());
     chk_size[0] = {.opt_name = "unifyfs.consistency", .opt_value = "LAMINATED"};

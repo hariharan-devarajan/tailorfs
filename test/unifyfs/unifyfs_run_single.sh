@@ -9,7 +9,7 @@ UNIFYFS_LOG_DIR=$4
 PFS=$5
 UNIFYFS_HOSTFILE=$6
 TEST_ARGS="${@:7}"
-SLEEP_TIME=3
+SLEEP_TIME=5
 
 error_ct=0
 if [[ ! -f "${TEST_EXEC}" ]]; then
@@ -57,6 +57,10 @@ ${TEST_EXEC} ${TEST_ARGS}
 status=$?
 echo "Killing UnifyFS daemon with PID ${UNIFYFS_EXEC_PID}"
 kill ${UNIFYFS_EXEC_PID}
+
+echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
+sleep ${SLEEP_TIME}
+
 if [ $status -gt 0 ]; then
   echo "Test failed with code $status!" >&2
   exit $status
