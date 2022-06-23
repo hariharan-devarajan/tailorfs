@@ -260,9 +260,10 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
   }
   SECTION("storage.unifyfs.nobuffer") {
     strcpy(usecase, "unifyfs.nobuffer");
-    const int n_configs = 1;
+    const int n_configs = 2;
     unifyfs_cfg_option chk_size[n_configs];
     chk_size[0] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
+    chk_size[1] = {.opt_name = "logio.chunk_size", .opt_value = "4096"};
     fs::path unifyfs_path = "/unifyfs1";
     unifyfs_handle fshdl;
     init_time.resumeTime();
