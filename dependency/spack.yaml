@@ -4,8 +4,6 @@ spack:
   - gotcha@1.0.3
   - spath~mpi
   - mochi-margo@0.9.6 ^libfabric@1.12.1 fabrics=rxm,sockets,tcp ^mercury~boostsys
-  - unifyfs@develop~auto-mount ^mpich@3.3.2~fortran ^boost@1.69.0 ^mochi-margo@0.9.6
-    ^libfabric@1.12.1 fabrics=rxm,sockets,tcp ^mercury~boostsys
   - mochi-thallium@0.9.1 ^libfabric@1.12.1 fabrics=rxm,sockets,tcp
   - catch2@3.0.1
   concretizer:

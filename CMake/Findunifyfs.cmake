@@ -11,7 +11,7 @@ if(NOT TARGET unifyfs::unifyfs)
     get_filename_component(UNIFYFS_ROOT_DIR ${UNIFYFS_INCLUDE_DIRS}/.. ABSOLUTE)
     message("-- UNIFYFS_ROOT_DIR: " ${UNIFYFS_ROOT_DIR})
     find_path(UNIFYFS_LIBRARY_PATH libunifyfs.so PATH_SUFFIXES lib/)
-    set(UNIFYFS_LIBRARIES -L${UNIFYFS_LIBRARY_PATH} -lunifyfs )
+    set(UNIFYFS_LIBRARIES -L${UNIFYFS_LIBRARY_PATH} -lunifyfs -lmercury -lmercury_util -lmargo -labt )
     set(UNIFYFS_EXEC ${UNIFYFS_ROOT_DIR}/bin/unifyfsd )
     set(UNIFYFS_API_LIBRARIES -L${UNIFYFS_LIBRARY_PATH} -lunifyfs_api )
 

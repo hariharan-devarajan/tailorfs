@@ -7,7 +7,8 @@ UNIFYFS_EXEC=$2
 UNIFYFS_LOGIO_SPILL_DIR=$3
 UNIFYFS_LOG_DIR=$4
 PFS=$5
-TEST_ARGS="${@:6}"
+UNIFYFS_HOSTFILE=$6
+TEST_ARGS="${@:7}"
 SLEEP_TIME=3
 
 error_ct=0
@@ -37,8 +38,12 @@ if [ $error_ct -gt 0 ]; then
   exit $error_ct
 fi
 
-echo "${UNIFYFS_EXEC} start --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${UNIFYFS_LOGIO_SPILL_DIR} &"
-${UNIFYFS_EXEC} start --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${UNIFYFS_LOGIO_SPILL_DIR} &
+echo "1" > $UNIFYFS_HOSTFILE
+echo $(hostname) >> $UNIFYFS_HOSTFILE
+
+export UNIFYFS_SERVER_HOSTFILE=$UNIFYFS_HOSTFILE
+echo "${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${UNIFYFS_LOGIO_SPILL_DIR} --log-verbosity 5 -C &"
+${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${UNIFYFS_LOGIO_SPILL_DIR} --log-verbosity 5 -C &
 UNIFYFS_EXEC_PID=$!
 echo "process spawned ${UNIFYFS_EXEC_PID}"
 
