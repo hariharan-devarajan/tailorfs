@@ -1,6 +1,6 @@
 set(examples unifyfs_basic)
-set(BB_PATH $ENV{BB_PATH})
-set(PFS_PATH $ENV{PFS_PATH})
+set(BB_PATH $ENV{BBPATH}/unifyfs)
+set(PFS_PATH $ENV{pfs}/unifyfs)
 set(SHM_PATH $ENV{SHM_PATH})
 if (NOT DEFINED ENV{BB_PATH})
     message(FATAL_ERROR "BB_PATH not defined")
@@ -18,8 +18,9 @@ function(gcc_base example)
 endfunction()
 
 find_program(BASH_PROGRAM bash)
-function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile pfs test_name test_exec test_args)
+function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile pfs test_name test_exec request_size iteration)
     #TEST_EXEC=$1 UNIFYFS_EXEC=$2 UNIFYFS_LOGIO_SPILL_DIR=$3 UNIFYFS_LOG_DIR=$4 PFS=$5
+    message("-- test args --request_size ${request_size} --iterations ${iteration}")
     add_test(Test_${test_name} ${BASH_PROGRAM}
             ${CMAKE_CURRENT_SOURCE_DIR}/unifyfs_run_single.sh
             ${CMAKE_CURRENT_BINARY_DIR}/${test_exec}
@@ -28,7 +29,7 @@ function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile
             ${unifyfs_log_dir}
             ${pfs}
             ${unifyfs_hostfile}
-            ${test_args})
+            --request_size ${request_size} --iteration ${iteration})
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH})
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT BB_PATH=${BB_PATH})
@@ -42,8 +43,22 @@ file(MAKE_DIRECTORY ${BB_PATH})
 file(MAKE_DIRECTORY ${UNIFYFS_LOG_DIR})
 file(MAKE_DIRECTORY ${SHM_PATH})
 file(MAKE_DIRECTORY ${PFS_PATH})
+message("-- Created Directories BB_PATH ${BB_PATH}")
+message("-- Created Directories SHM_PATH ${SHM_PATH}")
+message("-- Created Directories PFS_PATH ${PFS_PATH}")
+
+set(rqs 1 4 16 64 128 512 1024)
+set(scales 1024)
+set(iters 100 1000 10000)
 
 foreach (example ${examples})
     gcc_base(${example})
-    unifyfs_daemon(${UNIFYFS_LOGIO_SPILL_DIR} ${UNIFYFS_LOG_DIR} ${UNIFYFS_HOSTFILE} ${PFS_PATH} example ${example} "")
+    foreach(rq ${rqs})
+        foreach(scale ${scales})
+            foreach(iter ${iters})
+                math(EXPR ts "${rq} * ${scale}")
+                unifyfs_daemon(${UNIFYFS_LOGIO_SPILL_DIR} ${UNIFYFS_LOG_DIR} ${UNIFYFS_HOSTFILE} ${PFS_PATH} example_${rq}_${iter} ${example} ${ts} ${iter})
+            endforeach()
+        endforeach()
+    endforeach()
 endforeach ()

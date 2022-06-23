@@ -42,7 +42,7 @@ echo "1" > $UNIFYFS_HOSTFILE
 echo $(hostname) >> $UNIFYFS_HOSTFILE
 
 export UNIFYFS_SERVER_HOSTFILE=$UNIFYFS_HOSTFILE
-echo "${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${UNIFYFS_LOGIO_SPILL_DIR} --log-verbosity 5 -C &"
+echo "${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &"
 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${UNIFYFS_LOGIO_SPILL_DIR} --log-verbosity 5 -C &
 UNIFYFS_EXEC_PID=$!
 echo "process spawned ${UNIFYFS_EXEC_PID}"
