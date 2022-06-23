@@ -29,7 +29,7 @@ set(UNIFYFS_HOSTFILE $ENV{HOME}/unifyfs/hostfile)
 set(PFS $ENV{HOME}/unifyfs/pfs)
 file(MAKE_DIRECTORY ${UNIFYFS_LOGIO_SPILL_DIR})
 file(MAKE_DIRECTORY ${UNIFYFS_LOG_DIR})
-file(MAKE_DIRECTORY $ENV{HOME}/unifyfs/shm)
+file(MAKE_DIRECTORY $ENV{HOME}/unifyfs/shm/unifyfs/data)
 file(MAKE_DIRECTORY ${PFS})
 
 foreach (example ${examples})

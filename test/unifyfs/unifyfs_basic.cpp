@@ -157,17 +157,11 @@ void buffer_io(Timer &init_time, Timer &finalize_time, Timer &open_time,
                Timer &close_time, Timer &write_time, Timer &async_write_time,
                Timer &flush_time, fs::path &bb, fs::path &pfs,
                unifyfs_cfg_option *options, int options_ct, char *write_buf) {
-  const int n_configs = options_ct + 1;
-  unifyfs_cfg_option chk_size[n_configs];
-  chk_size[0] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
-  for (int i = 1; i < n_configs; ++i) {
-    chk_size[i] = options[i - 1];
-  }
   fs::path unifyfs_path = "/unifyfs1";
   unifyfs_handle fshdl;
   init_time.resumeTime();
   int rc =
-      unifyfs_initialize(unifyfs_path.c_str(), chk_size, n_configs, &fshdl);
+      unifyfs_initialize(unifyfs_path.c_str(), options, options_ct, &fshdl);
   init_time.pauseTime();
   REQUIRE(rc == UNIFYFS_SUCCESS);
   fs::path unifyfs_filename = unifyfs_path / args.filename;
@@ -235,6 +229,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
   REQUIRE(SHM_VAR != nullptr);
   fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
   fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
+  fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
   fs::create_directories(pfs);
   fs::create_directories(bb);
   auto write_data = std::vector<char>(args.iteration * args.request_size, 'w');
@@ -332,104 +327,23 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
   }
   SECTION("storage.unifyfs.buffer") {
     strcpy(usecase, "unifyfs.buffer");
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, nullptr, 0,
-              write_data.data());
-  }
-  SECTION("storage.unifyfs.consistency=laminate") {
-    strcpy(usecase, "unifyfs.consistency=laminate");
-    unifyfs_cfg_option chk_size[1];
+    const int options_c = 6;
+    unifyfs_cfg_option chk_size[options_c];
     chk_size[0] = {.opt_name = "unifyfs.consistency", .opt_value = "LAMINATED"};
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
-              write_data.data());
-  }
-  SECTION("storage.unifyfs.consistency=posix") {
-    strcpy(usecase, "unifyfs.consistency=posix");
-    unifyfs_cfg_option chk_size[1];
-    chk_size[0] = {.opt_name = "unifyfs.consistency", .opt_value = "POSIX"};
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
-              write_data.data());
-  }
-  SECTION("storage.unifyfs.consistency=none") {
-    strcpy(usecase, "unifyfs.consistency=none");
-    unifyfs_cfg_option chk_size[1];
-    chk_size[0] = {.opt_name = "unifyfs.consistency", .opt_value = "NONE"};
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
-              write_data.data());
-  }
-  SECTION("storage.client.fsync_persist=on") {
-    strcpy(usecase, "client.fsync_persist=on");
-    unifyfs_cfg_option chk_size[1];
-    chk_size[0] = {.opt_name = "client.fsync_persist", .opt_value = "on"};
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
-              write_data.data());
-  }
-  SECTION("storage.client.fsync_persist=off") {
-    strcpy(usecase, "client.fsync_persist=off");
-    unifyfs_cfg_option chk_size[1];
-    chk_size[0] = {.opt_name = "client.fsync_persist", .opt_value = "off"};
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
-              write_data.data());
-  }
-  SECTION("storage.client.local_extents") {
-    strcpy(usecase, "client.local_extents=on");
-    unifyfs_cfg_option chk_size[1];
-    chk_size[0] = {.opt_name = "client.local_extents", .opt_value = "on"};
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
-              write_data.data());
-  }
-  SECTION("storage.client.max_files") {
-    strcpy(usecase, "client.max_files=4");
-    unifyfs_cfg_option chk_size[1];
-    chk_size[0] = {.opt_name = "client.max_files", .opt_value = "4"};
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
-              write_data.data());
-  }
-  SECTION("storage.client.write_index_size") {
-    strcpy(usecase, "client.write_index_size=4,194,304");
-    unifyfs_cfg_option chk_size[1];
-    chk_size[0] = {.opt_name = "client.write_index_size",
-                   .opt_value = "4194304"};
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
-              write_data.data());
-  }
-  SECTION("storage.client.write_sync") {
-    strcpy(usecase, "client.write_sync=on");
-    unifyfs_cfg_option chk_size[1];
-    chk_size[0] = {.opt_name = "client.write_sync", .opt_value = "on"};
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
-              write_data.data());
-  }
-  SECTION("storage.logio.chunk_size") {
-    strcpy(usecase,
-           ("logio.chunk_size=" + std::to_string(args.request_size)).c_str());
-    unifyfs_cfg_option chk_size[1];
-    chk_size[0] = {.opt_name = "logio.chunk_size",
+    chk_size[1] = {.opt_name = "client.fsync_persist", .opt_value = "off"};
+    chk_size[2] = {.opt_name = "logio.chunk_size",
                    .opt_value = std::to_string(args.request_size).c_str()};
-    buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
-              write_data.data());
-  }
-  SECTION("storage.logio.shmem_size") {
-    strcpy(usecase, ("logio.shmem_size=" +
-                     std::to_string(args.request_size * args.iteration))
-                        .c_str());
-    unifyfs_cfg_option chk_size[1];
-    chk_size[0] = {
+    chk_size[3] = {
         .opt_name = "logio.shmem_size",
         .opt_value =
             std::to_string(args.request_size * args.iteration).c_str()};
+    chk_size[4] = {.opt_name = "logio.spill_dir", .opt_value = shm.c_str()};
+    chk_size[5] = {
+        .opt_name = "logio.spill_size",
+        .opt_value =
+            std::to_string(args.request_size * args.iteration * 8).c_str()};
     buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, 1,
+              async_write_time, flush_time, bb, pfs, chk_size, options_c,
               write_data.data());
   }
   printf("%ld\t,%ld\t,%f\t,%f\t,%f\t,%f\t,%f\t,%f\t,%f,\t%s\n", args.iteration,
