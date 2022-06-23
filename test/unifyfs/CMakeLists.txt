@@ -30,9 +30,9 @@ function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile
             ${unifyfs_hostfile}
             ${test_args})
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
-    set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH}/unifyfs/pfs)
-    set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT BB_PATH=${BB_PATH}/unifyfs/ssd)
-    set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT SHM_PATH=${SHM_PATH}/unifyfs/shm)
+    set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH})
+    set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT BB_PATH=${BB_PATH})
+    set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT SHM_PATH=${SHM_PATH})
 endfunction()
 
 set(UNIFYFS_LOGIO_SPILL_DIR ${BB_PATH})
