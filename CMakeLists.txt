@@ -18,7 +18,7 @@ if (MPI_FOUND)
 endif ()
 include_directories(${MPI_CXX_INCLUDE_DIRS})
 add_executable(tailorfs main.cpp)
-target_link_libraries(tailorfs unifyfs::unifyfs ${MPI_CXX_LIBRARIES})
+target_link_libraries(tailorfs ${UNIFYFS_API_LIBRARIES} ${MPI_CXX_LIBRARIES})
 
 option(BUILD_TEST "Build the unit tests" ON)
 if (BUILD_TEST)
