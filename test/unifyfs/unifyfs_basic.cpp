@@ -46,121 +46,6 @@ cl::Parser define_options() {
 /**
  * Test cases
  */
-TEST_CASE("basic", "[type=basic]") {
-  const char *PFS_VAR = std::getenv("PFS_PATH");
-  const char *BB_VAR = std::getenv("BB_PATH");
-  const char *SHM_VAR = std::getenv("SHM_PATH");
-  REQUIRE(PFS_VAR != nullptr);
-  REQUIRE(BB_VAR != nullptr);
-  REQUIRE(SHM_VAR != nullptr);
-  fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
-  fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
-  fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
-  fs::create_directories(pfs);
-  fs::create_directories(bb);
-  int my_rank, comm_size;
-  MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-  MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
-  int n_configs = 2;
-  unifyfs_cfg_option chk_size[2];
-  auto chksize = 32768;
-  char chksize_str[256];
-  strcpy(chksize_str,std::to_string(chksize).c_str());
-  chk_size[0] = {.opt_name = "logio.chunk_size",
-                 .opt_value = chksize_str};
-  chk_size[1] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
-  const char *unifyfs_prefix = "/unifyfs1";
-  unifyfs_handle fshdl;
-  int rc = unifyfs_initialize(unifyfs_prefix, chk_size, n_configs, &fshdl);
-  REQUIRE(rc == UNIFYFS_SUCCESS);
-  const char *filename = "/unifyfs1/file.0";
-  int create_flags = 0;
-  unifyfs_gfid gfid;
-  rc = unifyfs_create(fshdl, create_flags, filename, &gfid);
-  REQUIRE(rc == UNIFYFS_SUCCESS);
-  REQUIRE(gfid != UNIFYFS_INVALID_GFID);
-  size_t n_chks = args.iteration;
-  size_t chunk_size = args.request_size;
-  auto data_buf = std::vector<char>(n_chks * chunk_size, 'w');
-  size_t block_size = chunk_size * comm_size;
-  size_t n_reqs = n_chks + 1;
-  unifyfs_io_request my_reqs[n_reqs];
-  for (size_t i = 0; i < n_chks; i++) {
-    my_reqs[i].op = UNIFYFS_IOREQ_OP_WRITE;
-    my_reqs[i].gfid = gfid;
-    my_reqs[i].nbytes = chunk_size;
-    my_reqs[i].offset = (off_t)((i * block_size) + (my_rank * chunk_size));
-    my_reqs[i].user_buf = data_buf.data() + (i * chunk_size);
-  }
-  my_reqs[n_chks].op = UNIFYFS_IOREQ_OP_SYNC_META;
-  my_reqs[n_chks].gfid = gfid;
-
-  rc = unifyfs_dispatch_io(fshdl, n_reqs, my_reqs);
-  if (rc == UNIFYFS_SUCCESS) {
-    int waitall = 1;
-    rc = unifyfs_wait_io(fshdl, n_reqs, my_reqs, waitall);
-    if (rc == UNIFYFS_SUCCESS) {
-      for (size_t i = 0; i < n_reqs; i++) {
-        REQUIRE(my_reqs[i].result.error == 0);
-      }
-    }
-  }
-
-  auto read_buf = std::vector<char>(n_chks * chunk_size, 'w');
-  block_size = n_chks * chunk_size * comm_size;
-  n_reqs = 1;
-  unifyfs_io_request my_read_reqs[n_reqs];
-  for (size_t i = 0; i < n_reqs; i++) {
-    my_read_reqs[i].op = UNIFYFS_IOREQ_OP_READ;
-    my_read_reqs[i].gfid = gfid;
-    my_read_reqs[i].nbytes = block_size;
-    my_read_reqs[i].offset = (off_t)((i * block_size));
-    my_read_reqs[i].user_buf = data_buf.data();
-  }
-  rc = unifyfs_dispatch_io(fshdl, n_reqs, my_read_reqs);
-  if (rc == UNIFYFS_SUCCESS) {
-    int waitall = 1;
-    rc = unifyfs_wait_io(fshdl, n_reqs, my_read_reqs, waitall);
-    if (rc == UNIFYFS_SUCCESS) {
-      for (size_t i = 0; i < n_reqs; i++) {
-        REQUIRE(my_read_reqs[i].result.error == 0);
-        REQUIRE(my_read_reqs[i].result.count == block_size);
-        for (int i = 0; i < my_read_reqs[i].result.count; ++i) {
-          REQUIRE(((char *)my_read_reqs[i].user_buf)[i] == 'w');
-        }
-      }
-    }
-  }
-  const char *destfs_prefix = pfs.c_str();
-  size_t n_files = 1;
-  const int PATHLEN_MAX = 256;
-  unifyfs_transfer_request mv_reqs[n_files];
-  char src_file[PATHLEN_MAX];
-  char dst_file[PATHLEN_MAX];
-  for (int i = 0; i < (int)n_files; i++) {
-    snprintf(src_file, sizeof(src_file), "%s/file.%d", unifyfs_prefix, i);
-    snprintf(dst_file, sizeof(src_file), "%s/file.%d", destfs_prefix, i);
-    mv_reqs[i].src_path = strdup(src_file);
-    mv_reqs[i].dst_path = strdup(dst_file);
-    mv_reqs[i].mode = UNIFYFS_TRANSFER_MODE_MOVE;
-    mv_reqs[i].use_parallel = 1;
-  }
-
-  rc = unifyfs_dispatch_transfer(fshdl, n_files, mv_reqs);
-  REQUIRE(rc == UNIFYFS_SUCCESS);
-  if (rc == UNIFYFS_SUCCESS) {
-    int waitall = 1;
-    rc = unifyfs_wait_transfer(fshdl, n_files, mv_reqs, waitall);
-    if (rc == UNIFYFS_SUCCESS) {
-      for (int i = 0; i < (int)n_files; i++) {
-        REQUIRE(my_reqs[i].result.error == 0);
-      }
-    }
-  }
-  rc = unifyfs_finalize(fshdl);
-  REQUIRE(rc == UNIFYFS_SUCCESS);
-}
-
 void buffer_io(Timer &init_time, Timer &finalize_time, Timer &open_time,
                Timer &close_time, Timer &write_time, Timer &async_write_time,
                Timer &flush_time, fs::path &bb, fs::path &pfs,
@@ -273,10 +158,15 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
   }
   SECTION("storage.unifyfs.nobuffer") {
     strcpy(usecase, "unifyfs.nobuffer");
-    const int n_configs = 2;
+    const int n_configs = 3;
     unifyfs_cfg_option chk_size[n_configs];
+
+    size_t io_size = args.request_size * args.iteration;
+    char logio_spill_size[256];
+    strcpy(logio_spill_size, std::to_string(io_size).c_str());
     chk_size[0] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
     chk_size[1] = {.opt_name = "logio.chunk_size", .opt_value = "4096"};
+        chk_size[2] = {.opt_name = "logio.spill_size", .opt_value = logio_spill_size};
     fs::path unifyfs_path = "/unifyfs1";
 
     unifyfs_handle fshdl;
@@ -346,19 +236,19 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     strcpy(usecase, "unifyfs.buffer");
     const int options_c = 6;
     unifyfs_cfg_option chk_size[options_c];
-    size_t shm_size = args.request_size * args.iteration;
+    size_t io_size = args.request_size * args.iteration;
 
     char logio_chunk_size[256];
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
     char logio_shmem_size[256];
-    strcpy(logio_shmem_size, std::to_string(shm_size).c_str());
+    strcpy(logio_shmem_size, std::to_string(io_size).c_str());
     char logio_spill_size[256];
-    strcpy(logio_spill_size, std::to_string(shm_size * 8).c_str());
+    strcpy(logio_spill_size, std::to_string(io_size).c_str());
     chk_size[0] = {.opt_name = "unifyfs.consistency", .opt_value = "LAMINATED"};
     chk_size[1] = {.opt_name = "client.fsync_persist", .opt_value = "off"};
     chk_size[2] = {.opt_name = "logio.chunk_size", .opt_value = logio_chunk_size};
     chk_size[3] = {.opt_name = "logio.shmem_size", .opt_value = logio_shmem_size};
-    chk_size[4] = {.opt_name = "logio.spill_dir", .opt_value = shm.c_str()};
+    chk_size[4] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
     chk_size[5] = {.opt_name = "logio.spill_size", .opt_value = logio_spill_size};
     buffer_io(init_time, finalize_time, open_time, close_time, write_time,
               async_write_time, flush_time, bb, pfs, chk_size, options_c,

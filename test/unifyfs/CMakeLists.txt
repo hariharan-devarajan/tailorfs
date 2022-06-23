@@ -47,9 +47,9 @@ message("-- Created Directories BB_PATH ${BB_PATH}")
 message("-- Created Directories SHM_PATH ${SHM_PATH}")
 message("-- Created Directories PFS_PATH ${PFS_PATH}")
 
-set(rqs 1 4 16 64 128 512 1024)
+set(rqs 4 16 64 128 512 1024)
 set(scales 1024)
-set(iters 100 1000 10000)
+set(iters 100 1000 10000 100000)
 
 foreach (example ${examples})
     gcc_base(${example})
