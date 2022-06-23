@@ -47,11 +47,17 @@ cl::Parser define_options() {
  * Test cases
  */
 TEST_CASE("basic", "[type=basic]") {
-  char ssd[256], pfs[256];
-  sprintf(ssd, "%s/unifyfs/ssd", std::getenv("HOME"));
-  sprintf(pfs, "%s/unifyfs/pfs", std::getenv("HOME"));
-  fs::create_directories(ssd);
+  const char *PFS_VAR = std::getenv("PFS_PATH");
+  const char *BB_VAR = std::getenv("BB_PATH");
+  const char *SHM_VAR = std::getenv("SHM_PATH");
+  REQUIRE(PFS_VAR != nullptr);
+  REQUIRE(BB_VAR != nullptr);
+  REQUIRE(SHM_VAR != nullptr);
+  fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
+  fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
+  fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
   fs::create_directories(pfs);
+  fs::create_directories(bb);
   int my_rank, comm_size;
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
@@ -60,7 +66,7 @@ TEST_CASE("basic", "[type=basic]") {
   auto chksize = 32768;
   chk_size[0] = {.opt_name = "logio.chunk_size",
                  .opt_value = std::to_string(chksize).c_str()};
-  chk_size[1] = {.opt_name = "logio.spill_dir", .opt_value = ssd};
+  chk_size[1] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
   const char *unifyfs_prefix = "/unifyfs1";
   unifyfs_handle fshdl;
   int rc = unifyfs_initialize(unifyfs_prefix, chk_size, n_configs, &fshdl);
@@ -123,7 +129,7 @@ TEST_CASE("basic", "[type=basic]") {
       }
     }
   }
-  const char *destfs_prefix = pfs;
+  const char *destfs_prefix = pfs.c_str();
   size_t n_files = 1;
   const int PATHLEN_MAX = 256;
   unifyfs_transfer_request mv_reqs[n_files];
