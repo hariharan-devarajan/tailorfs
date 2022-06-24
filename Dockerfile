@@ -68,14 +68,41 @@ RUN cd ${PROJECT_DEPENDENCY_DIR} && $spack env create -d . spack.yaml && $spack 
 ENV PROJECT_DEPENDENCY_INSTALL_DIR ${PROJECT_DEPENDENCY_DIR}/.spack-env/view
 RUN sudo apt-get install locate && sudo updatedb
 RUN locate libmpich.so && cd /usr/lib && sudo ln /usr/lib/x86_64-linux-gnu/libmpich.so.12 libmpich.so && sudo updatedb && locate libmpich.so
-RUN cd ${PROJECT_SOURCE_DIR}/external/UnifyFS && \
-    ./autogen.sh && PKG_CONFIG_PATH=${PROJECT_DEPENDENCY_INSTALL_DIR}/lib/pkgconfig ./configure --prefix=${PROJECT_DEPENDENCY_INSTALL_DIR} \
-    --with-gotcha=${PROJECT_DEPENDENCY_INSTALL_DIR} --with-spath=${PROJECT_DEPENDENCY_INSTALL_DIR} CFLAGS="-L${PROJECT_DEPENDENCY_INSTALL_DIR}/lib -L/usr/lib" && \
+
+RUN sudo apt-get install -y libtool \
+    libtool-bin \
+    lcov \
+    zlib1g-dev \
+    libsdl2-dev
+
+RUN $spack install mpich@3.3.2~fortran
+
+RUN sudo apt-get remove -y  mpich
+RUN $spack view --verbose symlink ${PROJECT_DEPENDENCY_INSTALL_DIR} mpich@3.3.2~fortran
+ENV PATH ${PROJECT_DEPENDENCY_INSTALL_DIR}:$PATH
+
+RUN $spack install --deprecated openssl@1.1.1l
+RUN $spack view --verbose symlink ${PROJECT_DEPENDENCY_INSTALL_DIR} openssl@1.1.1l
+
+RUN $spack external find
+RUN ls `$spack location -i openssl@1.1.1l`/lib/pkgconfig
+RUN . ${SPACK_DIR}/share/spack/setup-env.sh && $spack env activate --sh -p ${PROJECT_DEPENDENCY_DIR} && cd ${PROJECT_SOURCE_DIR}/external/UnifyFS && \
+    ./autogen.sh && PATH=${PROJECT_DEPENDENCY_INSTALL_DIR}/bin:$PATH PKG_CONFIG_PATH=`$spack location -i openssl@1.1.1l`/lib/pkgconfig:${PROJECT_DEPENDENCY_INSTALL_DIR}/lib/pkgconfig:$PKG_CONFIG_PATH ./configure --prefix=${PROJECT_DEPENDENCY_INSTALL_DIR} \
+    --with-gotcha=${PROJECT_DEPENDENCY_INSTALL_DIR} --with-spath=${PROJECT_DEPENDENCY_INSTALL_DIR} CC=${PROJECT_DEPENDENCY_INSTALL_DIR}/bin/mpicc \
+    LDFLAGS="-L/usr/lib -Wl,-rpath,/usr/lib" && \
     make -j && make install
 
 # Build Project
-RUN cd ${PROJECT_BUILD_DIR} && cmake ${PROJECT_SOURCE_DIR} -G Ninja -DCMAKE_BUILD_TYPE=debug && make -j
+ENV STORAGE_DIR  /workspace/storage
+ENV BB_PATH  $STORAGE_DIR/bb
+ENV PFS_PATH  $STORAGE_DIR/pfs
+ENV SHM_PATH  $STORAGE_DIR/shm
 
+RUN mkdir -p ${BB_PATH} ${PFS_PATH} ${SHM_PATH}
+
+RUN $spack env activate --sh -p ${PROJECT_DEPENDENCY_DIR} && \
+    cd ${PROJECT_BUILD_DIR} && \
+    cmake ${PROJECT_SOURCE_DIR} -DCMAKE_PREFIX_PATH=${PROJECT_DEPENDENCY_INSTALL_DIR} && make -j
 
 ENV PATH=${SPACK_DIR}/bin:${SOFTWARE_INSTALL_DIR}/bin:${PROJECT_BUILD_DIR}/bin:${PROJECT_DEPENDENCY_DIR}/.spack-env/view/bin:$PATH
 
