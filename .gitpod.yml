@@ -8,5 +8,4 @@ tasks:
   - init: >
     spack env activate --sh -p ${PROJECT_DEPENDENCY_DIR} &&
     cd ${PROJECT_BUILD_DIR} &&
-    cmake ${PROJECT_SOURCE_DIR} -DCMAKE_PREFIX_PATH=${PROJECT_DEPENDENCY_INSTALL_DIR} &&
-    make -j
+    cmake ${PROJECT_SOURCE_DIR} -DCMAKE_PREFIX_PATH=${PROJECT_DEPENDENCY_INSTALL_DIR}
