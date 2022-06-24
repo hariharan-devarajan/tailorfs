@@ -94,8 +94,8 @@ RUN . ${SPACK_DIR}/share/spack/setup-env.sh && $spack env activate --sh -p ${PRO
 
 # Build Project
 ENV STORAGE_DIR  /workspace/storage
-ENV BB_PATH  $STORAGE_DIR/bb
-ENV PFS_PATH  $STORAGE_DIR/pfs
+ENV BBPATH  $STORAGE_DIR/bb
+ENV pfs  $STORAGE_DIR/pfs
 ENV SHM_PATH  $STORAGE_DIR/shm
 
 RUN mkdir -p ${BB_PATH} ${PFS_PATH} ${SHM_PATH}
