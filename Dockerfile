@@ -31,7 +31,8 @@ RUN DEBIAN_FRONTEND="noninteractive" sudo apt-get install -y --no-install-recomm
     lcov \
     zlib1g-dev \
     libsdl2-dev \
-    gfortran
+    gfortran \
+    mpich
 
 # Install spack
 ENV SPACK_DIR=$SOFTWARE_SRC_DIR/spack
@@ -57,12 +58,24 @@ RUN echo ". ${SPACK_DIR}/share/spack/setup-env.sh" >> /home/$USER/.bashrc
 
 # Clone Project
 RUN git clone --recurse-submodules https://github.com/hariharan-devarajan/tailorfs.git ${PROJECT_SOURCE_DIR}
-RUN cd ${PROJECT_SOURCE_DIR}/external/hcl && git reset --hard && git pull
-RUN cd ${PROJECT_SOURCE_DIR}/external/UnifyFS && git reset --hard && git checkout -b hari-fix && git pull
+RUN cd ${PROJECT_SOURCE_DIR}/external/hcl && git reset --hard && git pull origin dev
+RUN cd ${PROJECT_SOURCE_DIR}/external/UnifyFS && git reset --hard && git checkout -b hari-fix && git pull origin hari-fix
 
-# install dependencies
+# Install dependencies
+RUN $spack external find
 RUN cp ${PROJECT_SOURCE_DIR}/dependency/spack.yaml ${PROJECT_DEPENDENCY_DIR}
-RUN cd ${PROJECT_DEPENDENCY_DIR} && spack env create -d . spack.yaml && spack env activate -p . && spack install
+RUN cd ${PROJECT_DEPENDENCY_DIR} && $spack env create -d . spack.yaml && $spack --env . install
+ENV PROJECT_DEPENDENCY_INSTALL_DIR ${PROJECT_DEPENDENCY_DIR}/.spack-env/view
+RUN sudo apt-get install locate && sudo updatedb
+RUN locate libmpich.so && cd /usr/lib && sudo ln /usr/lib/x86_64-linux-gnu/libmpich.so.12 libmpich.so && sudo updatedb && locate libmpich.so
+RUN cd ${PROJECT_SOURCE_DIR}/external/UnifyFS && \
+    ./autogen.sh && PKG_CONFIG_PATH=${PROJECT_DEPENDENCY_INSTALL_DIR}/lib/pkgconfig ./configure --prefix=${PROJECT_DEPENDENCY_INSTALL_DIR} \
+    --with-gotcha=${PROJECT_DEPENDENCY_INSTALL_DIR} --with-spath=${PROJECT_DEPENDENCY_INSTALL_DIR} CFLAGS="-L${PROJECT_DEPENDENCY_INSTALL_DIR}/lib -L/usr/lib" && \
+    make -j && make install
+
+# Build Project
+RUN cd ${PROJECT_BUILD_DIR} && cmake ${PROJECT_SOURCE_DIR} -G Ninja -DCMAKE_BUILD_TYPE=debug && make -j
+
 
 ENV PATH=${SPACK_DIR}/bin:${SOFTWARE_INSTALL_DIR}/bin:${PROJECT_BUILD_DIR}/bin:${PROJECT_DEPENDENCY_DIR}/.spack-env/view/bin:$PATH
 
