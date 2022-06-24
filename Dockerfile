@@ -57,6 +57,8 @@ RUN echo ". ${SPACK_DIR}/share/spack/setup-env.sh" >> /home/$USER/.bashrc
 
 # Clone Project
 RUN git clone --recurse-submodules https://github.com/hariharan-devarajan/tailorfs.git ${PROJECT_SOURCE_DIR}
+RUN cd ${PROJECT_SOURCE_DIR}/external/hcl && git reset --hard && git pull
+RUN cd ${PROJECT_SOURCE_DIR}/external/UnifyFS && git reset --hard && git checkout -b hari-fix && git pull
 
 # install dependencies
 RUN cp ${PROJECT_SOURCE_DIR}/dependency/spack.yaml ${PROJECT_DEPENDENCY_DIR}

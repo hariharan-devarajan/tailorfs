@@ -3,4 +3,4 @@
 	url = https://github.com/hariharan-devarajan/hcl.git
 [submodule "external/UnifyFS"]
 	path = external/UnifyFS
-	url = https://github.com/LLNL/UnifyFS.git
+	url =  https://github.com/MichaelBrim/UnifyFS.git
