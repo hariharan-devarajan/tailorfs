@@ -1,6 +1,6 @@
 spack:
   specs:
-  - cmake%gcc@8.3.1
+  - cmake
   - gotcha@1.0.3
   - spath~mpi
   - mochi-margo@0.9.6 ^libfabric@1.12.1 fabrics=rxm,sockets,tcp ^mercury~boostsys
