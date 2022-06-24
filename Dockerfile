@@ -99,7 +99,7 @@ ENV pfs  $STORAGE_DIR/pfs
 ENV SHM_PATH  $STORAGE_DIR/shm
 
 RUN mkdir -p ${BB_PATH} ${PFS_PATH} ${SHM_PATH}
-
+RUN cd ${PROJECT_SOURCE_DIR} && git pull
 RUN $spack env activate --sh -p ${PROJECT_DEPENDENCY_DIR} && \
     cd ${PROJECT_BUILD_DIR} && \
     cmake ${PROJECT_SOURCE_DIR} -DCMAKE_PREFIX_PATH=${PROJECT_DEPENDENCY_INSTALL_DIR} && make -j
