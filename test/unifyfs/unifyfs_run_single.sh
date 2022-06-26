@@ -8,7 +8,9 @@ UNIFYFS_LOGIO_SPILL_DIR=$3
 UNIFYFS_LOG_DIR=$4
 PFS=$5
 UNIFYFS_HOSTFILE=$6
-TEST_ARGS="${@:7}"
+MPI_EXEC=$7
+MPI_PROCS=$8
+TEST_ARGS="${@:9}"
 SLEEP_TIME=5
 
 error_ct=0
@@ -52,8 +54,8 @@ sleep ${SLEEP_TIME}
 
 
 
-echo "${TEST_EXEC} ${TEST_ARGS}"
-${TEST_EXEC} ${TEST_ARGS}
+echo "${MPI_EXEC} -n ${MPI_PROCS} ${TEST_EXEC} ${TEST_ARGS}"
+${MPI_EXEC} -n ${MPI_PROCS} ${TEST_EXEC} ${TEST_ARGS}
 status=$?
 echo "Killing UnifyFS daemon with PID ${UNIFYFS_EXEC_PID}"
 kill ${UNIFYFS_EXEC_PID}

@@ -50,6 +50,9 @@ void buffer_io(Timer &init_time, Timer &finalize_time, Timer &open_time,
                Timer &close_time, Timer &write_time, Timer &async_write_time,
                Timer &flush_time, fs::path &bb, fs::path &pfs,
                unifyfs_cfg_option *options, int options_ct, char *write_buf) {
+  int rank, comm_size;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
   fs::path unifyfs_path = "/unifyfs1";
   const char* val = unifyfs_path.c_str();
   unifyfs_handle fshdl;
@@ -59,11 +62,20 @@ void buffer_io(Timer &init_time, Timer &finalize_time, Timer &open_time,
   init_time.pauseTime();
   REQUIRE(rc == UNIFYFS_SUCCESS);
   fs::path unifyfs_filename = unifyfs_path / args.filename;
-  int create_flags = 0;
   unifyfs_gfid gfid;
-  open_time.resumeTime();
-  rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(), &gfid);
-  open_time.pauseTime();
+  if (rank ==0) {
+    int create_flags = 0;
+    open_time.resumeTime();
+    rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(), &gfid);
+    open_time.pauseTime();
+  }
+  MPI_Barrier(MPI_COMM_WORLD);
+  if (rank !=0) {
+    int access_flags = O_RDWR;
+    open_time.resumeTime();
+    rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
+    open_time.pauseTime();
+  }
   REQUIRE(rc == UNIFYFS_SUCCESS);
   REQUIRE(gfid != UNIFYFS_INVALID_GFID);
   unifyfs_io_request write_req[args.iteration];
@@ -71,7 +83,7 @@ void buffer_io(Timer &init_time, Timer &finalize_time, Timer &open_time,
     write_req[i].op = UNIFYFS_IOREQ_OP_WRITE;
     write_req[i].gfid = gfid;
     write_req[i].nbytes = args.request_size;
-    write_req[i].offset = i * args.request_size;
+    write_req[i].offset = i * args.request_size + (rank * args.request_size * args.iteration);
     write_req[i].user_buf = write_buf + (i * args.request_size);
   }
   write_time.resumeTime();
@@ -118,6 +130,9 @@ void buffer_io(Timer &init_time, Timer &finalize_time, Timer &open_time,
 }
 
 TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
+    int rank, comm_size;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
   const char *PFS_VAR = std::getenv("PFS_PATH");
   const char *BB_VAR = std::getenv("BB_PATH");
   const char *SHM_VAR = std::getenv("SHM_PATH");
@@ -138,23 +153,30 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     strcpy(usecase, "pfs");
     fs::path filename = pfs / args.filename;
     open_time.resumeTime();
-    int fd = open(filename.c_str(), O_WRONLY | O_CREAT, 0666);
+    MPI_File fh_orig;
+    int status_orig = MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &fh_orig);
     open_time.pauseTime();
-    REQUIRE(fd != -1);
+    REQUIRE(status_orig == MPI_SUCCESS);
     for (int i = 0; i < args.iteration; ++i) {
       write_time.resumeTime();
-      int written_bytes = write(fd, write_data.data() + (i * args.request_size),
-                                args.request_size);
+      MPI_Status stat_orig;
+      auto ret_orig = MPI_File_write_at_all(fh_orig, rank * args.request_size * args.iteration,
+                                            write_data.data() + (i*args.request_size), args.request_size,
+                                            MPI_CHAR, &stat_orig);
+      int written_bytes;
+      MPI_Get_count(&stat_orig, MPI_CHAR, &written_bytes);
       write_time.pauseTime();
       REQUIRE(written_bytes == args.request_size);
     }
     close_time.resumeTime();
-    int status = close(fd);
+    status_orig = MPI_File_close(&fh_orig);
     close_time.pauseTime();
-    REQUIRE(status == 0);
+    REQUIRE(status_orig == MPI_SUCCESS);
+    if (rank == 0){
     printf(
-        "n\t\t,rq\t\t,init\t\t,fin\t\t,open\t\t,close\t\t,write\t\t,"
+        "Timing\t\t,n\t\t,rq\t\t,init\t\t,fin\t\t,open\t\t,close\t\t,write\t\t,"
         "awrite\t\t,flush\t\t,case\n");
+    }
   }
   SECTION("storage.unifyfs.buffer") {
     strcpy(usecase, "unifyfs.buffer");
@@ -165,7 +187,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     char logio_chunk_size[256];
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
     char logio_shmem_size[256];
-    strcpy(logio_shmem_size, std::to_string(64*1024*1024*1024LL).c_str());
+    strcpy(logio_shmem_size, std::to_string(64*1024*1024*1024LL/comm_size).c_str());
     char logio_spill_size[256];
     strcpy(logio_spill_size, std::to_string(io_size).c_str());
     chk_size[0] = {.opt_name = "unifyfs.consistency", .opt_value = "LAMINATED"};
@@ -178,10 +200,37 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
               async_write_time, flush_time, bb, pfs, chk_size, options_c,
               write_data.data());
   }
-  printf("%ld\t,%ld\t,%f\t,%f\t,%f\t,%f\t,%f\t,%f\t,%f,\t%s\n", args.iteration,
-         args.request_size, init_time.getElapsedTime(),
-         finalize_time.getElapsedTime(), open_time.getElapsedTime(),
-         close_time.getElapsedTime(), write_time.getElapsedTime(),
-         async_write_time.getElapsedTime(), flush_time.getElapsedTime(),
-         usecase);
+
+  double total_init = 0.0, total_finalize = 0.0, total_open= 0.0,
+            total_close = 0.0, total_awrite = 0.0, total_write = 0.0, total_flush = 0.0;
+  auto init_a = init_time.getElapsedTime();
+    auto finalize_a = finalize_time.getElapsedTime();
+    auto open_a = open_time.getElapsedTime();
+    auto close_a = close_time.getElapsedTime();
+    auto awrite_a = async_write_time.getElapsedTime();
+    auto write_a = write_time.getElapsedTime();
+    auto flush_a = flush_time.getElapsedTime();
+    MPI_Reduce(&init_a, &total_init, 1, MPI_DOUBLE, MPI_SUM, 0,
+               MPI_COMM_WORLD);
+    MPI_Reduce(&finalize_a, &total_finalize, 1, MPI_DOUBLE, MPI_SUM, 0,
+               MPI_COMM_WORLD);
+    MPI_Reduce(&open_a, &total_open, 1, MPI_DOUBLE, MPI_SUM, 0,
+               MPI_COMM_WORLD);
+    MPI_Reduce(&close_a, &total_close, 1, MPI_DOUBLE, MPI_SUM, 0,
+               MPI_COMM_WORLD);
+    MPI_Reduce(&awrite_a, &total_awrite, 1, MPI_DOUBLE, MPI_SUM, 0,
+               MPI_COMM_WORLD);
+    MPI_Reduce(&write_a, &total_write, 1, MPI_DOUBLE, MPI_SUM, 0,
+               MPI_COMM_WORLD);
+    MPI_Reduce(&flush_a, &total_flush, 1, MPI_DOUBLE, MPI_SUM, 0,
+               MPI_COMM_WORLD);
+    if (rank == 0){
+      printf("Timing\t\t,%ld\t,%ld\t,%f\t,%f\t,%f\t,%f\t,%f\t,%f\t,%f,\t%s\n", args.iteration,
+             args.request_size, total_init/comm_size,
+             total_finalize/comm_size, total_open/comm_size,
+             total_close/comm_size, total_awrite/comm_size,
+             total_write/comm_size,total_flush/comm_size,
+             usecase);
+  }
+    MPI_Barrier(MPI_COMM_WORLD);
 }
