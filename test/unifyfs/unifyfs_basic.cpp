@@ -88,7 +88,7 @@ void buffer_io(Timer &init_time, Timer &finalize_time, Timer &open_time,
       auto write_data = std::vector<char>(args.request_size * num_req_to_buf, 'w');
       unifyfs_io_request write_req[num_req_to_buf];
       int j = 0;
-      for (int i = iter * num_req_to_buf; i < iter * num_iter + num_req_to_buf; ++i) {
+      for (int i = iter * num_req_to_buf; i < iter * num_req_to_buf + num_req_to_buf; ++i) {
         write_req[i].op = UNIFYFS_IOREQ_OP_WRITE;
         write_req[i].gfid = gfid;
         write_req[i].nbytes = args.request_size;
