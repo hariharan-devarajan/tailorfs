@@ -49,7 +49,7 @@ cl::Parser define_options() {
 void buffer_io(Timer &init_time, Timer &finalize_time, Timer &open_time,
                Timer &close_time, Timer &write_time, Timer &async_write_time,
                Timer &flush_time, fs::path &bb, fs::path &pfs,
-               unifyfs_cfg_option *options, int options_ct, char *write_buf) {
+               unifyfs_cfg_option *options, int options_ct) {
   int rank, comm_size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
@@ -78,29 +78,40 @@ void buffer_io(Timer &init_time, Timer &finalize_time, Timer &open_time,
   }
   REQUIRE(rc == UNIFYFS_SUCCESS);
   REQUIRE(gfid != UNIFYFS_INVALID_GFID);
-  unifyfs_io_request write_req[args.iteration];
-  for (int i = 0; i < args.iteration; ++i) {
-    write_req[i].op = UNIFYFS_IOREQ_OP_WRITE;
-    write_req[i].gfid = gfid;
-    write_req[i].nbytes = args.request_size;
-    write_req[i].offset = i * args.request_size + (rank * args.request_size * args.iteration);
-    write_req[i].user_buf = write_buf + (i * args.request_size);
-  }
-  write_time.resumeTime();
-  async_write_time.resumeTime();
-  rc = unifyfs_dispatch_io(fshdl, args.iteration, write_req);
-  async_write_time.pauseTime();
-  if (rc == UNIFYFS_SUCCESS) {
-    int waitall = 1;
-    rc = unifyfs_wait_io(fshdl, args.iteration, write_req, waitall);
-    if (rc == UNIFYFS_SUCCESS) {
-      for (size_t i = 0; i < args.iteration; i++) {
-        REQUIRE(write_req[i].result.error == 0);
-        REQUIRE(write_req[i].result.count == args.request_size);
+
+  int max_buff = 100;
+  auto num_req_to_buf = args.iteration >= max_buff ? max_buff : args.iteration;
+
+  auto num_iter = ceil(args.iteration / num_req_to_buf);
+
+  for (int iter = 0; iter < num_iter; ++iter) {
+      auto write_data = std::vector<char>(args.request_size * num_req_to_buf, 'w');
+      unifyfs_io_request write_req[num_req_to_buf];
+      int j = 0;
+      for (int i = iter * num_req_to_buf; i < iter * num_iter + num_req_to_buf; ++i) {
+        write_req[i].op = UNIFYFS_IOREQ_OP_WRITE;
+        write_req[i].gfid = gfid;
+        write_req[i].nbytes = args.request_size;
+        write_req[i].offset = i * args.request_size + (rank * args.request_size * args.iteration);
+        write_req[i].user_buf = write_data.data() + (j * args.request_size);
+        j++;
       }
-    }
+      write_time.resumeTime();
+      async_write_time.resumeTime();
+      rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, write_req);
+      async_write_time.pauseTime();
+      if (rc == UNIFYFS_SUCCESS) {
+        int waitall = 1;
+        rc = unifyfs_wait_io(fshdl, num_req_to_buf, write_req, waitall);
+        if (rc == UNIFYFS_SUCCESS) {
+          for (size_t i = 0; i < num_req_to_buf; i++) {
+            REQUIRE(write_req[i].result.error == 0);
+            REQUIRE(write_req[i].result.count == args.request_size);
+          }
+        }
+      }
+      write_time.pauseTime();
   }
-  write_time.pauseTime();
   fs::path pfs_filename = pfs / args.filename;
   unifyfs_transfer_request mv_req;
   mv_req.src_path = unifyfs_filename.c_str();
@@ -145,7 +156,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
   fs::create_directories(pfs);
   fs::create_directories(bb);
   fs::create_directories(shm);
-  auto write_data = std::vector<char>(args.iteration * args.request_size, 'w');
+
   Timer init_time, finalize_time, open_time, close_time, write_time,
       async_write_time, flush_time;
   char usecase[256];
@@ -158,10 +169,11 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     open_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
     for (int i = 0; i < args.iteration; ++i) {
+      auto write_data = std::vector<char>(args.request_size, 'w');
       write_time.resumeTime();
       MPI_Status stat_orig;
       auto ret_orig = MPI_File_write_at_all(fh_orig, rank * args.request_size * args.iteration,
-                                            write_data.data() + (i*args.request_size), args.request_size,
+                                            write_data.data(), args.request_size,
                                             MPI_CHAR, &stat_orig);
       int written_bytes;
       MPI_Get_count(&stat_orig, MPI_CHAR, &written_bytes);
@@ -172,17 +184,17 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     status_orig = MPI_File_close(&fh_orig);
     close_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
-    if (rank == 0){
-    printf(
-        "Timing\t\t,n\t\t,rq\t\t,init\t\t,fin\t\t,open\t\t,close\t\t,write\t\t,"
-        "awrite\t\t,flush\t\t,case\n");
-    }
+//    if (rank == 0){
+//    printf(
+//        "Timing\t\t,n\t\t,rq\t\t,init\t\t,fin\t\t,open\t\t,close\t\t,write\t\t,"
+//        "awrite\t\t,flush\t\t,case\n");
+//    }
   }
   SECTION("storage.unifyfs.buffer") {
     strcpy(usecase, "unifyfs.buffer");
     const int options_c = 6;
     unifyfs_cfg_option chk_size[options_c];
-    size_t io_size = args.request_size * args.iteration;
+    size_t io_size = args.request_size * args.iteration * comm_size;
 
     char logio_chunk_size[256];
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
@@ -197,8 +209,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     chk_size[4] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
     chk_size[5] = {.opt_name = "logio.spill_size", .opt_value = logio_spill_size};
     buffer_io(init_time, finalize_time, open_time, close_time, write_time,
-              async_write_time, flush_time, bb, pfs, chk_size, options_c,
-              write_data.data());
+              async_write_time, flush_time, bb, pfs, chk_size, options_c);
   }
 
   double total_init = 0.0, total_finalize = 0.0, total_open= 0.0,

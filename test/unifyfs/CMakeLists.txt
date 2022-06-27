@@ -30,8 +30,8 @@ function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile
             ${pfs}
             ${unifyfs_hostfile}
             ${MPIEXEC_EXECUTABLE}
-            40
-            --request_size ${request_size} --iteration ${iteration})
+            16
+            --request_size ${request_size} --iteration ${iteration} --section "storage.unifyfs.buffer")
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH})
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT BB_PATH=${BB_PATH})
@@ -49,9 +49,9 @@ message("-- Created Directories BB_PATH ${BB_PATH}")
 message("-- Created Directories SHM_PATH ${SHM_PATH}")
 message("-- Created Directories PFS_PATH ${PFS_PATH}")
 
-set(rqs 4 16 64 128 512 1024 4096)
+set(rqs 4 16 64 128 512 1024)
 set(scales 1024)
-set(iters 100 1000)
+set(iters 100 1000 10000)
 
 foreach (example ${examples})
     gcc_base(${example})
