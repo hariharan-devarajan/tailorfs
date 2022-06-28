@@ -58,7 +58,7 @@ echo "${MPI_EXEC} -n ${MPI_PROCS} ${TEST_EXEC} ${TEST_ARGS}"
 ${MPI_EXEC} -n ${MPI_PROCS} ${TEST_EXEC} ${TEST_ARGS}
 status=$?
 echo "Killing UnifyFS daemon with PID ${UNIFYFS_EXEC_PID}"
-kill ${UNIFYFS_EXEC_PID}
+kill -9 ${UNIFYFS_EXEC_PID}
 
 echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
 sleep ${SLEEP_TIME}

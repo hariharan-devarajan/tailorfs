@@ -261,8 +261,11 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     if (rank == 0) {
         std::string cmd = "perl -e 'print \"w\" x " +
                           std::to_string(args.request_size * args.iteration * comm_size) +
-                          "' > " + pfs_filename.u8string() + " 2> /dev/null";
+                          "' > " + pfs_filename.u8string() + "_temp 2> /dev/null";
         int status = system(cmd.c_str());
+        REQUIRE(status != -1);
+        cmd = "rm " + pfs_filename.u8string() + " && mv " + pfs_filename.u8string() + "_temp " + pfs_filename.u8string() + " 2> /dev/null";
+        status = system(cmd.c_str());
         REQUIRE(status != -1);
         REQUIRE(fs::file_size(pfs_filename) == args.request_size * args.iteration * comm_size);
     }
@@ -281,7 +284,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
             auto read_data = std::vector<char>(args.request_size, 'r');
             read_time.resumeTime();
             MPI_Status stat_orig;
-            auto ret_orig = MPI_File_read_at_all(fh_orig, rank * args.request_size * args.iteration,
+            auto ret_orig = MPI_File_read_at(fh_orig, rank * args.request_size * args.iteration,
                                                  read_data.data(), args.request_size,
                                                   MPI_CHAR, &stat_orig);
             int read_bytes;
@@ -335,8 +338,11 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         ctx.mountpoint = (char *)unifyfs_path.c_str();
         ctx.rank = rank;
         ctx.total_ranks = comm_size;
+        ctx.fshdl = fshdl;
+        prefetch_time.resumeTime();
         rc = unifyfs_stage_transfer(&ctx, 1, pfs_filename.c_str(),
                                     unifyfs_filename.c_str());
+        prefetch_time.pauseTime();
         REQUIRE(rc == UNIFYFS_SUCCESS);
 
         int access_flags = O_RDONLY;
@@ -356,19 +362,22 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
             auto read_data = std::vector<char>(args.request_size * num_req_to_buf, 'r');
             unifyfs_io_request read_req[num_req_to_buf];
             int j = 0;
-            for (int i = iter * num_req_to_buf; i < iter * num_req_to_buf + num_req_to_buf; ++i) {
+            for (int i = 0; i < num_req_to_buf; ++i) {
                 read_req[i].op = UNIFYFS_IOREQ_OP_READ;
                 read_req[i].gfid = gfid;
                 read_req[i].nbytes = args.request_size;
-                read_req[i].offset = i * args.request_size + (rank * args.request_size * args.iteration);
+                read_req[i].offset = (i + iter * num_req_to_buf) * args.request_size + (rank * args.request_size * args.iteration);
                 read_req[i].user_buf = read_data.data() + (j * args.request_size);
                 j++;
             }
             read_time.resumeTime();
             rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, read_req);
+            read_time.pauseTime();
             if (rc == UNIFYFS_SUCCESS) {
                 int waitall = 1;
+                read_time.resumeTime();
                 rc = unifyfs_wait_io(fshdl, num_req_to_buf, read_req, waitall);
+                read_time.pauseTime();
                 if (rc == UNIFYFS_SUCCESS) {
                     for (size_t i = 0; i < num_req_to_buf; i++) {
                         REQUIRE(read_req[i].result.error == 0);
@@ -376,7 +385,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
                     }
                 }
             }
-            read_time.pauseTime();
+
         }
 
         finalize_time.resumeTime();
