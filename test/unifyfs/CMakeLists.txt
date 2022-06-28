@@ -18,7 +18,7 @@ function(gcc_base example)
 endfunction()
 
 find_program(BASH_PROGRAM bash)
-function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile pfs test_name test_exec request_size iteration)
+function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile pfs test_name test_exec request_size iteration string)
     #TEST_EXEC=$1 UNIFYFS_EXEC=$2 UNIFYFS_LOGIO_SPILL_DIR=$3 UNIFYFS_LOG_DIR=$4 PFS=$5
     message("-- test args --request_size ${request_size} --iterations ${iteration}")
     add_test(Test_${test_name} ${BASH_PROGRAM}
@@ -31,7 +31,7 @@ function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile
             ${unifyfs_hostfile}
             ${MPIEXEC_EXECUTABLE}
             20
-            --request_size ${request_size} --iteration ${iteration} --section "storage.unifyfs.buffer")
+            --request_size ${request_size} --iteration ${iteration} ${string})# --section "storage.unifyfs.buffer")
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH})
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT BB_PATH=${BB_PATH})
@@ -59,7 +59,8 @@ foreach (example ${examples})
         foreach(scale ${scales})
             foreach(iter ${iters})
                 math(EXPR ts "${rq} * ${scale}")
-                unifyfs_daemon(${UNIFYFS_LOGIO_SPILL_DIR} ${UNIFYFS_LOG_DIR} ${UNIFYFS_HOSTFILE} ${PFS_PATH} example_${rq}_${iter} ${example} ${ts} ${iter})
+                unifyfs_daemon(${UNIFYFS_LOGIO_SPILL_DIR} ${UNIFYFS_LOG_DIR} ${UNIFYFS_HOSTFILE} ${PFS_PATH} example_write_${rq}_${iter} ${example} ${ts} ${iter}  "[type=write-only]")
+                unifyfs_daemon(${UNIFYFS_LOGIO_SPILL_DIR} ${UNIFYFS_LOG_DIR} ${UNIFYFS_HOSTFILE} ${PFS_PATH} example_read_${rq}_${iter} ${example} ${ts} ${iter} "[type=read-only]")
             endforeach()
         endforeach()
     endforeach()
