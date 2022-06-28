@@ -6,8 +6,10 @@ namespace fs = std::experimental::filesystem;
 
 #include <fcntl.h>
 #include <mpi.h>
-#include <unifyfs/unifyfs_api.h>
 #include <unifyfs.h>
+#include <unifyfs/unifyfs_api.h>
+
+#include <tailorfs/unifyfs-stage-transfer.cpp>
 
 /**
  * Test data structures
@@ -317,24 +319,24 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         MPI_Comm_rank(MPI_COMM_WORLD, &rank);
         MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
         fs::path unifyfs_path = "/unifyfs1";
-        const char* val = unifyfs_path.c_str();
+        const char *val = unifyfs_path.c_str();
         unifyfs_handle fshdl;
         init_time.resumeTime();
-        int rc =
-                unifyfs_initialize(val, options, options_c, &fshdl);
+        int rc = unifyfs_initialize(val, options, options_c, &fshdl);
         init_time.pauseTime();
         REQUIRE(rc == UNIFYFS_SUCCESS);
         unifyfs_gfid gfid;
         fs::path unifyfs_filename = unifyfs_path / args.filename;
 
-        stage_ctx ctx;
-        ctx->checksum = 0;
-        ctx->data_dist = UNIFYFS_STAGE_DATA_BALANCED;
-        ctx->mode = UNIFYFS_STAGE_MODE_PARALLEL;
-        ctx->mountpoint = unifyfs_path;
-        ctx->rank = rank;
-        ctx->total_ranks = comm_size;
-        rc = unifyfs_stage_transfer(ctx, 1, pfs_filename.c_str(), unifyfs_filename.c_str());
+        unifyfs_stage ctx;
+        ctx.checksum = 0;
+        ctx.data_dist = UNIFYFS_STAGE_DATA_BALANCED;
+        ctx.mode = UNIFYFS_STAGE_MODE_PARALLEL;
+        ctx.mountpoint = (char *)unifyfs_path.c_str();
+        ctx.rank = rank;
+        ctx.total_ranks = comm_size;
+        rc = unifyfs_stage_transfer(&ctx, 1, pfs_filename.c_str(),
+                                    unifyfs_filename.c_str());
         REQUIRE(rc == UNIFYFS_SUCCESS);
 
         int access_flags = O_RDONLY;

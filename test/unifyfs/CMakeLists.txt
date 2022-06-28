@@ -2,6 +2,8 @@ set(examples unifyfs_basic)
 set(BB_PATH $ENV{BBPATH}/unifyfs)
 set(PFS_PATH $ENV{pfs}/unifyfs)
 set(SHM_PATH $ENV{SHM_PATH})
+
+
 if (NOT DEFINED ENV{BBPATH})
     message(FATAL_ERROR "BBPATH not defined")
 endif ()
@@ -14,7 +16,7 @@ endif ()
 
 function(gcc_base example)
     add_executable(${example} ${example}.cpp ${TEST_SRC})
-    target_link_libraries(${example} ${TEST_LIBS} ${UNIFYFS_API_LIBRARIES})
+    target_link_libraries(${example} ${TEST_LIBS} ${UNIFYFS_API_LIBRARIES} -lcrypto)
 endfunction()
 
 find_program(BASH_PROGRAM bash)
@@ -30,7 +32,7 @@ function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile
             ${pfs}
             ${unifyfs_hostfile}
             ${MPIEXEC_EXECUTABLE}
-            20
+            1
             --request_size ${request_size} --iteration ${iteration} ${string})# --section "storage.unifyfs.buffer")
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH})

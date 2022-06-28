@@ -16,6 +16,8 @@ find_package(MPI COMPONENTS CXX)
 if (MPI_FOUND)
     message(STATUS "found mpi.h at ${MPI_CXX_INCLUDE_DIRS}")
 endif ()
+include_directories(${CMAKE_SOURCE_DIR}/src)
+
 include_directories(${MPI_CXX_INCLUDE_DIRS})
 add_executable(tailorfs main.cpp)
 target_link_libraries(tailorfs ${UNIFYFS_API_LIBRARIES} ${MPI_CXX_LIBRARIES})
