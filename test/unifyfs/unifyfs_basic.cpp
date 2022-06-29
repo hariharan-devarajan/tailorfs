@@ -524,10 +524,6 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
     REQUIRE(status_orig == MPI_SUCCESS);
   }
   SECTION("storage.unifyfs.buffer") {
-    if (rank == 0) {
-      getchar();
-    }
-    MPI_Barrier(MPI_COMM_WORLD);
     strcpy(usecase, "unifyfs.buffer");
     unifyfs_handle fshdl;
     int rc;
