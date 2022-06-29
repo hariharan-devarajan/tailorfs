@@ -32,7 +32,7 @@ function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile
             ${pfs}
             ${unifyfs_hostfile}
             ${MPIEXEC_EXECUTABLE}
-            1
+            20
             --request_size ${request_size} --iteration ${iteration} ${string})# --section "storage.unifyfs.buffer")
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
     set_property(TEST Test_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH})
@@ -63,6 +63,7 @@ foreach (example ${examples})
                 math(EXPR ts "${rq} * ${scale}")
                 unifyfs_daemon(${UNIFYFS_LOGIO_SPILL_DIR} ${UNIFYFS_LOG_DIR} ${UNIFYFS_HOSTFILE} ${PFS_PATH} example_write_${rq}_${iter} ${example} ${ts} ${iter}  "[type=write-only]")
                 unifyfs_daemon(${UNIFYFS_LOGIO_SPILL_DIR} ${UNIFYFS_LOG_DIR} ${UNIFYFS_HOSTFILE} ${PFS_PATH} example_read_${rq}_${iter} ${example} ${ts} ${iter} "[type=read-only]")
+                unifyfs_daemon(${UNIFYFS_LOGIO_SPILL_DIR} ${UNIFYFS_LOG_DIR} ${UNIFYFS_HOSTFILE} ${PFS_PATH} example_pc_${rq}_${iter} ${example} ${ts} ${iter} "[type=pc]")
             endforeach()
         endforeach()
     endforeach()
