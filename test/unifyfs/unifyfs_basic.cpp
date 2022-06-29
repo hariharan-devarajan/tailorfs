@@ -246,69 +246,75 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
 }
 
 TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
-    int rank, comm_size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
-    const char *PFS_VAR = std::getenv("PFS_PATH");
-    const char *BB_VAR = std::getenv("BB_PATH");
-    const char *SHM_VAR = std::getenv("SHM_PATH");
-    REQUIRE(PFS_VAR != nullptr);
-    REQUIRE(BB_VAR != nullptr);
-    REQUIRE(SHM_VAR != nullptr);
-    fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
-    fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
-    fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
-    fs::create_directories(pfs);
-    fs::create_directories(bb);
-    fs::create_directories(shm);
-    fs::path pfs_filename = pfs / args.filename;
-    if (rank == 0) {
-        std::string cmd = "perl -e 'print \"w\" x " +
-                          std::to_string(args.request_size * args.iteration * comm_size) +
-                          "' > " + pfs_filename.u8string() + "_temp 2> /dev/null";
-        int status = system(cmd.c_str());
-        REQUIRE(status != -1);
-        cmd = "rm " + pfs_filename.u8string() + " && mv " + pfs_filename.u8string() + "_temp " + pfs_filename.u8string() + " 2> /dev/null";
-        status = system(cmd.c_str());
-        REQUIRE(status != -1);
-        REQUIRE(fs::file_size(pfs_filename) == args.request_size * args.iteration * comm_size);
-    }
-    MPI_Barrier(MPI_COMM_WORLD);
-    Timer init_time, finalize_time, open_time, close_time, read_time, prefetch_time;
-    char usecase[256];
-    SECTION("storage.pfs") {
-        strcpy(usecase, "pfs");
+  int rank, comm_size;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
+  const char *PFS_VAR = std::getenv("PFS_PATH");
+  const char *BB_VAR = std::getenv("BB_PATH");
+  const char *SHM_VAR = std::getenv("SHM_PATH");
+  REQUIRE(PFS_VAR != nullptr);
+  REQUIRE(BB_VAR != nullptr);
+  REQUIRE(SHM_VAR != nullptr);
+  fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
+  fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
+  fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
+  fs::create_directories(pfs);
+  fs::create_directories(bb);
+  fs::create_directories(shm);
+  fs::path pfs_filename = pfs / args.filename;
+  if (rank == 0) {
+    std::string cmd =
+        "perl -e 'print \"w\" x " +
+        std::to_string(args.request_size * args.iteration * comm_size) +
+        "' > " + pfs_filename.u8string() + "_temp 2> /dev/null";
+    int status = system(cmd.c_str());
+    REQUIRE(status != -1);
+    cmd = "rm " + pfs_filename.u8string() + " && mv " +
+          pfs_filename.u8string() + "_temp " + pfs_filename.u8string() +
+          " 2> /dev/null";
+    status = system(cmd.c_str());
+    REQUIRE(status != -1);
+    REQUIRE(fs::file_size(pfs_filename) ==
+            args.request_size * args.iteration * comm_size);
+  }
+  MPI_Barrier(MPI_COMM_WORLD);
+  Timer init_time, finalize_time, open_time, close_time, read_time,
+      prefetch_time;
+  char usecase[256];
+  SECTION("storage.pfs") {
+    strcpy(usecase, "pfs");
 
-        open_time.resumeTime();
-        MPI_File fh_orig;
-        int status_orig = MPI_File_open(MPI_COMM_WORLD, pfs_filename.c_str(), MPI_MODE_RDWR , MPI_INFO_NULL, &fh_orig);
-        open_time.pauseTime();
-        REQUIRE(status_orig == MPI_SUCCESS);
-        for (int i = 0; i < args.iteration; ++i) {
-            auto read_data = std::vector<char>(args.request_size, 'r');
-            read_time.resumeTime();
-            MPI_Status stat_orig;
-            auto ret_orig = MPI_File_read_at(fh_orig, rank * args.request_size * args.iteration,
-                                                 read_data.data(), args.request_size,
-                                                  MPI_CHAR, &stat_orig);
-            int read_bytes;
-            MPI_Get_count(&stat_orig, MPI_CHAR, &read_bytes);
-            read_time.pauseTime();
-            REQUIRE(read_bytes == args.request_size);
-            for(auto& val:read_data) {
-                REQUIRE(val == 'w');
-            }
-        }
-        close_time.resumeTime();
-        status_orig = MPI_File_close(&fh_orig);
-        close_time.pauseTime();
-        REQUIRE(status_orig == MPI_SUCCESS);
+    open_time.resumeTime();
+    MPI_File fh_orig;
+    int status_orig = MPI_File_open(MPI_COMM_WORLD, pfs_filename.c_str(),
+                                    MPI_MODE_RDWR, MPI_INFO_NULL, &fh_orig);
+    open_time.pauseTime();
+    REQUIRE(status_orig == MPI_SUCCESS);
+    for (int i = 0; i < args.iteration; ++i) {
+      auto read_data = std::vector<char>(args.request_size, 'r');
+      read_time.resumeTime();
+      MPI_Status stat_orig;
+      auto ret_orig = MPI_File_read_at(
+          fh_orig, rank * args.request_size * args.iteration, read_data.data(),
+          args.request_size, MPI_CHAR, &stat_orig);
+      int read_bytes;
+      MPI_Get_count(&stat_orig, MPI_CHAR, &read_bytes);
+      read_time.pauseTime();
+      REQUIRE(read_bytes == args.request_size);
+      for (auto &val : read_data) {
+        REQUIRE(val == 'w');
+      }
     }
-    SECTION("storage.unifyfs.buffer") {
-        strcpy(usecase, "unifyfs.buffer");
-        const int options_c = 6;
-        unifyfs_cfg_option options[options_c];
-        size_t io_size = args.request_size * args.iteration * comm_size;
+    close_time.resumeTime();
+    status_orig = MPI_File_close(&fh_orig);
+    close_time.pauseTime();
+    REQUIRE(status_orig == MPI_SUCCESS);
+  }
+  SECTION("storage.unifyfs.buffer") {
+    strcpy(usecase, "unifyfs.buffer");
+    const int options_c = 6;
+    unifyfs_cfg_option options[options_c];
+    size_t io_size = args.request_size * args.iteration * comm_size;
 
     char logio_chunk_size[256];
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
@@ -339,19 +345,19 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     unifyfs_gfid gfid;
     fs::path unifyfs_filename = unifyfs_path / args.filename;
 
-        unifyfs_stage ctx;
-        ctx.checksum = 0;
-        ctx.data_dist = UNIFYFS_STAGE_DATA_BALANCED;
-        ctx.mode = UNIFYFS_STAGE_MODE_PARALLEL;
-        ctx.mountpoint = (char *)unifyfs_path.c_str();
-        ctx.rank = rank;
-        ctx.total_ranks = comm_size;
-        ctx.fshdl = fshdl;
-        prefetch_time.resumeTime();
-        rc = unifyfs_stage_transfer(&ctx, 1, pfs_filename.c_str(),
-                                    unifyfs_filename.c_str());
-        prefetch_time.pauseTime();
-        REQUIRE(rc == UNIFYFS_SUCCESS);
+    unifyfs_stage ctx;
+    ctx.checksum = 0;
+    ctx.data_dist = UNIFYFS_STAGE_DATA_BALANCED;
+    ctx.mode = UNIFYFS_STAGE_MODE_PARALLEL;
+    ctx.mountpoint = (char *)unifyfs_path.c_str();
+    ctx.rank = rank;
+    ctx.total_ranks = comm_size;
+    ctx.fshdl = fshdl;
+    prefetch_time.resumeTime();
+    rc = unifyfs_stage_transfer(&ctx, 1, pfs_filename.c_str(),
+                                unifyfs_filename.c_str());
+    prefetch_time.pauseTime();
+    REQUIRE(rc == UNIFYFS_SUCCESS);
 
     int access_flags = O_RDONLY;
     open_time.resumeTime();
@@ -365,44 +371,46 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     auto num_req_to_buf =
         args.iteration >= max_buff ? max_buff : args.iteration;
 
-        auto num_iter = ceil(args.iteration / num_req_to_buf);
-        int successful_reads = 0;
-        for (int iter = 0; iter < num_iter; ++iter) {
-            auto read_data = std::vector<char>(args.request_size * num_req_to_buf, 'r');
-            unifyfs_io_request read_req[num_req_to_buf];
-            int j = 0;
-            for (int i = 0; i < num_req_to_buf; ++i) {
-                read_req[i].op = UNIFYFS_IOREQ_OP_READ;
-                read_req[i].gfid = gfid;
-                read_req[i].nbytes = args.request_size;
-                read_req[i].offset = (i + iter * num_req_to_buf) * args.request_size + (rank * args.request_size * args.iteration);
-                read_req[i].user_buf = read_data.data() + (j * args.request_size);
-                j++;
-            }
-            read_time.resumeTime();
-            rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, read_req);
-            read_time.pauseTime();
-            if (rc == UNIFYFS_SUCCESS) {
-                int waitall = 1;
-                read_time.resumeTime();
-                rc = unifyfs_wait_io(fshdl, num_req_to_buf, read_req, waitall);
-                read_time.pauseTime();
-                if (rc == UNIFYFS_SUCCESS) {
-                    for (size_t i = 0; i < num_req_to_buf; i++) {
-                        REQUIRE(read_req[i].result.error == 0);
-                        if (read_req[i].result.count == args.request_size) successful_reads++;
-                        //REQUIRE(read_req[i].result.count == args.request_size);
-                    }
-                }
-            }
-
+    auto num_iter = ceil(args.iteration / num_req_to_buf);
+    int successful_reads = 0;
+    for (int iter = 0; iter < num_iter; ++iter) {
+      auto read_data =
+          std::vector<char>(args.request_size * num_req_to_buf, 'r');
+      unifyfs_io_request read_req[num_req_to_buf];
+      int j = 0;
+      for (int i = 0; i < num_req_to_buf; ++i) {
+        read_req[i].op = UNIFYFS_IOREQ_OP_READ;
+        read_req[i].gfid = gfid;
+        read_req[i].nbytes = args.request_size;
+        read_req[i].offset = (i + iter * num_req_to_buf) * args.request_size +
+                             (rank * args.request_size * args.iteration);
+        read_req[i].user_buf = read_data.data() + (j * args.request_size);
+        j++;
+      }
+      read_time.resumeTime();
+      rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, read_req);
+      read_time.pauseTime();
+      if (rc == UNIFYFS_SUCCESS) {
+        int waitall = 1;
+        read_time.resumeTime();
+        rc = unifyfs_wait_io(fshdl, num_req_to_buf, read_req, waitall);
+        read_time.pauseTime();
+        if (rc == UNIFYFS_SUCCESS) {
+          for (size_t i = 0; i < num_req_to_buf; i++) {
+            REQUIRE(read_req[i].result.error == 0);
+            if (read_req[i].result.count == args.request_size)
+              successful_reads++;
+            // REQUIRE(read_req[i].result.count == args.request_size);
+          }
         }
-        //REQUIRE(args.iteration == successful_reads);
-        finalize_time.resumeTime();
-        rc = unifyfs_finalize(fshdl);
-        finalize_time.pauseTime();
-        REQUIRE(rc == UNIFYFS_SUCCESS);
+      }
     }
+    // REQUIRE(args.iteration == successful_reads);
+    finalize_time.resumeTime();
+    rc = unifyfs_finalize(fshdl);
+    finalize_time.pauseTime();
+    REQUIRE(rc == UNIFYFS_SUCCESS);
+  }
 
   double total_init = 0.0, total_finalize = 0.0, total_open = 0.0,
          total_close = 0.0, total_read = 0.0, total_prefetch = 0.0;
@@ -434,6 +442,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
   int rank, comm_size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
+
   REQUIRE(comm_size > 1);
   REQUIRE(comm_size % 2 == 0);
   const char *PFS_VAR = std::getenv("PFS_PATH");
@@ -515,39 +524,42 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
     REQUIRE(status_orig == MPI_SUCCESS);
   }
   SECTION("storage.unifyfs.buffer") {
+    if (rank == 0) {
+      getchar();
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
     strcpy(usecase, "unifyfs.buffer");
     unifyfs_handle fshdl;
     int rc;
     fs::path unifyfs_path = "/unifyfs1";
     /* Initialize unifyfs */
-    {
-      const int options_ct = 6;
-      unifyfs_cfg_option options[options_ct];
-      size_t io_size = args.request_size * args.iteration * comm_size;
 
-      char logio_chunk_size[256];
-      strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
-      char logio_shmem_size[256];
-      strcpy(logio_shmem_size,
-             std::to_string(64 * 1024 * 1024 * 1024LL / comm_size).c_str());
-      char logio_spill_size[256];
-      strcpy(logio_spill_size, std::to_string(io_size).c_str());
-      options[0] = {.opt_name = "unifyfs.consistency",
-                    .opt_value = "LAMINATED"};
-      options[1] = {.opt_name = "client.fsync_persist", .opt_value = "off"};
-      options[2] = {.opt_name = "logio.chunk_size",
-                    .opt_value = logio_chunk_size};
-      options[3] = {.opt_name = "logio.shmem_size",
-                    .opt_value = logio_shmem_size};
-      options[4] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
-      options[5] = {.opt_name = "logio.spill_size",
-                    .opt_value = logio_spill_size};
-      const char *val = unifyfs_path.c_str();
+    const int options_ct = 6;
+    unifyfs_cfg_option options[options_ct];
+    size_t io_size = args.request_size * args.iteration * comm_size;
 
-      init_time.resumeTime();
-      rc = unifyfs_initialize(val, options, options_ct, &fshdl);
-      init_time.pauseTime();
-    }
+    char logio_chunk_size[256];
+    strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
+    char logio_shmem_size[256];
+    strcpy(logio_shmem_size,
+           std::to_string(64 * 1024 * 1024 * 1024LL / comm_size).c_str());
+    char logio_spill_size[256];
+    strcpy(logio_spill_size, std::to_string(io_size).c_str());
+    options[0] = {.opt_name = "unifyfs.consistency", .opt_value = "LAMINATED"};
+    options[1] = {.opt_name = "client.fsync_persist", .opt_value = "off"};
+    options[2] = {.opt_name = "logio.chunk_size",
+                  .opt_value = logio_chunk_size};
+    options[3] = {.opt_name = "logio.shmem_size", .opt_value = "0"};
+    options[4] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
+    options[5] = {.opt_name = "logio.spill_size",
+                  .opt_value = logio_spill_size};
+    const char *val = unifyfs_path.c_str();
+
+    init_time.resumeTime();
+    rc = unifyfs_initialize(val, options, options_ct, &fshdl);
+    init_time.pauseTime();
+
+    fs::path unifyfs_filename = unifyfs_path / args.filename;
     int max_buff = 100;
     auto num_req_to_buf =
         args.iteration >= max_buff ? max_buff : args.iteration;
@@ -555,115 +567,117 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
     if (is_producer) {
       int producer_rank;
       MPI_Comm_rank(producer_comm, &producer_rank);
-      fs::path unifyfs_filename = unifyfs_path / args.filename;
+
       unifyfs_gfid gfid;
       /* Create or Open file for production */
-      {
-        if (producer_rank == 0) {
-          int create_flags = 0;
-          open_time.resumeTime();
-          rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(),
-                              &gfid);
-          open_time.pauseTime();
-        }
-        MPI_Barrier(MPI_COMM_WORLD);
-        if (producer_rank != 0) {
-          int access_flags = O_RDWR;
-          open_time.resumeTime();
-          rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(),
+
+      if (producer_rank == 0) {
+        int create_flags = 0;
+        open_time.resumeTime();
+        rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(),
                             &gfid);
-          open_time.pauseTime();
-        }
-        REQUIRE(rc == UNIFYFS_SUCCESS);
-        REQUIRE(gfid != UNIFYFS_INVALID_GFID);
+        open_time.pauseTime();
       }
+      MPI_Barrier(producer_comm);
+      if (producer_rank != 0) {
+        int access_flags = O_RDWR;
+        open_time.resumeTime();
+        rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
+        open_time.pauseTime();
+      }
+      REQUIRE(rc == UNIFYFS_SUCCESS);
+      REQUIRE(gfid != UNIFYFS_INVALID_GFID);
+
       /* Write data to file */
-      {
-        for (int iter = 0; iter < num_iter; ++iter) {
-          auto write_data =
-              std::vector<char>(args.request_size * num_req_to_buf, 'w');
-          unifyfs_io_request write_req[num_req_to_buf];
-          int j = 0;
-          for (int i = iter * num_req_to_buf;
-               i < iter * num_req_to_buf + num_req_to_buf; ++i) {
-            write_req[i].op = UNIFYFS_IOREQ_OP_WRITE;
-            write_req[i].gfid = gfid;
-            write_req[i].nbytes = args.request_size;
-            write_req[i].offset =
-                i * args.request_size +
-                (producer_rank * args.request_size * args.iteration);
-            write_req[i].user_buf = write_data.data() + (j * args.request_size);
-            j++;
-          }
+
+      for (int iter = 0; iter < num_iter; ++iter) {
+        auto write_data =
+            std::vector<char>(args.request_size * num_req_to_buf, 'w');
+        unifyfs_io_request write_req[num_req_to_buf];
+        int j = 0;
+        for (int i = iter * num_req_to_buf;
+             i < iter * num_req_to_buf + num_req_to_buf; ++i) {
+          write_req[j].op = UNIFYFS_IOREQ_OP_WRITE;
+          write_req[j].gfid = gfid;
+          write_req[j].nbytes = args.request_size;
+          write_req[j].offset =
+              i * args.request_size +
+              (producer_rank * args.request_size * args.iteration);
+          write_req[j].user_buf = write_data.data() + (j * args.request_size);
+          j++;
+        }
+        write_time.resumeTime();
+        rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, write_req);
+        write_time.pauseTime();
+        if (rc == UNIFYFS_SUCCESS) {
+          int waitall = 1;
           write_time.resumeTime();
-          rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, write_req);
+          rc = unifyfs_wait_io(fshdl, num_req_to_buf, write_req, waitall);
           write_time.pauseTime();
           if (rc == UNIFYFS_SUCCESS) {
-            int waitall = 1;
-            write_time.resumeTime();
-            rc = unifyfs_wait_io(fshdl, num_req_to_buf, write_req, waitall);
-            write_time.pauseTime();
-            if (rc == UNIFYFS_SUCCESS) {
-              for (size_t i = 0; i < num_req_to_buf; i++) {
-                REQUIRE(write_req[i].result.error == 0);
-                REQUIRE(write_req[i].result.count == args.request_size);
-              }
+            for (size_t i = 0; i < num_req_to_buf; i++) {
+              REQUIRE(write_req[i].result.error == 0);
+              REQUIRE(write_req[i].result.count == args.request_size);
+            }
+          }
+        }
+      }
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    if (!is_producer) {
+      int consumer_rank;
+      MPI_Comm_rank(consumer_comm, &consumer_rank);
+      unifyfs_gfid gfid;
+      /* Open file for consumption */
+
+      int access_flags = O_RDONLY;
+      open_time.resumeTime();
+      rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
+      open_time.pauseTime();
+      REQUIRE(rc == UNIFYFS_SUCCESS);
+      REQUIRE(gfid != UNIFYFS_INVALID_GFID);
+
+      /* Read data from file */
+
+      for (int iter = 0; iter < num_iter; ++iter) {
+        auto read_data =
+            std::vector<char>(args.request_size * num_req_to_buf, 'r');
+        unifyfs_io_request read_req[num_req_to_buf];
+        int j = 0;
+        for (int i = iter * num_req_to_buf;
+             i < iter * num_req_to_buf + num_req_to_buf; ++i) {
+          read_req[j].op = UNIFYFS_IOREQ_OP_READ;
+          read_req[j].gfid = gfid;
+          read_req[j].nbytes = args.request_size;
+          read_req[j].offset =
+              i * args.request_size +
+              (consumer_rank * args.request_size * args.iteration);
+          read_req[j].user_buf = read_data.data() + (j * args.request_size);
+          j++;
+        }
+        read_time.resumeTime();
+        rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, read_req);
+        read_time.pauseTime();
+        if (rc == UNIFYFS_SUCCESS) {
+          int waitall = 1;
+          read_time.resumeTime();
+          rc = unifyfs_wait_io(fshdl, num_req_to_buf, read_req, waitall);
+          read_time.pauseTime();
+          if (rc == UNIFYFS_SUCCESS) {
+            for (size_t i = 0; i < num_req_to_buf; i++) {
+              REQUIRE(read_req[i].result.error == 0);
             }
           }
         }
       }
     }
     MPI_Barrier(MPI_COMM_WORLD);
-    {
-      int consumer_rank;
-      MPI_Comm_rank(consumer_comm, &consumer_rank);
-      fs::path unifyfs_filename = unifyfs_path / args.filename;
-      unifyfs_gfid gfid;
-      /* Open file for consumption */
-      {
-        int access_flags = O_RDONLY;
-        open_time.resumeTime();
-        rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
-        open_time.pauseTime();
-        REQUIRE(rc == UNIFYFS_SUCCESS);
-        REQUIRE(gfid != UNIFYFS_INVALID_GFID);
-      }
-      /* Read data from file */
-      {
-        for (int iter = 0; iter < num_iter; ++iter) {
-          auto read_data =
-              std::vector<char>(args.request_size * num_req_to_buf, 'r');
-          unifyfs_io_request read_req[num_req_to_buf];
-          int j = 0;
-          for (int i = iter * num_req_to_buf;
-               i < iter * num_req_to_buf + num_req_to_buf; ++i) {
-            read_req[i].op = UNIFYFS_IOREQ_OP_READ;
-            read_req[i].gfid = gfid;
-            read_req[i].nbytes = args.request_size;
-            read_req[i].offset =
-                i * args.request_size +
-                (consumer_rank * args.request_size * args.iteration);
-            read_req[i].user_buf = read_data.data() + (j * args.request_size);
-            j++;
-          }
-          read_time.resumeTime();
-          rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, read_req);
-          read_time.pauseTime();
-          if (rc == UNIFYFS_SUCCESS) {
-            int waitall = 1;
-            read_time.resumeTime();
-            rc = unifyfs_wait_io(fshdl, num_req_to_buf, read_req, waitall);
-            read_time.pauseTime();
-            if (rc == UNIFYFS_SUCCESS) {
-              for (size_t i = 0; i < num_req_to_buf; i++) {
-                REQUIRE(read_req[i].result.error == 0);
-                REQUIRE(read_req[i].result.count == args.request_size);
-              }
-            }
-          }
-        }
-      }
-    }
+    // REQUIRE(args.iteration == successful_reads);
+    finalize_time.resumeTime();
+    rc = unifyfs_finalize(fshdl);
+    finalize_time.pauseTime();
+    REQUIRE(rc == UNIFYFS_SUCCESS);
   }
   double total_init = 0.0, total_finalize = 0.0, total_open = 0.0,
          total_close = 0.0, total_read = 0.0, total_write = 0.0;
