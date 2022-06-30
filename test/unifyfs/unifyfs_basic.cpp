@@ -399,14 +399,13 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
           for (size_t i = 0; i < num_req_to_buf; i++) {
             REQUIRE(read_req[i].result.error == 0);
             REQUIRE(read_req[i].result.count == args.request_size);
-            for (auto &val : read_data) {
-              REQUIRE(val == 'w');
+            for (int char_i = 0; char_i < args.request_size; ++char_i) {
+              REQUIRE(((char *)read_req[i].user_buf)[char_i] == 'w');
             }
           }
         }
       }
     }
-    // REQUIRE(args.iteration == successful_reads);
     finalize_time.resumeTime();
     rc = unifyfs_finalize(fshdl);
     finalize_time.pauseTime();
@@ -665,8 +664,8 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
             for (size_t i = 0; i < num_req_to_buf; i++) {
               REQUIRE(read_req[i].result.error == 0);
               REQUIRE(read_req[i].result.count == args.request_size);
-              for (auto &val : read_data) {
-                REQUIRE(val == 'w');
+              for (int char_i = 0; char_i < args.request_size; ++char_i) {
+                REQUIRE(((char *)read_req[i].user_buf)[char_i] == 'w');
               }
             }
           }
