@@ -398,6 +398,11 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         read_time.pauseTime();
         if (rc == UNIFYFS_SUCCESS) {
           for (size_t i = 0; i < num_req_to_buf; i++) {
+            if (read_req[i].result.error != 0)
+              fprintf(stderr,
+                      "UNIFYFS ERROR: "
+                      "OP_READ req failed - %s",
+                      strerror(read_req[i].result.error));
             REQUIRE(read_req[i].result.error == 0);
             REQUIRE(read_req[i].result.count == args.request_size);
             for (int char_i = 0; char_i < args.request_size; ++char_i) {
