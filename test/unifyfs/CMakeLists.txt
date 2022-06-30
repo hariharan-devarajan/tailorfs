@@ -53,7 +53,7 @@ message("-- Created Directories PFS_PATH ${PFS_PATH}")
 
 set(rqs 4 16 64 128 512 1024)
 set(scales 1024)
-set(iters 1 100 1000)# 10000)
+set(iters 1 10 100 1000)# 10000)
 
 foreach (example ${examples})
     gcc_base(${example})
