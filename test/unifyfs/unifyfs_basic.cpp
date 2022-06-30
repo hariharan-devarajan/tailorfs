@@ -564,7 +564,8 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
     options[1] = {.opt_name = "client.fsync_persist", .opt_value = "off"};
     options[2] = {.opt_name = "logio.chunk_size",
                   .opt_value = logio_chunk_size};
-    options[3] = {.opt_name = "logio.shmem_size", .opt_value = "0"};
+    options[3] = {.opt_name = "logio.shmem_size",
+                  .opt_value = logio_shmem_size};
     options[4] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
     options[5] = {.opt_name = "logio.spill_size",
                   .opt_value = logio_spill_size};
