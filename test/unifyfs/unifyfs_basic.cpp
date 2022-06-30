@@ -19,6 +19,7 @@ struct Arguments {
   std::string filename = "test.dat";
   size_t request_size = 65536;
   size_t iteration = 64;
+  int ranks_per_node = 1;
 };
 }  // namespace tailorfs::test
 
@@ -43,7 +44,8 @@ cl::Parser define_options() {
          cl::Opt(args.request_size, "request_size")["-r"]["--request_size"](
              "Transfer size used for performing I/O") |
          cl::Opt(args.iteration,
-                 "iteration")["-i"]["--iteration"]("Number of Iterations");
+                 "iteration")["-i"]["--iteration"]("Number of Iterations") |
+         cl::Opt(args.ranks_per_node, "rpn")["-n"]["--rpn"]("Ranks per node");
 }
 
 /**
@@ -138,14 +140,14 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
     fs::path unifyfs_filename = unifyfs_path / args.filename;
     unifyfs_gfid gfid;
-    if (rank == 0) {
+    if (rank % args.ranks_per_node == 0) {
       int create_flags = 0;
       open_time.resumeTime();
       rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(), &gfid);
       open_time.pauseTime();
     }
     MPI_Barrier(MPI_COMM_WORLD);
-    if (rank != 0) {
+    if (rank % args.ranks_per_node != 0) {
       int access_flags = O_RDWR;
       open_time.resumeTime();
       rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
