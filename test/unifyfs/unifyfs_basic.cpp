@@ -415,8 +415,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
                       "OP_READ req failed - %s",
                       strerror(read_req[i].result.error));
             REQUIRE(read_req[i].result.error == 0);
-            if (read_req[i].op == UNIFYFS_IOREQ_OP_READ)
-              REQUIRE(read_req[i].result.count == args.request_size);
+            REQUIRE(read_req[i].result.count == args.request_size);
           }
         }
         free(read_data);
