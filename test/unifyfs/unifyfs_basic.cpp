@@ -151,7 +151,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     REQUIRE(rc == UNIFYFS_SUCCESS);
     REQUIRE(gfid != UNIFYFS_INVALID_GFID);
 
-    int max_buff = 100;
+    int max_buff = 10000;
     auto num_req_to_buf =
         args.iteration >= max_buff ? max_buff : args.iteration;
 
@@ -164,12 +164,12 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
       int j = 0;
       for (int i = iter * num_req_to_buf;
            i < iter * num_req_to_buf + num_req_to_buf; ++i) {
-        write_req[i].op = UNIFYFS_IOREQ_OP_WRITE;
-        write_req[i].gfid = gfid;
-        write_req[i].nbytes = args.request_size;
-        write_req[i].offset =
+        write_req[j].op = UNIFYFS_IOREQ_OP_WRITE;
+        write_req[j].gfid = gfid;
+        write_req[j].nbytes = args.request_size;
+        write_req[j].offset =
             i * args.request_size + (rank * args.request_size * args.iteration);
-        write_req[i].user_buf = write_data.data() + (j * args.request_size);
+        write_req[j].user_buf = write_data.data() + (j * args.request_size);
         j++;
       }
       write_time.resumeTime();
@@ -367,7 +367,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     REQUIRE(rc == UNIFYFS_SUCCESS);
     REQUIRE(gfid != UNIFYFS_INVALID_GFID);
 
-    int max_buff = 100;
+    int max_buff = 10000;
     auto num_req_to_buf =
         args.iteration >= max_buff ? max_buff : args.iteration;
 
@@ -379,12 +379,12 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
       unifyfs_io_request read_req[num_req_to_buf];
       int j = 0;
       for (int i = 0; i < num_req_to_buf; ++i) {
-        read_req[i].op = UNIFYFS_IOREQ_OP_READ;
-        read_req[i].gfid = gfid;
-        read_req[i].nbytes = args.request_size;
-        read_req[i].offset = (i + iter * num_req_to_buf) * args.request_size +
+        read_req[j].op = UNIFYFS_IOREQ_OP_READ;
+        read_req[j].gfid = gfid;
+        read_req[j].nbytes = args.request_size;
+        read_req[j].offset = (i + iter * num_req_to_buf) * args.request_size +
                              (rank * args.request_size * args.iteration);
-        read_req[i].user_buf = read_data.data() + (j * args.request_size);
+        read_req[j].user_buf = read_data.data() + (j * args.request_size);
         j++;
       }
       read_time.resumeTime();
@@ -398,9 +398,10 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         if (rc == UNIFYFS_SUCCESS) {
           for (size_t i = 0; i < num_req_to_buf; i++) {
             REQUIRE(read_req[i].result.error == 0);
-            if (read_req[i].result.count == args.request_size)
-              successful_reads++;
-            // REQUIRE(read_req[i].result.count == args.request_size);
+            REQUIRE(read_req[i].result.count == args.request_size);
+            for (auto &val : read_data) {
+              REQUIRE(val == 'w');
+            }
           }
         }
       }
@@ -663,6 +664,10 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
           if (rc == UNIFYFS_SUCCESS) {
             for (size_t i = 0; i < num_req_to_buf; i++) {
               REQUIRE(read_req[i].result.error == 0);
+              REQUIRE(read_req[i].result.count == args.request_size);
+              for (auto &val : read_data) {
+                REQUIRE(val == 'w');
+              }
             }
           }
         }
