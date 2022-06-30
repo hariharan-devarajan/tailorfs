@@ -44,8 +44,8 @@ echo "1" > $UNIFYFS_HOSTFILE
 echo $(hostname) >> $UNIFYFS_HOSTFILE
 
 export UNIFYFS_SERVER_HOSTFILE=$UNIFYFS_HOSTFILE
-echo "${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &"
-${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &
+echo "jsrun -r 1 -a 1 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &"
+jsrun -r 1 -a 1 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &
 UNIFYFS_EXEC_PID=$!
 echo "process spawned ${UNIFYFS_EXEC_PID}"
 
