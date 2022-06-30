@@ -289,12 +289,8 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     std::string cmd =
         "perl -e 'print \"w\" x " +
         std::to_string(args.request_size * args.iteration * comm_size) +
-        "' > " + pfs_filename.u8string() + "_temp 2> /dev/null";
+        "' > " + pfs_filename.u8string() + " 2> /dev/null";
     int status = system(cmd.c_str());
-    REQUIRE(status != -1);
-    cmd = "mv " + pfs_filename.u8string() + "_temp " + pfs_filename.u8string() +
-          " 2> /dev/null";
-    status = system(cmd.c_str());
     REQUIRE(status != -1);
     REQUIRE(fs::file_size(pfs_filename) ==
             args.request_size * args.iteration * comm_size);
@@ -379,13 +375,40 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     prefetch_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
 
-    int access_flags = O_RDONLY;
-    open_time.resumeTime();
-    rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
-    open_time.pauseTime();
+        int access_flags = O_RDONLY;
+        open_time.resumeTime();
+        rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
+        open_time.pauseTime();
 
-    REQUIRE(rc == UNIFYFS_SUCCESS);
-    REQUIRE(gfid != UNIFYFS_INVALID_GFID);
+        REQUIRE(rc == UNIFYFS_SUCCESS);
+        REQUIRE(gfid != UNIFYFS_INVALID_GFID);
+    unifyfs_io_request prefetch_sync[2];
+        prefetch_sync[0].op = UNIFYFS_IOREQ_OP_SYNC_META;
+        prefetch_sync[0].gfid = gfid;
+        prefetch_sync[1].op = UNIFYFS_IOREQ_OP_SYNC_DATA;
+        prefetch_sync[1].gfid = gfid;
+        prefetch_time.resumeTime();
+    rc = unifyfs_dispatch_io(fshdl, 2, prefetch_sync);
+        prefetch_time.pauseTime();
+        if (rc == UNIFYFS_SUCCESS) {
+            int waitall = 1;
+            read_time.resumeTime();
+            rc = unifyfs_wait_io(fshdl, 2, prefetch_sync, waitall);
+            read_time.pauseTime();
+            if (rc == UNIFYFS_SUCCESS) {
+                for (size_t i = 0; i < 2; i++) {
+                    if (prefetch_sync[i].result.error != 0)
+                        fprintf(stderr,
+                                "UNIFYFS ERROR: "
+                                "OP_READ req failed - %s",
+                                strerror(prefetch_sync[i].result.error));
+                    REQUIRE(prefetch_sync[i].result.error == 0);
+                }
+            }
+        }
+
+
+
 
     int max_buff = 1000;
     auto num_req_to_buf =
