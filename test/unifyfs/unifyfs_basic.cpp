@@ -400,12 +400,12 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         j++;
       }
       read_time.resumeTime();
-      rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, read_req);
+      rc = unifyfs_dispatch_io(fshdl, num_req_to_buf + 1, read_req);
       read_time.pauseTime();
       if (rc == UNIFYFS_SUCCESS) {
         int waitall = 1;
         read_time.resumeTime();
-        rc = unifyfs_wait_io(fshdl, num_req_to_buf, read_req, waitall);
+        rc = unifyfs_wait_io(fshdl, num_req_to_buf + 1, read_req, waitall);
         read_time.pauseTime();
         if (rc == UNIFYFS_SUCCESS) {
           for (size_t i = 1; i < num_req_to_buf + 1; i++) {
@@ -415,7 +415,8 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
                       "OP_READ req failed - %s",
                       strerror(read_req[i].result.error));
             REQUIRE(read_req[i].result.error == 0);
-            REQUIRE(read_req[i].result.count == args.request_size);
+            if (read_req[i].op == UNIFYFS_IOREQ_OP_READ)
+              REQUIRE(read_req[i].result.count == args.request_size);
           }
         }
         free(read_data);
