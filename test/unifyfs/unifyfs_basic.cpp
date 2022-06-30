@@ -570,7 +570,8 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
     char logio_shmem_size[256];
     strcpy(logio_shmem_size,
-           std::to_string(64 * 1024 * 1024 * 1024LL / comm_size).c_str());
+           std::to_string(64 * 1024 * 1024 * 1024LL / args.ranks_per_node)
+               .c_str());
     char logio_spill_size[256];
     strcpy(logio_spill_size, std::to_string(io_size).c_str());
     options[0] = {.opt_name = "unifyfs.consistency", .opt_value = "LAMINATED"};
@@ -736,7 +737,4 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
            total_read / comm_size, usecase);
   }
   MPI_Barrier(MPI_COMM_WORLD);
-  fs::remove_all(pfs);
-  fs::remove_all(bb);
-  fs::remove_all(shm);
 }
