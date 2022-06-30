@@ -557,7 +557,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
     init_time.pauseTime();
 
     fs::path unifyfs_filename = unifyfs_path / args.filename;
-    int max_buff = 100;
+    int max_buff = 10000;
     auto num_req_to_buf =
         args.iteration >= max_buff ? max_buff : args.iteration;
     auto num_iter = ceil(args.iteration / num_req_to_buf);
