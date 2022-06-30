@@ -154,11 +154,11 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     REQUIRE(rc == UNIFYFS_SUCCESS);
     REQUIRE(gfid != UNIFYFS_INVALID_GFID);
 
-    int max_buff = 10000;
+    int max_buff = 1000;
     auto num_req_to_buf =
         args.iteration >= max_buff ? max_buff : args.iteration;
 
-    auto num_iter = ceil(args.iteration / num_req_to_buf);
+    auto num_iter = args.iteration / num_req_to_buf;
 
     for (int iter = 0; iter < num_iter; ++iter) {
       auto write_data =
@@ -380,7 +380,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     auto num_req_to_buf =
         args.iteration >= max_buff ? max_buff : args.iteration;
 
-    auto num_iter = ceil(args.iteration / num_req_to_buf);
+    auto num_iter = args.iteration / num_req_to_buf;
     int successful_reads = 0;
     for (off_t iter = 0; iter < num_iter; ++iter) {
       auto read_data =
@@ -577,10 +577,10 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
     init_time.pauseTime();
 
     fs::path unifyfs_filename = unifyfs_path / args.filename;
-    int max_buff = 10000;
+    int max_buff = 1000;
     auto num_req_to_buf =
         args.iteration >= max_buff ? max_buff : args.iteration;
-    auto num_iter = ceil(args.iteration / num_req_to_buf);
+    auto num_iter = args.iteration / num_req_to_buf;
     if (is_producer) {
       int producer_rank;
       MPI_Comm_rank(producer_comm, &producer_rank);
