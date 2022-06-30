@@ -52,9 +52,6 @@ mkdir -p $BBPATH/unifyfs/data
 echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &"
 UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &
 
-UNIFYFS_EXEC_PID=$!
-echo "process spawned ${UNIFYFS_EXEC_PID}"
-
 echo "Started unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
 sleep ${SLEEP_TIME}
 
@@ -63,8 +60,9 @@ sleep ${SLEEP_TIME}
 echo "jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS} -d packed ${TEST_EXEC} ${TEST_ARGS}"
 jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS}  -d packed ${TEST_EXEC} ${TEST_ARGS}
 status=$?
-echo "Killing UnifyFS daemon with PID ${UNIFYFS_EXEC_PID}"
-kill -9 ${UNIFYFS_EXEC_PID}
+
+echo "Killing UnifyFS daemon"
+${UNIFYFS_EXEC} terminate
 
 echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
 sleep ${SLEEP_TIME}
