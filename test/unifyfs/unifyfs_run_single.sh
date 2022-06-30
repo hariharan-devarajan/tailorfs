@@ -40,6 +40,8 @@ if [ $error_ct -gt 0 ]; then
   exit $error_ct
 fi
 
+export UNIFYFS_LOG_VERBOSITY=4
+
 #echo "1" > $UNIFYFS_HOSTFILE
 #echo $(hostname) >> $UNIFYFS_HOSTFILE
 
