@@ -353,9 +353,6 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     options[4] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
     options[5] = {.opt_name = "logio.spill_size",
                   .opt_value = logio_spill_size};
-    int rank, comm_size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
     fs::path unifyfs_path = "/unifyfs1";
     const char *val = unifyfs_path.c_str();
     unifyfs_handle fshdl;
@@ -461,9 +458,6 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
            total_prefetch / comm_size, usecase);
   }
   MPI_Barrier(MPI_COMM_WORLD);
-  fs::remove_all(pfs);
-  fs::remove_all(bb);
-  fs::remove_all(shm);
 }
 
 TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
