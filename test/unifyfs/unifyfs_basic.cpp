@@ -415,9 +415,6 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
             REQUIRE(read_req[i].result.error == 0);
             REQUIRE(read_req[i].result.count == args.request_size);
             for (int char_i = 0; char_i < args.request_size; ++char_i) {
-              fprintf(stderr, "index %d %c\n", char_i,
-                      ((char *)read_req[i].user_buf)[char_i]);
-
               REQUIRE(((char *)read_req[i].user_buf)[char_i] == 'w');
             }
           }
@@ -662,8 +659,8 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
       /* Read data from file */
 
       for (int iter = 0; iter < num_iter; ++iter) {
-        auto read_data =
-            std::vector<char>(args.request_size * num_req_to_buf, 'r');
+        char *read_data = (char *)malloc(args.request_size * num_req_to_buf);
+        memset(read_data, 'r', args.request_size * num_req_to_buf);
         unifyfs_io_request read_req[num_req_to_buf];
         int j = 0;
         for (int i = iter * num_req_to_buf;
@@ -674,7 +671,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
           read_req[j].offset =
               i * args.request_size +
               (consumer_rank * args.request_size * args.iteration);
-          read_req[j].user_buf = read_data.data() + (j * args.request_size);
+          read_req[j].user_buf = read_data + (j * args.request_size);
           j++;
         }
         read_time.resumeTime();
@@ -695,6 +692,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
             }
           }
         }
+        free(read_data);
       }
     }
     MPI_Barrier(MPI_COMM_WORLD);
