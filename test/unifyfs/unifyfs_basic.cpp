@@ -269,9 +269,11 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
   fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
   if (rank == 0) {
     fs::remove_all(pfs);
+    fs::create_directories(pfs);
+  }
+  if (rank % args.ranks_per_node == 0) {
     fs::remove_all(bb);
     fs::remove_all(shm);
-    fs::create_directories(pfs);
     fs::create_directories(bb);
     fs::create_directories(shm);
   }
