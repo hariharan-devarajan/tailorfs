@@ -64,7 +64,7 @@ status=$?
 echo "Killing UnifyFS daemon"
 echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} terminate -c --share-dir=${PFS}"
 UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} terminate -c --share-dir=${PFS}
-
+jsrun -r 1 -a 1 `ps -aef | grep unifyfs | xargs kill -9`
 echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
 sleep ${SLEEP_TIME}
 

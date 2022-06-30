@@ -378,7 +378,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     char *val = strdup(unifyfs_path.c_str());
     unifyfs_handle fshdl;
     init_time.resumeTime();
-    int rc = unifyfs_initialize(val, options_b, 3, &fshdl);
+    int rc = unifyfs_initialize(val, options_b, 4, &fshdl);
     init_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
     // fprintf(stderr, "unifyfs initialized by rank %d\n", rank);
@@ -414,15 +414,15 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     prefetch_sync[1].op = UNIFYFS_IOREQ_OP_SYNC_DATA;
     prefetch_sync[1].gfid = gfid;
     prefetch_time.resumeTime();
-    rc = unifyfs_dispatch_io(fshdl, 2, prefetch_sync);
+    rc = unifyfs_dispatch_io(fshdl, 1, prefetch_sync);
     prefetch_time.pauseTime();
     if (rc == UNIFYFS_SUCCESS) {
       int waitall = 1;
       read_time.resumeTime();
-      rc = unifyfs_wait_io(fshdl, 2, prefetch_sync, waitall);
+      rc = unifyfs_wait_io(fshdl, 1, prefetch_sync, waitall);
       read_time.pauseTime();
       if (rc == UNIFYFS_SUCCESS) {
-        for (size_t i = 0; i < 2; i++) {
+        for (size_t i = 0; i < 1; i++) {
           if (prefetch_sync[i].result.error != 0)
             fprintf(stderr,
                     "UNIFYFS ERROR: "
