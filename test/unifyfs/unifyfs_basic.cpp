@@ -138,6 +138,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     int rank, comm_size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
+    printf("My rank %d %d\n", rank, comm_size);
     fs::path unifyfs_filename = unifyfs_path / args.filename;
     unifyfs_gfid gfid;
     if (rank % args.ranks_per_node == 0) {
@@ -148,7 +149,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     }
     MPI_Barrier(MPI_COMM_WORLD);
     if (rank % args.ranks_per_node != 0) {
-      int access_flags = O_RDWR;
+      int access_flags = O_WRONLY;
       open_time.resumeTime();
       rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
       open_time.pauseTime();
