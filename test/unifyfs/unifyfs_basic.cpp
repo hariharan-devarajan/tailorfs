@@ -656,12 +656,12 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
 
       /* Read data from file */
 
-      for (int iter = 0; iter < num_iter; ++iter) {
+      for (off_t iter = 0; iter < num_iter; ++iter) {
         char *read_data = (char *)malloc(args.request_size * num_req_to_buf);
         memset(read_data, 'r', args.request_size * num_req_to_buf);
         unifyfs_io_request read_req[num_req_to_buf];
-        int j = 0;
-        for (int i = iter * num_req_to_buf;
+        off_t j = 0;
+        for (off_t i = iter * num_req_to_buf;
              i < iter * num_req_to_buf + num_req_to_buf; ++i) {
           read_req[j].op = UNIFYFS_IOREQ_OP_READ;
           read_req[j].gfid = gfid;
