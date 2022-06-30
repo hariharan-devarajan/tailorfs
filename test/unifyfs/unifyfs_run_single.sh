@@ -47,8 +47,8 @@ export UNIFYFS_SERVER_HOSTFILE=$UNIFYFS_HOSTFILE
 #echo "jsrun -r 1 -a 1 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &"
 #jsrun -r 1 -a 1 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &
 mkdir -p $BBPATH/unifyfs/server/data
-echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_LOGIO_SPILL_DIR=$BBPATH/unifyfs/server/data ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &"
-UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_LOGIO_SPILL_DIR=$BBPATH/unifyfs/server/data ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &
+echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &"
+UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &
 
 UNIFYFS_EXEC_PID=$!
 echo "process spawned ${UNIFYFS_EXEC_PID}"
