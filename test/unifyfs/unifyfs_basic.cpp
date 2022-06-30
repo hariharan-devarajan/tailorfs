@@ -627,7 +627,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
         write_req[num_req_to_buf].op = UNIFYFS_IOREQ_OP_SYNC_META;
         write_req[num_req_to_buf].gfid = gfid;
         write_time.resumeTime();
-        rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, write_req);
+        rc = unifyfs_dispatch_io(fshdl, num_req_to_buf + 1, write_req);
         write_time.pauseTime();
         if (rc == UNIFYFS_SUCCESS) {
           int waitall = 1;
