@@ -54,7 +54,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
   const char *PFS_VAR = std::getenv("PFS_PATH");
-  const char *BB_VAR = std::getenv("BB_PATH");
+  const char *BB_VAR = std::getenv("BBPATH");
   const char *SHM_VAR = std::getenv("SHM_PATH");
   REQUIRE(PFS_VAR != nullptr);
   REQUIRE(BB_VAR != nullptr);
@@ -256,7 +256,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
   const char *PFS_VAR = std::getenv("PFS_PATH");
-  const char *BB_VAR = std::getenv("BB_PATH");
+  const char *BB_VAR = std::getenv("BBPATH");
   const char *SHM_VAR = std::getenv("SHM_PATH");
   REQUIRE(PFS_VAR != nullptr);
   REQUIRE(BB_VAR != nullptr);
@@ -462,7 +462,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
   REQUIRE(comm_size > 1);
   REQUIRE(comm_size % 2 == 0);
   const char *PFS_VAR = std::getenv("PFS_PATH");
-  const char *BB_VAR = std::getenv("BB_PATH");
+  const char *BB_VAR = std::getenv("BBPATH");
   const char *SHM_VAR = std::getenv("SHM_PATH");
   REQUIRE(PFS_VAR != nullptr);
   REQUIRE(BB_VAR != nullptr);
