@@ -18,6 +18,8 @@ if (MPI_FOUND)
 endif ()
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -rdynamic")
+
 include_directories(${MPI_CXX_INCLUDE_DIRS})
 add_executable(tailorfs main.cpp)
 target_link_libraries(tailorfs ${UNIFYFS_API_LIBRARIES} ${MPI_CXX_LIBRARIES})

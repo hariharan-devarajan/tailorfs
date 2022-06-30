@@ -31,6 +31,14 @@ tailorfs::test::Arguments args;
 
 int init(int *argc, char ***argv) {
   MPI_Init(argc, argv);
+    int rank, comm_size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
+//    if(rank == 0) {
+//        fprintf(stderr, "attach to processes\n");
+//        getchar();
+//    }
+    MPI_Barrier(MPI_COMM_WORLD);
   return 0;
 }
 int finalize() {
@@ -259,9 +267,28 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
   fs::remove_all(bb);
   fs::remove_all(shm);
 }
+#include <stdio.h>
+#include <execinfo.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <unistd.h>
 
+
+void handler(int sig) {
+    void *array[10];
+    size_t size;
+
+    // get void*'s for all entries on the stack
+    size = backtrace(array, 10);
+
+    // print out all the frames to stderr
+    fprintf(stderr, "Error: signal %d:\n", sig);
+    backtrace_symbols_fd(array, size, STDERR_FILENO);
+    exit(sig);
+}
 TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
-  int rank, comm_size;
+    signal(SIGSEGV, handler);
+    int rank, comm_size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
   const char *PFS_VAR = std::getenv("PFS_PATH");
@@ -330,9 +357,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
   }
   SECTION("storage.unifyfs.buffer") {
     strcpy(usecase, "unifyfs.buffer");
-    const int options_c = 6;
-    unifyfs_cfg_option options[options_c];
-    size_t io_size = 512 * 1024 * 1024L;
+    size_t io_size = 400 * 1024 * 1024 * 1024LL  / args.ranks_per_node;
 
     char logio_chunk_size[256];
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
@@ -342,30 +367,32 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
                .c_str());
     char logio_spill_size[256];
     strcpy(logio_spill_size, std::to_string(io_size).c_str());
-    options[0] = {.opt_name = "unifyfs.consistency", .opt_value = "LAMINATED"};
-    options[1] = {.opt_name = "client.fsync_persist", .opt_value = "off"};
-    options[2] = {.opt_name = "logio.chunk_size",
-                  .opt_value = logio_chunk_size};
-    options[3] = {.opt_name = "logio.shmem_size",
-                  .opt_value = logio_shmem_size};
-    options[4] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
-    options[5] = {.opt_name = "logio.spill_size",
-                  .opt_value = logio_spill_size};
+        unifyfs_cfg_option options_b[4];
+        options_b[0] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
+        options_b[1] = {.opt_name = "logio.chunk_size",
+                .opt_value = logio_chunk_size};
+        options_b[2] = {.opt_name = "logio.spill_size",
+                .opt_value = logio_spill_size};
+        options_b[3] = {.opt_name = "logio.shmem_size",
+                .opt_value = "0"};
     fs::path unifyfs_path = "/unifyfs1";
-    const char *val = unifyfs_path.c_str();
+        fprintf(stderr, "setting options by rank %d\n", rank);
+    char *val = strdup(unifyfs_path.c_str());
     unifyfs_handle fshdl;
     init_time.resumeTime();
-    int rc = unifyfs_initialize(val, options, options_c, &fshdl);
+    int rc = unifyfs_initialize(val, options_b, 3, &fshdl);
     init_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
+    fprintf(stderr, "unifyfs initialized by rank %d\n", rank);
     unifyfs_gfid gfid;
     fs::path unifyfs_filename = unifyfs_path / args.filename;
-
+    char unifyfs_filename_charp[256];
+    strcpy(unifyfs_filename_charp, unifyfs_filename.c_str());
     unifyfs_stage ctx;
     ctx.checksum = 0;
     ctx.data_dist = UNIFYFS_STAGE_DATA_BALANCED;
     ctx.mode = UNIFYFS_STAGE_MODE_PARALLEL;
-    ctx.mountpoint = (char *)unifyfs_path.c_str();
+    ctx.mountpoint = unifyfs_filename_charp;
     ctx.rank = rank;
     ctx.total_ranks = comm_size;
     ctx.fshdl = fshdl;
@@ -375,6 +402,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     prefetch_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
 
+        fprintf(stderr, "prefetch done by rank %d\n", rank);
         int access_flags = O_RDONLY;
         open_time.resumeTime();
         rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
@@ -382,21 +410,21 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
 
         REQUIRE(rc == UNIFYFS_SUCCESS);
         REQUIRE(gfid != UNIFYFS_INVALID_GFID);
-    unifyfs_io_request prefetch_sync[2];
+    unifyfs_io_request prefetch_sync[1];
         prefetch_sync[0].op = UNIFYFS_IOREQ_OP_SYNC_META;
         prefetch_sync[0].gfid = gfid;
-        prefetch_sync[1].op = UNIFYFS_IOREQ_OP_SYNC_DATA;
-        prefetch_sync[1].gfid = gfid;
+//        prefetch_sync[1].op = UNIFYFS_IOREQ_OP_SYNC_DATA;
+//        prefetch_sync[1].gfid = gfid;
         prefetch_time.resumeTime();
-    rc = unifyfs_dispatch_io(fshdl, 2, prefetch_sync);
+    rc = unifyfs_dispatch_io(fshdl, 1, prefetch_sync);
         prefetch_time.pauseTime();
         if (rc == UNIFYFS_SUCCESS) {
             int waitall = 1;
             read_time.resumeTime();
-            rc = unifyfs_wait_io(fshdl, 2, prefetch_sync, waitall);
+            rc = unifyfs_wait_io(fshdl, 1, prefetch_sync, waitall);
             read_time.pauseTime();
             if (rc == UNIFYFS_SUCCESS) {
-                for (size_t i = 0; i < 2; i++) {
+                for (size_t i = 0; i < 1; i++) {
                     if (prefetch_sync[i].result.error != 0)
                         fprintf(stderr,
                                 "UNIFYFS ERROR: "
