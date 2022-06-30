@@ -336,7 +336,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     strcpy(usecase, "unifyfs.buffer");
     const int options_c = 6;
     unifyfs_cfg_option options[options_c];
-    size_t io_size = args.request_size * args.iteration * comm_size;
+    size_t io_size = 512 * 1024 * 1024L;
 
     char logio_chunk_size[256];
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
