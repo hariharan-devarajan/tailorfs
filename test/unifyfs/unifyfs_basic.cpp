@@ -373,17 +373,18 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
 
     auto num_iter = ceil(args.iteration / num_req_to_buf);
     int successful_reads = 0;
-    for (int iter = 0; iter < num_iter; ++iter) {
+    for (off_t iter = 0; iter < num_iter; ++iter) {
       auto read_data =
           std::vector<char>(args.request_size * num_req_to_buf, 'r');
       unifyfs_io_request read_req[num_req_to_buf];
       int j = 0;
-      for (int i = 0; i < num_req_to_buf; ++i) {
+      for (off_t i = iter * num_req_to_buf;
+           i < iter * num_req_to_buf + num_req_to_buf; ++i) {
         read_req[j].op = UNIFYFS_IOREQ_OP_READ;
         read_req[j].gfid = gfid;
         read_req[j].nbytes = args.request_size;
-        read_req[j].offset = (i + iter * num_req_to_buf) * args.request_size +
-                             (rank * args.request_size * args.iteration);
+        read_req[j].offset =
+            i * args.request_size + (rank * args.request_size * args.iteration);
         read_req[j].user_buf = read_data.data() + (j * args.request_size);
         j++;
       }
