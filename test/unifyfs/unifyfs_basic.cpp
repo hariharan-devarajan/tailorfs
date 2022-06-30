@@ -383,8 +383,8 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     auto num_iter = args.iteration / num_req_to_buf;
     int successful_reads = 0;
     for (off_t iter = 0; iter < num_iter; ++iter) {
-      auto read_data =
-          std::vector<char>(args.request_size * num_req_to_buf, 'r');
+      char *read_data = (char *)malloc(args.request_size * num_req_to_buf);
+      memset(read_data, 'r', args.request_size * num_req_to_buf);
       unifyfs_io_request read_req[num_req_to_buf];
       int j = 0;
       for (off_t i = iter * num_req_to_buf;
@@ -394,7 +394,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         read_req[j].nbytes = args.request_size;
         read_req[j].offset =
             i * args.request_size + (rank * args.request_size * args.iteration);
-        read_req[j].user_buf = read_data.data() + (j * args.request_size);
+        read_req[j].user_buf = read_data + (j * args.request_size);
         j++;
       }
       read_time.resumeTime();
@@ -420,6 +420,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
             }
           }
         }
+        free(read_data);
       }
     }
     finalize_time.resumeTime();
