@@ -64,12 +64,17 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
   fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
   fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
   fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
-  fs::remove_all(pfs);
-  fs::remove_all(bb);
-  fs::remove_all(shm);
-  fs::create_directories(pfs);
-  fs::create_directories(bb);
-  fs::create_directories(shm);
+  if (rank == 0) {
+    fs::remove_all(pfs);
+    fs::create_directories(pfs);
+  }
+  if (rank % args.ranks_per_node == 0) {
+    fs::remove_all(bb);
+    fs::remove_all(shm);
+    fs::create_directories(bb);
+    fs::create_directories(shm);
+  }
+  MPI_Barrier(MPI_COMM_WORLD);
 
   Timer init_time, finalize_time, open_time, close_time, write_time,
       async_write_time, flush_time;
@@ -477,12 +482,17 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
   fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
   fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
   fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
-  fs::remove_all(pfs);
-  fs::remove_all(bb);
-  fs::remove_all(shm);
-  fs::create_directories(pfs);
-  fs::create_directories(bb);
-  fs::create_directories(shm);
+  if (rank == 0) {
+    fs::remove_all(pfs);
+    fs::create_directories(pfs);
+  }
+  if (rank % args.ranks_per_node == 0) {
+    fs::remove_all(bb);
+    fs::remove_all(shm);
+    fs::create_directories(bb);
+    fs::create_directories(shm);
+  }
+  MPI_Barrier(MPI_COMM_WORLD);
   fs::path pfs_filename = pfs / args.filename;
   Timer init_time, finalize_time, open_time, close_time, write_time, read_time;
   char usecase[256];
