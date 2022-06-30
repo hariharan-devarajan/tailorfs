@@ -632,7 +632,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
         if (rc == UNIFYFS_SUCCESS) {
           int waitall = 1;
           write_time.resumeTime();
-          rc = unifyfs_wait_io(fshdl, num_req_to_buf, write_req, waitall);
+          rc = unifyfs_wait_io(fshdl, num_req_to_buf + 1, write_req, waitall);
           write_time.pauseTime();
           if (rc == UNIFYFS_SUCCESS) {
             for (size_t i = 0; i < num_req_to_buf; i++) {
