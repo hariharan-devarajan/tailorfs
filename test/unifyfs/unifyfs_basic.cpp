@@ -267,12 +267,15 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
   fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
   fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
   fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
-  fs::remove_all(pfs);
-  fs::remove_all(bb);
-  fs::remove_all(shm);
-  fs::create_directories(pfs);
-  fs::create_directories(bb);
-  fs::create_directories(shm);
+  if (rank == 0) {
+    fs::remove_all(pfs);
+    fs::remove_all(bb);
+    fs::remove_all(shm);
+    fs::create_directories(pfs);
+    fs::create_directories(bb);
+    fs::create_directories(shm);
+  }
+  MPI_Barrier(MPI_COMM_WORLD);
   fs::path pfs_filename = pfs / args.filename;
   if (rank == 0) {
     std::string cmd =
