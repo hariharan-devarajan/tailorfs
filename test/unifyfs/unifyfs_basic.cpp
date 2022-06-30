@@ -639,6 +639,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
               REQUIRE(write_req[i].result.error == 0);
               REQUIRE(write_req[i].result.count == args.request_size);
             }
+            REQUIRE(write_req[num_req_to_buf].result.error == 0);
           }
         }
       }
