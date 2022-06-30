@@ -40,15 +40,15 @@ if [ $error_ct -gt 0 ]; then
   exit $error_ct
 fi
 
-echo "1" > $UNIFYFS_HOSTFILE
-echo $(hostname) >> $UNIFYFS_HOSTFILE
+#echo "1" > $UNIFYFS_HOSTFILE
+#echo $(hostname) >> $UNIFYFS_HOSTFILE
 
-export UNIFYFS_SERVER_HOSTFILE=$UNIFYFS_HOSTFILE
+#export UNIFYFS_SERVER_HOSTFILE=$UNIFYFS_HOSTFILE
 #echo "jsrun -r 1 -a 1 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &"
 #jsrun -r 1 -a 1 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &
 mkdir -p $BBPATH/unifyfs/data
-echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_LOGIO_SPILL_DIR=$BBPATH/unifyfs/data ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &"
-UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_LOGIO_SPILL_DIR=$BBPATH/unifyfs/data ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &
+echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &"
+UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &
 
 UNIFYFS_EXEC_PID=$!
 echo "process spawned ${UNIFYFS_EXEC_PID}"
