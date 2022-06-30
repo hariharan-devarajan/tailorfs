@@ -357,7 +357,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
   }
   SECTION("storage.unifyfs.buffer") {
     strcpy(usecase, "unifyfs.buffer");
-    size_t io_size = 400 * 1024 * 1024 * 1024LL  / args.ranks_per_node;
+    size_t io_size = 256 * 1024 * 1024 * 1024LL  / args.ranks_per_node;
 
     char logio_chunk_size[256];
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
@@ -376,14 +376,14 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         options_b[3] = {.opt_name = "logio.shmem_size",
                 .opt_value = "0"};
     fs::path unifyfs_path = "/unifyfs1";
-        fprintf(stderr, "setting options by rank %d\n", rank);
+    //    fprintf(stderr, "setting options by rank %d\n", rank);
     char *val = strdup(unifyfs_path.c_str());
     unifyfs_handle fshdl;
     init_time.resumeTime();
     int rc = unifyfs_initialize(val, options_b, 3, &fshdl);
     init_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
-    fprintf(stderr, "unifyfs initialized by rank %d\n", rank);
+    //fprintf(stderr, "unifyfs initialized by rank %d\n", rank);
     unifyfs_gfid gfid;
     fs::path unifyfs_filename = unifyfs_path / args.filename;
     char unifyfs_filename_charp[256];
@@ -402,7 +402,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     prefetch_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
 
-        fprintf(stderr, "prefetch done by rank %d\n", rank);
+        //fprintf(stderr, "prefetch done by rank %d\n", rank);
         int access_flags = O_RDONLY;
         open_time.resumeTime();
         rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
@@ -413,18 +413,18 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     unifyfs_io_request prefetch_sync[1];
         prefetch_sync[0].op = UNIFYFS_IOREQ_OP_SYNC_META;
         prefetch_sync[0].gfid = gfid;
-//        prefetch_sync[1].op = UNIFYFS_IOREQ_OP_SYNC_DATA;
-//        prefetch_sync[1].gfid = gfid;
+        prefetch_sync[1].op = UNIFYFS_IOREQ_OP_SYNC_DATA;
+        prefetch_sync[1].gfid = gfid;
         prefetch_time.resumeTime();
-    rc = unifyfs_dispatch_io(fshdl, 1, prefetch_sync);
+    rc = unifyfs_dispatch_io(fshdl, 2, prefetch_sync);
         prefetch_time.pauseTime();
         if (rc == UNIFYFS_SUCCESS) {
             int waitall = 1;
             read_time.resumeTime();
-            rc = unifyfs_wait_io(fshdl, 1, prefetch_sync, waitall);
+            rc = unifyfs_wait_io(fshdl, 2, prefetch_sync, waitall);
             read_time.pauseTime();
             if (rc == UNIFYFS_SUCCESS) {
-                for (size_t i = 0; i < 1; i++) {
+                for (size_t i = 0; i < 2; i++) {
                     if (prefetch_sync[i].result.error != 0)
                         fprintf(stderr,
                                 "UNIFYFS ERROR: "
@@ -435,7 +435,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
             }
         }
 
-
+    MPI_Barrier(MPI_COMM_WORLD);
 
 
     int max_buff = 1000;
