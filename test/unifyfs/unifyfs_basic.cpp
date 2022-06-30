@@ -336,7 +336,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     strcpy(usecase, "unifyfs.buffer");
     const int options_c = 6;
     unifyfs_cfg_option options[options_c];
-    size_t io_size = args.request_size * args.iteration * args.ranks_per_node;
+    size_t io_size = args.request_size * args.iteration * comm_size;
 
     char logio_chunk_size[256];
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
@@ -350,7 +350,8 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     options[1] = {.opt_name = "client.fsync_persist", .opt_value = "off"};
     options[2] = {.opt_name = "logio.chunk_size",
                   .opt_value = logio_chunk_size};
-    options[3] = {.opt_name = "logio.shmem_size", .opt_value = "0"};
+    options[3] = {.opt_name = "logio.shmem_size",
+                  .opt_value = logio_shmem_size};
     options[4] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
     options[5] = {.opt_name = "logio.spill_size",
                   .opt_value = logio_spill_size};
