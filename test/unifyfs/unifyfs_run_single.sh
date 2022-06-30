@@ -54,8 +54,8 @@ sleep ${SLEEP_TIME}
 
 
 
-echo "jsrun -r 1 -a ${MPI_PROCS} -d packed ${TEST_EXEC} ${TEST_ARGS}"
-jsrun -r 1 -a ${MPI_PROCS} -d packed ${TEST_EXEC} ${TEST_ARGS}
+echo "jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS} -d packed ${TEST_EXEC} ${TEST_ARGS}"
+jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS}  -d packed ${TEST_EXEC} ${TEST_ARGS}
 status=$?
 echo "Killing UnifyFS daemon with PID ${UNIFYFS_EXEC_PID}"
 kill -9 ${UNIFYFS_EXEC_PID}
