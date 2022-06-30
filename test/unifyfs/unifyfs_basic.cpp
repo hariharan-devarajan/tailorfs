@@ -385,10 +385,8 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     for (off_t iter = 0; iter < num_iter; ++iter) {
       char *read_data = (char *)malloc(args.request_size * num_req_to_buf);
       memset(read_data, 'r', args.request_size * num_req_to_buf);
-      unifyfs_io_request read_req[num_req_to_buf + 1];
-      read_req[0].op = UNIFYFS_IOREQ_OP_SYNC_META;
-      read_req[0].gfid = gfid;
-      int j = 1;
+      unifyfs_io_request read_req[num_req_to_buf];
+      int j = 0;
       for (off_t i = iter * num_req_to_buf;
            i < iter * num_req_to_buf + num_req_to_buf; ++i) {
         read_req[j].op = UNIFYFS_IOREQ_OP_READ;
@@ -400,15 +398,15 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         j++;
       }
       read_time.resumeTime();
-      rc = unifyfs_dispatch_io(fshdl, num_req_to_buf + 1, read_req);
+      rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, read_req);
       read_time.pauseTime();
       if (rc == UNIFYFS_SUCCESS) {
         int waitall = 1;
         read_time.resumeTime();
-        rc = unifyfs_wait_io(fshdl, num_req_to_buf + 1, read_req, waitall);
+        rc = unifyfs_wait_io(fshdl, num_req_to_buf, read_req, waitall);
         read_time.pauseTime();
         if (rc == UNIFYFS_SUCCESS) {
-          for (size_t i = 1; i < num_req_to_buf + 1; i++) {
+          for (size_t i = 0; i < num_req_to_buf; i++) {
             if (read_req[i].result.error != 0)
               fprintf(stderr,
                       "UNIFYFS ERROR: "
