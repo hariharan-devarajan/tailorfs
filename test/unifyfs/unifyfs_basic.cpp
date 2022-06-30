@@ -121,8 +121,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     options[1] = {.opt_name = "client.fsync_persist", .opt_value = "off"};
     options[2] = {.opt_name = "logio.chunk_size",
                   .opt_value = logio_chunk_size};
-    options[3] = {.opt_name = "logio.shmem_size",
-                  .opt_value = logio_shmem_size};
+    options[3] = {.opt_name = "logio.shmem_size", .opt_value = "0"};
     options[4] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
     options[5] = {.opt_name = "logio.spill_size",
                   .opt_value = logio_spill_size};
@@ -336,8 +335,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     options[1] = {.opt_name = "client.fsync_persist", .opt_value = "off"};
     options[2] = {.opt_name = "logio.chunk_size",
                   .opt_value = logio_chunk_size};
-    options[3] = {.opt_name = "logio.shmem_size",
-                  .opt_value = logio_shmem_size};
+    options[3] = {.opt_name = "logio.shmem_size", .opt_value = "0"};
     options[4] = {.opt_name = "logio.spill_dir", .opt_value = bb.c_str()};
     options[5] = {.opt_name = "logio.spill_size",
                   .opt_value = logio_spill_size};
