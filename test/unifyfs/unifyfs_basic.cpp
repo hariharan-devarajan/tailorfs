@@ -435,7 +435,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    int max_buff = 1000;
+    int max_buff = 1;
     auto num_req_to_buf =
         args.iteration >= max_buff ? max_buff : args.iteration;
 
@@ -638,10 +638,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
     init_time.pauseTime();
 
     fs::path unifyfs_filename = unifyfs_path / args.filename;
-    int max_buff = 1000;
-    auto num_req_to_buf =
-        args.iteration >= max_buff ? max_buff : args.iteration;
-    auto num_iter = args.iteration / num_req_to_buf;
+
     if (is_producer) {
       int producer_rank;
       MPI_Comm_rank(producer_comm, &producer_rank);
@@ -667,7 +664,10 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
       REQUIRE(gfid != UNIFYFS_INVALID_GFID);
 
       /* Write data to file */
-
+        int max_buff = 1000;
+        auto num_req_to_buf =
+                args.iteration >= max_buff ? max_buff : args.iteration;
+        auto num_iter = args.iteration / num_req_to_buf;
       for (int iter = 0; iter < num_iter; ++iter) {
         auto write_data =
             std::vector<char>(args.request_size * num_req_to_buf, 'w');
@@ -720,7 +720,10 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
       REQUIRE(gfid != UNIFYFS_INVALID_GFID);
 
       /* Read data from file */
-
+        int max_buff = 1;
+        auto num_req_to_buf =
+                args.iteration >= max_buff ? max_buff : args.iteration;
+        auto num_iter = args.iteration / num_req_to_buf;
       for (off_t iter = 0; iter < num_iter; ++iter) {
         char *read_data = (char *)malloc(args.request_size * num_req_to_buf);
         memset(read_data, 'r', args.request_size * num_req_to_buf);
