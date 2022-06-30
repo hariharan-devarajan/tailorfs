@@ -62,6 +62,9 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
   fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
   fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
   fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
+  fs::remove_all(pfs);
+  fs::remove_all(bb);
+  fs::remove_all(shm);
   fs::create_directories(pfs);
   fs::create_directories(bb);
   fs::create_directories(shm);
@@ -243,6 +246,9 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
            total_write / comm_size, total_flush / comm_size, usecase);
   }
   MPI_Barrier(MPI_COMM_WORLD);
+  fs::remove_all(pfs);
+  fs::remove_all(bb);
+  fs::remove_all(shm);
 }
 
 TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
@@ -258,6 +264,9 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
   fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
   fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
   fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
+  fs::remove_all(pfs);
+  fs::remove_all(bb);
+  fs::remove_all(shm);
   fs::create_directories(pfs);
   fs::create_directories(bb);
   fs::create_directories(shm);
@@ -442,6 +451,9 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
            total_prefetch / comm_size, usecase);
   }
   MPI_Barrier(MPI_COMM_WORLD);
+  fs::remove_all(pfs);
+  fs::remove_all(bb);
+  fs::remove_all(shm);
 }
 
 TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
@@ -460,6 +472,9 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
   fs::path pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
   fs::path bb = fs::path(BB_VAR) / "unifyfs" / "data";
   fs::path shm = fs::path(SHM_VAR) / "unifyfs" / "data";
+  fs::remove_all(pfs);
+  fs::remove_all(bb);
+  fs::remove_all(shm);
   fs::create_directories(pfs);
   fs::create_directories(bb);
   fs::create_directories(shm);
@@ -708,4 +723,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
            total_read / comm_size, usecase);
   }
   MPI_Barrier(MPI_COMM_WORLD);
+  fs::remove_all(pfs);
+  fs::remove_all(bb);
+  fs::remove_all(shm);
 }
