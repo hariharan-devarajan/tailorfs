@@ -284,8 +284,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         "' > " + pfs_filename.u8string() + "_temp 2> /dev/null";
     int status = system(cmd.c_str());
     REQUIRE(status != -1);
-    cmd = "rm -f " + pfs_filename.u8string() + " && mv " +
-          pfs_filename.u8string() + "_temp " + pfs_filename.u8string() +
+    cmd = "mv " + pfs_filename.u8string() + "_temp " + pfs_filename.u8string() +
           " 2> /dev/null";
     status = system(cmd.c_str());
     REQUIRE(status != -1);
