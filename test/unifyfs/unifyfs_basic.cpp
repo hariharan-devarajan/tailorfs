@@ -415,8 +415,10 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
             REQUIRE(read_req[i].result.error == 0);
             REQUIRE(read_req[i].result.count == args.request_size);
             for (int char_i = 0; char_i < args.request_size; ++char_i) {
-              fprintf(stderr, "index %d %s\n", char_i, read_data[char_i]);
-              REQUIRE(read_data[char_i] == 'w');
+              fprintf(stderr, "index %d %c\n", char_i,
+                      ((char *)read_req[i].user_buf)[char_i]);
+
+              REQUIRE(((char *)read_req[i].user_buf)[char_i] == 'w');
             }
           }
         }
