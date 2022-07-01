@@ -65,7 +65,7 @@ echo "Killing UnifyFS daemon"
 echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} terminate -c --share-dir=${PFS}"
 UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} terminate -c --share-dir=${PFS}
 # shellcheck disable=SC2046
-jsrun -r 1 -a 1 `ps -aef | grep unifyfs | awk {'print $2'} | xargs kill -9`
+jsrun -r 1 -a 1 `ps -aef | grep unifyfsd | awk {'print $2'} | xargs kill -9`
 echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
 sleep ${SLEEP_TIME}
 
