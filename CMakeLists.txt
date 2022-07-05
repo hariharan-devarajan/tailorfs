@@ -5,7 +5,7 @@ set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${CMAKE_SOURCE_DIR}/dependency/.spack
 set(CMAKE_CXX_STANDARD 14)
 set(TAILORFS_CMAKE_DIR ${CMAKE_SOURCE_DIR}/CMake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${TAILORFS_CMAKE_DIR})
-add_subdirectory(external/hcl)
+#add_subdirectory(external/hcl)
 find_package(unifyfs REQUIRED)
 if (NOT ${UNIFYFS_FOUND})
     message(FATAL_ERROR "UnifyFS is needed for TailorFS build")

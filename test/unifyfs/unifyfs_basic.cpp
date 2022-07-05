@@ -411,8 +411,8 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     unifyfs_io_request prefetch_sync[1];
     prefetch_sync[0].op = UNIFYFS_IOREQ_OP_SYNC_META;
     prefetch_sync[0].gfid = gfid;
-    prefetch_sync[1].op = UNIFYFS_IOREQ_OP_SYNC_DATA;
-    prefetch_sync[1].gfid = gfid;
+//    prefetch_sync[1].op = UNIFYFS_IOREQ_OP_SYNC_DATA;
+//    prefetch_sync[1].gfid = gfid;
     prefetch_time.resumeTime();
     rc = unifyfs_dispatch_io(fshdl, 1, prefetch_sync);
     prefetch_time.pauseTime();
@@ -435,47 +435,37 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    int max_buff = 1;
-    auto num_req_to_buf =
-        args.iteration >= max_buff ? max_buff : args.iteration;
-
-    auto num_iter = args.iteration / num_req_to_buf;
-    int successful_reads = 0;
-    for (off_t iter = 0; iter < num_iter; ++iter) {
-      char *read_data = (char *)malloc(args.request_size * num_req_to_buf);
-      memset(read_data, 'r', args.request_size * num_req_to_buf);
-      unifyfs_io_request read_req[num_req_to_buf];
-      int j = 0;
-      for (off_t i = iter * num_req_to_buf;
-           i < iter * num_req_to_buf + num_req_to_buf; ++i) {
-        read_req[j].op = UNIFYFS_IOREQ_OP_READ;
-        read_req[j].gfid = gfid;
-        read_req[j].nbytes = args.request_size;
-        read_req[j].offset =
-            i * args.request_size + (rank * args.request_size * args.iteration);
-        read_req[j].user_buf = read_data + (j * args.request_size);
-        j++;
-      }
+    for (int i = 0; i < args.iteration; ++i) {
+      auto read_data = std::vector<char>(args.request_size, 'r');
+      unifyfs_io_request read_req;
+      read_req.op = UNIFYFS_IOREQ_OP_READ;
+      read_req.gfid = gfid;
+      read_req.nbytes = args.request_size;
+      read_req.offset =
+          i * args.request_size + (rank * args.request_size * args.iteration);
+      read_req.user_buf = read_data.data();
       read_time.resumeTime();
-      rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, read_req);
+      rc = unifyfs_dispatch_io(fshdl, 1, &read_req);
       read_time.pauseTime();
       if (rc == UNIFYFS_SUCCESS) {
         int waitall = 1;
         read_time.resumeTime();
-        rc = unifyfs_wait_io(fshdl, num_req_to_buf, read_req, waitall);
+        rc = unifyfs_wait_io(fshdl, 1, &read_req, waitall);
         read_time.pauseTime();
         if (rc == UNIFYFS_SUCCESS) {
-          for (size_t i = 0; i < num_req_to_buf; i++) {
-            if (read_req[i].result.error != 0)
-              fprintf(stderr,
-                      "UNIFYFS ERROR: "
-                      "OP_READ req failed - %s",
-                      strerror(read_req[i].result.error));
-            REQUIRE(read_req[i].result.error == 0);
-            REQUIRE(read_req[i].result.count == args.request_size);
-          }
+          if (read_req.result.error != 0)
+            fprintf(stderr,
+                    "UNIFYFS ERROR: "
+                    "OP_READ req failed - %s",
+                    strerror(read_req.result.error));
+          REQUIRE(read_req.result.error == 0);
+          if (read_req.result.count != args.request_size)
+            fprintf(stderr,
+                    "UNIFYFS ERROR: "
+                    "OP_READ req failed - %d and read only %d of %d",
+                    i, read_req.result.count, args.request_size);
+          REQUIRE(read_req.result.count == args.request_size);
         }
-        free(read_data);
       }
     }
     finalize_time.resumeTime();
@@ -720,42 +710,33 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
       REQUIRE(gfid != UNIFYFS_INVALID_GFID);
 
       /* Read data from file */
-        int max_buff = 1;
-        auto num_req_to_buf =
-                args.iteration >= max_buff ? max_buff : args.iteration;
-        auto num_iter = args.iteration / num_req_to_buf;
-      for (off_t iter = 0; iter < num_iter; ++iter) {
-        char *read_data = (char *)malloc(args.request_size * num_req_to_buf);
-        memset(read_data, 'r', args.request_size * num_req_to_buf);
-        unifyfs_io_request read_req[num_req_to_buf];
-        off_t j = 0;
-        for (off_t i = iter * num_req_to_buf;
-             i < iter * num_req_to_buf + num_req_to_buf; ++i) {
-          read_req[j].op = UNIFYFS_IOREQ_OP_READ;
-          read_req[j].gfid = gfid;
-          read_req[j].nbytes = args.request_size;
-          read_req[j].offset =
-              i * args.request_size +
-              (consumer_rank * args.request_size * args.iteration);
-          read_req[j].user_buf = read_data + (j * args.request_size);
-          j++;
-        }
+      for (int i = 0; i < args.iteration; ++i) {
+        auto read_data = std::vector<char>(args.request_size, 'r');
+        unifyfs_io_request read_req;
+        read_req.op = UNIFYFS_IOREQ_OP_READ;
+        read_req.gfid = gfid;
+        read_req.nbytes = args.request_size;
+        read_req.offset =
+            i * args.request_size + (consumer_rank * args.request_size * args.iteration);
+        read_req.user_buf = read_data.data();
         read_time.resumeTime();
-        rc = unifyfs_dispatch_io(fshdl, num_req_to_buf, read_req);
+        rc = unifyfs_dispatch_io(fshdl, 1, &read_req);
         read_time.pauseTime();
         if (rc == UNIFYFS_SUCCESS) {
           int waitall = 1;
           read_time.resumeTime();
-          rc = unifyfs_wait_io(fshdl, num_req_to_buf, read_req, waitall);
+          rc = unifyfs_wait_io(fshdl, 1, &read_req, waitall);
           read_time.pauseTime();
           if (rc == UNIFYFS_SUCCESS) {
-            for (size_t i = 0; i < num_req_to_buf; i++) {
-              REQUIRE(read_req[i].result.error == 0);
-              REQUIRE(read_req[i].result.count == args.request_size);
-            }
+            if (read_req.result.error != 0)
+              fprintf(stderr,
+                      "UNIFYFS ERROR: "
+                      "OP_READ req failed - %s",
+                      strerror(read_req.result.error));
+            REQUIRE(read_req.result.error == 0);
+            REQUIRE(read_req.result.count == args.request_size);
           }
         }
-        free(read_data);
       }
     }
     MPI_Barrier(MPI_COMM_WORLD);

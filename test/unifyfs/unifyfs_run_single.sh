@@ -48,9 +48,11 @@ export UNIFYFS_LOG_VERBOSITY=3
 #export UNIFYFS_SERVER_HOSTFILE=$UNIFYFS_HOSTFILE
 #echo "jsrun -r 1 -a 1 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &"
 #jsrun -r 1 -a 1 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &
+echo "Killing existing unifyfs daemons"
+jsrun -r 1 -a 1 `ps -aef | grep unifyfsd | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
 mkdir -p $BBPATH/unifyfs/data
-echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &"
-UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug &
+echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug -c  &"
+UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug -c  &
 
 echo "Started unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
 sleep ${SLEEP_TIME}
@@ -65,7 +67,7 @@ echo "Killing UnifyFS daemon"
 echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} terminate -c --share-dir=${PFS}"
 UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} terminate -c --share-dir=${PFS}
 # shellcheck disable=SC2046
-jsrun -r 1 -a 1 `ps -aef | grep unifyfsd | awk {'print $2'} | xargs kill -9`
+jsrun -r 1 -a 1 `ps -aef | grep unifyfsd | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
 echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
 sleep ${SLEEP_TIME}
 
