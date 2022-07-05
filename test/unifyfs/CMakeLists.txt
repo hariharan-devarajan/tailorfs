@@ -25,7 +25,7 @@ function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile
     message("-- test args --request_size ${request_size} --iterations ${iteration}")
     set(RANKS_PER_NODE 20)
     add_test(Test_${test_name} ${BASH_PROGRAM}
-            ${CMAKE_CURRENT_SOURCE_DIR}/unifyfs_run_single.sh
+            ${CMAKE_CURRENT_SOURCE_DIR}/run_single.sh
             ${CMAKE_CURRENT_BINARY_DIR}/${test_exec}
             ${UNIFYFS_EXEC}
             ${unifyfs_logio_spill_dir}

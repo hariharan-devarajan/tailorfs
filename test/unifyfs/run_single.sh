@@ -11,7 +11,7 @@ UNIFYFS_HOSTFILE=$6
 MPI_EXEC=$7
 MPI_PROCS=$8
 TEST_ARGS="${@:9}"
-SLEEP_TIME=10
+SLEEP_TIME=2
 
 error_ct=0
 if [[ ! -f "${TEST_EXEC}" ]]; then
@@ -42,6 +42,8 @@ fi
 
 export UNIFYFS_LOG_VERBOSITY=3
 
+rm -rf /dev/shm/* $BBPATH/unifyfs/* $pfs/unifyfs/* ~/unifyfs/logs/*
+
 #echo "1" > $UNIFYFS_HOSTFILE
 #echo $(hostname) >> $UNIFYFS_HOSTFILE
 
@@ -49,27 +51,27 @@ export UNIFYFS_LOG_VERBOSITY=3
 #echo "jsrun -r 1 -a 1 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &"
 #jsrun -r 1 -a 1 ${UNIFYFS_EXEC} --sharedfs-dir=${PFS} --log-dir $UNIFYFS_LOG_DIR --log-verbosity 5 -C &
 echo "Killing existing unifyfs daemons"
-jsrun -r 1 -a 1 `ps -aef | grep unifyfsd | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
+echo "${UNIFYFS_EXEC} terminate"
+${UNIFYFS_EXEC} terminate
+#echo "jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1 > /dev/null 2>&1"
+#ps -aef | grep /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs
+#jsrun -r 1 -a 1 `ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
+
 mkdir -p $BBPATH/unifyfs/data
-echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug -c  &"
-UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} start --share-dir=${PFS} --debug -c  &
-
-echo "Started unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
-sleep ${SLEEP_TIME}
-
-
+echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_SERVER_CORES=4 ${UNIFYFS_EXEC} start --share-dir=${PFS}"
+UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_SERVER_CORES=4 ${UNIFYFS_EXEC} start --share-dir=${PFS}
 
 echo "jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS} -d packed ${TEST_EXEC} ${TEST_ARGS}"
 jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS}  -d packed ${TEST_EXEC} ${TEST_ARGS}
 status=$?
 
 echo "Killing UnifyFS daemon"
-echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} terminate -c --share-dir=${PFS}"
-UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR ${UNIFYFS_EXEC} terminate -c --share-dir=${PFS}
+echo "${UNIFYFS_EXEC} terminate"
+${UNIFYFS_EXEC} terminate
 # shellcheck disable=SC2046
-jsrun -r 1 -a 1 `ps -aef | grep unifyfsd | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
-echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
-sleep ${SLEEP_TIME}
+#jsrun -r 1 -a 1 `ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
+#echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
+#sleep ${SLEEP_TIME}
 
 if [ $status -gt 0 ]; then
   echo "Test failed with code $status!" >&2
