@@ -146,7 +146,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     options[2] = {.opt_name = "logio.chunk_size",
                   .opt_value = logio_chunk_size};
     options[3] = {.opt_name = "logio.shmem_size",
-                  .opt_value = logio_shmem_size};
+                  .opt_value = "0"};
     options[4] = {.opt_name = "logio.spill_dir",
                   .opt_value = logio_spill_dir};
     options[5] = {.opt_name = "logio.spill_size",
@@ -180,7 +180,7 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
     }
     REQUIRE(rc == UNIFYFS_SUCCESS);
     REQUIRE(gfid != UNIFYFS_INVALID_GFID);
-
+    if(rank == 0) fprintf(stderr, "Writing data\n");
     /* Write data to file */
     int max_buff = 1000;
     int processed = 0;
@@ -226,7 +226,10 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
       }
       processed += num_req_to_buf;
     }
+    MPI_Barrier(MPI_COMM_WORLD); 
+    if(rank == 0) fprintf(stderr, "Flushing data\n");
     fs::path pfs_filename = pfs / args.filename;
+    if (rank ==0) {
     unifyfs_transfer_request mv_req;
     mv_req.src_path = unifyfs_filename.c_str();
     mv_req.dst_path = pfs_filename.c_str();
@@ -248,6 +251,9 @@ TEST_CASE("Write-Only", "[type=write-only][optimization=buffered_write]") {
       }
     }
     flush_time.pauseTime();
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
+
     finalize_time.resumeTime();
     rc = unifyfs_finalize(fshdl);
     finalize_time.pauseTime();
