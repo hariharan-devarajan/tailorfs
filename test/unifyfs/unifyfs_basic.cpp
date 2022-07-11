@@ -421,6 +421,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     strcpy(logio_spill_size, std::to_string(io_size).c_str());
     char logio_spill_dir[256];
     strcpy(logio_spill_dir, bb.string().c_str());
+    int options_ct = 4;
     unifyfs_cfg_option options_b[5];
     options_b[0] = {.opt_name = "logio.spill_dir", .opt_value = logio_spill_dir};
     options_b[1] = {.opt_name = "logio.chunk_size",
@@ -437,7 +438,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     char *val = strdup(unifyfs_path.c_str());
     unifyfs_handle fshdl;
     init_time.resumeTime();
-    int rc = unifyfs_initialize(val, options_b,5 , &fshdl);
+    int rc = unifyfs_initialize(val, options_b,options_ct , &fshdl);
     init_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
     // fprintf(stderr, "unifyfs initialized by rank %d\n", rank);
@@ -467,7 +468,8 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
 
     REQUIRE(rc == UNIFYFS_SUCCESS);
     REQUIRE(gfid != UNIFYFS_INVALID_GFID);
-    int prefetch_ct = 1;
+    /* 
+    int prefetch_ct = 2;
     unifyfs_io_request prefetch_sync[2];
     prefetch_sync[0].op = UNIFYFS_IOREQ_OP_SYNC_META;
     prefetch_sync[0].gfid = gfid;
@@ -492,7 +494,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         }
       }
     }
-
+    */
     MPI_Barrier(MPI_COMM_WORLD);
 
     for (off_t i = 0; i < args.iteration; ++i) {
