@@ -320,11 +320,6 @@ static int distribute_source_file_data(unifyfs_stage* ctx,
   unifyfs_rc urc;
 
   size_t blocks_per_client = num_file_blocks / ctx->total_ranks;
-  if (blocks_per_client < 8) {
-    /* somewhat arbitrary choice of minimum 8 blocks per client.
-     * also avoids distribution of small files */
-    blocks_per_client = 8;
-  }
 
   /* rank 0 creates destination file */
   if (ctx->rank == 0) {
@@ -529,7 +524,7 @@ int unifyfs_stage_transfer(unifyfs_stage* ctx, int file_index,
               ctx->rank, mpi_errstr);
       ret = UNIFYFS_FAILURE;
     } else {
-      size_t transfer_blksz = UNIFYFS_STAGE_TRANSFER_BLOCKSIZE;
+      size_t transfer_blksz = ctx->block_size;
       size_t n_blocks = src_file_size / transfer_blksz;
       if (src_file_size % transfer_blksz) {
         n_blocks++;

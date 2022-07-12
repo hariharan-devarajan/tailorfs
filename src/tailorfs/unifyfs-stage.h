@@ -7,10 +7,6 @@
 #define UNIFYFS_STAGE_MD5_BLOCKSIZE (1048576)
 #endif
 
-#ifndef UNIFYFS_STAGE_TRANSFER_BLOCKSIZE
-#define UNIFYFS_STAGE_TRANSFER_BLOCKSIZE (16 * 1048576)
-#endif
-
 extern int verbose;
 
 enum {
@@ -32,6 +28,7 @@ struct _unifyfs_stage {
   char* manifest_file; /* manifest file containing the transfer list */
 
   unifyfs_handle fshdl; /* UnifyFS API client handle */
+  off_t block_size = 16 * 1048576;
 };
 typedef struct _unifyfs_stage unifyfs_stage;
 

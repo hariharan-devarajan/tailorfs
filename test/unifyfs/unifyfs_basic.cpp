@@ -326,8 +326,13 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
   int rank, comm_size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
-
-  args.filename = args.filename + "_" + std::to_string(comm_size);
+//  if (rank == 0) {
+//    fprintf(stderr, "Connect to processes\n");
+//    fflush(stderr);
+//    getchar();
+//  }
+//  MPI_Barrier(MPI_COMM_WORLD);
+//  args.filename = args.filename + "_" + std::to_string(comm_size);
   const char *PFS_VAR = std::getenv("pfs");
   const char *BB_VAR = std::getenv("BBPATH");
   const char *SHM_VAR = "/dev/shm";
@@ -421,7 +426,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     strcpy(logio_spill_size, std::to_string(io_size).c_str());
     char logio_spill_dir[256];
     strcpy(logio_spill_dir, bb.string().c_str());
-    int options_ct = 4;
+    int options_ct = 5;
     unifyfs_cfg_option options_b[5];
     options_b[0] = {.opt_name = "logio.spill_dir", .opt_value = logio_spill_dir};
     options_b[1] = {.opt_name = "logio.chunk_size",
@@ -454,6 +459,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
     ctx.rank = rank;
     ctx.total_ranks = comm_size;
     ctx.fshdl = fshdl;
+    ctx.block_size = args.request_size * args.iteration;
     prefetch_time.resumeTime();
     rc = unifyfs_stage_transfer(&ctx, 1, pfs_filename.c_str(),
                                 unifyfs_filename.c_str());
@@ -468,8 +474,8 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
 
     REQUIRE(rc == UNIFYFS_SUCCESS);
     REQUIRE(gfid != UNIFYFS_INVALID_GFID);
-    /* 
-    int prefetch_ct = 2;
+
+    int prefetch_ct = 1;
     unifyfs_io_request prefetch_sync[2];
     prefetch_sync[0].op = UNIFYFS_IOREQ_OP_SYNC_META;
     prefetch_sync[0].gfid = gfid;
@@ -494,7 +500,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
         }
       }
     }
-    */
+
     MPI_Barrier(MPI_COMM_WORLD);
 
     for (off_t i = 0; i < args.iteration; ++i) {
@@ -506,6 +512,7 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
       off_t base_offset = (off_t)rank * args.request_size * args.iteration;
       off_t relative_offset = i * args.request_size;
       read_req.offset = base_offset + relative_offset;
+      fprintf(stderr, "rank %d reads %lu for iter %d\n", rank, read_req.offset, i);
       read_req.user_buf = read_data.data();
       read_time.resumeTime();
       rc = unifyfs_dispatch_io(fshdl, 1, &read_req);
