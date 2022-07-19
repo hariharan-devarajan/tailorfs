@@ -572,12 +572,12 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
   int rank, comm_size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
-  if (rank == 0) {
-    fprintf(stderr, "Connect to processes\n");
-    fflush(stderr);
-    getchar();
-  }
-  MPI_Barrier(MPI_COMM_WORLD);
+//  if (rank == 0) {
+//    fprintf(stderr, "Connect to processes\n");
+//    fflush(stderr);
+//    getchar();
+//  }
+//  MPI_Barrier(MPI_COMM_WORLD);
   args.filename = args.filename + "_" + std::to_string(comm_size);
   REQUIRE(comm_size > 1);
   REQUIRE(comm_size % 2 == 0);
