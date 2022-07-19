@@ -9,7 +9,7 @@ find_program(BASH_PROGRAM bash)
 function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile pfs test_name test_exec request_size iteration string)
     #TEST_EXEC=$1 UNIFYFS_EXEC=$2 UNIFYFS_LOGIO_SPILL_DIR=$3 UNIFYFS_LOG_DIR=$4 PFS=$5
     message("-- test args --request_size ${request_size} --iterations ${iteration}")
-    set(RANKS_PER_NODE 32)
+    set(RANKS_PER_NODE 2)
     add_test(Test_unify_${test_name} ${BASH_PROGRAM}
             ${CMAKE_CURRENT_SOURCE_DIR}/run_single.sh
             ${CMAKE_CURRENT_BINARY_DIR}/${test_exec}
@@ -44,7 +44,7 @@ endfunction()
 set(UNIFYFS_LOGIO_SPILL_DIR $ENV{BBPATH}/unifyfs)
 set(UNIFYFS_LOG_DIR $ENV{HOME}/unifyfs/logs)
 set(UNIFYFS_HOSTFILE $ENV{HOME}/unifyfs/hostfile)
-file(MAKE_DIRECTORY $ENV{BBPATH}/unifyfs)
+#file(MAKE_DIRECTORY $ENV{BBPATH}/unifyfs)
 file(MAKE_DIRECTORY ${UNIFYFS_LOG_DIR})
 file(MAKE_DIRECTORY /dev/shm/unifyfs)
 file(MAKE_DIRECTORY $ENV{pfs}/unifyfs)

@@ -676,7 +676,7 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
     fs::path unifyfs_path = "/unifyfs1";
     /* Initialize unifyfs */
 
-    const int options_ct = 6;
+    const int options_ct = 7;
     unifyfs_cfg_option options[options_ct];
     size_t io_size = args.request_size * args.iteration * comm_size;
 
@@ -699,6 +699,8 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
     options[4] = {.opt_name = "logio.spill_dir", .opt_value = logio_spill_dir};
     options[5] = {.opt_name = "logio.spill_size",
                   .opt_value = logio_spill_size};
+    options[6] = {.opt_name = "client.node_local_extents",
+                  .opt_value = "on"};
     const char *val = unifyfs_path.c_str();
 
     init_time.resumeTime();
@@ -776,6 +778,8 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
       }
     }
 
+    MPI_Barrier(MPI_COMM_WORLD);
+    rc = unifyfs_laminate(fshdl, unifyfs_filename.c_str());
     MPI_Barrier(MPI_COMM_WORLD);
     if (!is_producer) {
       int consumer_rank;
