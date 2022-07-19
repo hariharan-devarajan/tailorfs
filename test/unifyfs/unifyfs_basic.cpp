@@ -326,13 +326,8 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
   int rank, comm_size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
-//  if (rank == 0) {
-//    fprintf(stderr, "Connect to processes\n");
-//    fflush(stderr);
-//    getchar();
-//  }
-//  MPI_Barrier(MPI_COMM_WORLD);
-//  args.filename = args.filename + "_" + std::to_string(comm_size);
+
+  //  args.filename = args.filename + "_" + std::to_string(comm_size);
   const char *PFS_VAR = std::getenv("pfs");
   const char *BB_VAR = std::getenv("BBPATH");
   const char *SHM_VAR = "/dev/shm";
@@ -512,7 +507,8 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
       off_t base_offset = (off_t)rank * args.request_size * args.iteration;
       off_t relative_offset = i * args.request_size;
       read_req.offset = base_offset + relative_offset;
-      fprintf(stderr, "rank %d reads %lu for iter %d\n", rank, read_req.offset, i);
+      fprintf(stderr, "rank %d reads %lu for iter %ld\n", rank, read_req.offset,
+              i);
       read_req.user_buf = read_data.data();
       read_time.resumeTime();
       rc = unifyfs_dispatch_io(fshdl, 1, &read_req);
@@ -532,8 +528,10 @@ TEST_CASE("Read-Only", "[type=read-only][optimization=buffered_read]") {
           if (read_req.result.count != args.request_size)
             fprintf(stderr,
                     "UNIFYFS ERROR: "
-                    "OP_READ req failed - rank %d, iter %d, and read only %d of %d with offset %lu\n",
-                    rank, i, read_req.result.count, args.request_size, read_req.offset);
+                    "OP_READ req failed - rank %d, iter %ld, and read only %ld "
+                    "of %ld with offset %lu\n",
+                    rank, i, read_req.result.count, args.request_size,
+                    read_req.offset);
           REQUIRE(read_req.result.count == args.request_size);
         }
       }
@@ -574,7 +572,12 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
   int rank, comm_size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
-
+  if (rank == 0) {
+    fprintf(stderr, "Connect to processes\n");
+    fflush(stderr);
+    getchar();
+  }
+  MPI_Barrier(MPI_COMM_WORLD);
   args.filename = args.filename + "_" + std::to_string(comm_size);
   REQUIRE(comm_size > 1);
   REQUIRE(comm_size % 2 == 0);
@@ -845,8 +848,10 @@ TEST_CASE("Producer-Consumer", "[type=pc][optimization=buffered_io]") {
             if (read_req.result.count != args.request_size)
               fprintf(stderr,
                       "UNIFYFS ERROR: "
-                      "OP_READ req failed - rank %d consumer_rank %d, iter %d, and read only %d of %d with offset %lu\n",
-                      rank, consumer_rank, i, read_req.result.count, args.request_size, read_req.offset);
+                      "OP_READ req failed - rank %d consumer_rank %d, iter %d, "
+                      "and read only %ld of %ld with offset %lu\n",
+                      rank, consumer_rank, i, read_req.result.count,
+                      args.request_size, read_req.offset);
             REQUIRE(read_req.result.count == args.request_size);
           }
         }
