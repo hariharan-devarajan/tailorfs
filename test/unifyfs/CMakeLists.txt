@@ -8,9 +8,9 @@ endfunction()
 find_program(BASH_PROGRAM bash)
 function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile pfs test_name test_exec request_size iteration storage_type access_pattern file_sharing process_grouping string)
     #TEST_EXEC=$1 UNIFYFS_EXEC=$2 UNIFYFS_LOGIO_SPILL_DIR=$3 UNIFYFS_LOG_DIR=$4 PFS=$5
-    message("-- test args --request_size ${request_size} --iterations ${iteration}")
+    #message("-- test args --request_size ${request_size} --iterations ${iteration}")
     set(RANKS_PER_NODE 32)
-    set(TEST_ARGS --request_size ${request_size} --iteration ${iteration} --rpn ${RANKS_PER_NODE} --storage_type ${storage_type} --access_pattern ${access_pattern} --file_sharing ${file_sharing} --process_grouping ${process_grouping} ${string})
+    set(TEST_ARGS --request_size ${request_size} --iteration ${iteration} --rpn ${RANKS_PER_NODE} --storage_type ${storage_type} --access_pattern ${access_pattern} --file_sharing ${file_sharing} --process_grouping ${process_grouping} --reporter compact ${string})
 
     add_test(Test_unify_${test_name} ${BASH_PROGRAM}
             ${CMAKE_CURRENT_SOURCE_DIR}/run_single.sh
@@ -22,7 +22,7 @@ function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile
             ${unifyfs_hostfile}
             ${MPIEXEC_EXECUTABLE}
             ${RANKS_PER_NODE}
-            ${TEST_ARGS} --section "storage.unifyfs.buffer")
+            ${TEST_ARGS} --section "storage.unifyfs")
     set_property(TEST Test_unify_${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
     set_property(TEST Test_unify_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH})
     set_property(TEST Test_unify_${test_name} APPEND PROPERTY ENVIRONMENT SHM_PATH=${SHM_PATH})

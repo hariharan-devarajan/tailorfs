@@ -26,10 +26,10 @@ if [[ ! -d "${UNIFYFS_LOG_DIR}" ]]; then
   echo "UNIFYFS_LOG_DIR ${UNIFYFS_LOG_DIR} does not exists." >&2
   error_ct=$((error_ct + 1))
 fi
-if [[ ! -d "${PFS}" ]]; then
-  echo "PFS ${PFS} does not exists." >&2
-  error_ct=$((error_ct + 1))
-fi
+  #if [[ ! -d "${PFS}" ]]; then
+  #  echo "PFS ${PFS} does not exists." >&2
+  #  error_ct=$((error_ct + 1))
+  #fi
 
 if [ $error_ct -gt 0 ]; then
   echo "Arguments are wrong !!!" >&2
@@ -51,8 +51,8 @@ echo "jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'pri
 #ps -aef | grep /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs
 jsrun -r 1 -a 1 `ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
 echo "Cleaning up directories"
-echo "jsrun -r 1 -a 1 rm -rf /dev/shm/* $BBPATH/unifyfs/* ${PFS}/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm"
-jsrun -r 1 -a 1 rm -rf /dev/shm/* $BBPATH/unifyfs/* ~/unifyfs/logs/* ${PFS}/* /tmp/kvstore /tmp/unifyfsd.margo-shm
+echo "jsrun -r 1 -a 1 rm -rf /dev/shm/* /tmp/na_sm* /tmp/unifyfsd.margo-shm"
+jsrun -r 1 -a 1 rm -rf /dev/shm/* ~/unifyfs/logs/* /tmp/unifyfsd.margo-shm
 
 mkdir -p $BBPATH/unifyfs/data
 echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_SERVER_CORES=8 ${UNIFYFS_EXEC} start --share-dir=${PFS} -d"

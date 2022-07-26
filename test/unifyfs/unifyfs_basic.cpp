@@ -27,7 +27,7 @@ const uint64_t GB = 1024L * 1024L * 1024L;
   auto name##_a = name##_time.getElapsedTime();                   \
   MPI_Reduce(&name##_a, &total_##name, 1, MPI_DOUBLE, MPI_SUM, 0, \
              MPI_COMM_WORLD);
-
+#define PRINT_MSG(format, ...) fprintf (stderr, format, __VA_ARGS__)
 namespace tailorfs::test {}
 
 namespace fs = std::experimental::filesystem;
@@ -70,15 +70,15 @@ struct Info {
   int rank;
   int comm_size;
   char hostname[256];
+  fs::path unifyfs_path = "/unifyfs1";
 };
 }  // namespace tailorfs::test
 tailorfs::test::Arguments args;
 tailorfs::test::Info info;
 
 namespace tailorfs::test {
-int buildUnifyFSOptions(UseCase use_case, int &options_ct,
-                        unifyfs_cfg_option *&options) {
-  options_ct = 0;
+int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl, Timer *init_time) {
+  int options_ct = 0;
   char unifyfs_consistency[32] = "LAMINATED";
   options_ct++;
   char client_fsync_persist[32] = "off";
@@ -87,7 +87,7 @@ int buildUnifyFSOptions(UseCase use_case, int &options_ct,
   strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
   options_ct++;
   char logio_shmem_size[32];
-  strcpy(logio_chunk_size, std::to_string(32 * GB).c_str());
+  strcpy(logio_shmem_size, "0");
   options_ct++;
   char logio_spill_dir[256];
   fs::path splill_dir;
@@ -101,7 +101,7 @@ int buildUnifyFSOptions(UseCase use_case, int &options_ct,
       break;
     }
   };
-  splill_dir = splill_dir / "spill_dir";
+  splill_dir = splill_dir;
   strcpy(logio_spill_dir, splill_dir.c_str());
   options_ct++;
   char logio_spill_size[32];
@@ -130,7 +130,7 @@ int buildUnifyFSOptions(UseCase use_case, int &options_ct,
       break;
     }
   };
-  options = static_cast<unifyfs_cfg_option *>(
+  unifyfs_cfg_option *options = static_cast<unifyfs_cfg_option *>(
       calloc(options_ct, sizeof(unifyfs_cfg_option)));
   options[0] = {.opt_name = "unifyfs.consistency",
                 .opt_value = unifyfs_consistency};
@@ -144,6 +144,12 @@ int buildUnifyFSOptions(UseCase use_case, int &options_ct,
                 .opt_value = client_local_extents};
   options[7] = {.opt_name = "client.node_local_extents",
                 .opt_value = client_node_local_extents};
+
+  const char *val = info.unifyfs_path.c_str();
+  init_time->resumeTime();
+  int rc = unifyfs_initialize(val, options, options_ct, fshdl);
+  init_time->pauseTime();
+  REQUIRE(rc == UNIFYFS_SUCCESS);
   return 0;
 }
 }  // namespace tailorfs::test
@@ -300,6 +306,7 @@ TEST_CASE("Write-Only",
   Timer init_time, finalize_time, open_time, close_time, write_time,
       awrite_time, flush_time;
   char usecase[256];
+  bool is_run =false;
   SECTION("storage.pfs") {
     strcpy(usecase, "pfs");
     fs::path filename = info.pfs / args.filename;
@@ -328,25 +335,19 @@ TEST_CASE("Write-Only",
     status_orig = MPI_File_close(&fh_orig);
     close_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
+    is_run =true;
   }
   SECTION("storage.unifyfs") {
     strcpy(usecase, "unifyfs");
-    int options_ct;
-    unifyfs_cfg_option *options;
-    tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, options_ct, options);
-    fs::path unifyfs_path = "/unifyfs1";
-    const char *val = unifyfs_path.c_str();
     unifyfs_handle fshdl;
-    init_time.resumeTime();
-    int rc = unifyfs_initialize(val, options, options_ct, &fshdl);
-    init_time.pauseTime();
-    REQUIRE(rc == UNIFYFS_SUCCESS);
+    tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time);
     MPI_Barrier(MPI_COMM_WORLD);
     int rank, comm_size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
-    fs::path unifyfs_filename = unifyfs_path / args.filename;
+    fs::path unifyfs_filename = info.unifyfs_path / args.filename;
     unifyfs_gfid gfid;
+    int rc;
     if (rank % args.ranks_per_node == 0) {
       int create_flags = 0;
       open_time.resumeTime();
@@ -448,26 +449,23 @@ TEST_CASE("Write-Only",
       INFO("Size of file written " << fs::file_size(pfs_filename));
     }
     MPI_Barrier(MPI_COMM_WORLD);
+
+    is_run =true;
   }
-  AGGREGATE_TIME(init);
-  AGGREGATE_TIME(finalize);
-  AGGREGATE_TIME(open);
-  AGGREGATE_TIME(close);
-  AGGREGATE_TIME(awrite);
-  AGGREGATE_TIME(write);
-  AGGREGATE_TIME(flush);
-  if (info.rank == 0) {
-    WARN("Timing"
-         << "," << std::setw(11) << args.iteration << "," << std::setw(11)
-         << args.request_size << "," << total_init / info.comm_size << ","
-         << total_finalize / info.comm_size << ","
-         << total_open / info.comm_size << "," << total_open / info.comm_size
-         << "," << total_close / info.comm_size << ","
-         << total_awrite / info.comm_size << "," << total_write / info.comm_size
-         << "," << total_awrite / info.comm_size << "," << std::setw(11)
-         << usecase << "," << std::setw(11) << "write-only"
-         << "," << args.storage_type << "," << args.access_pattern << ","
-         << args.file_sharing << "," << args.process_grouping);
+  if(is_run) {
+    AGGREGATE_TIME(init);
+    AGGREGATE_TIME(finalize);
+    AGGREGATE_TIME(open);
+    AGGREGATE_TIME(close);
+    AGGREGATE_TIME(awrite);
+    AGGREGATE_TIME(write);
+    AGGREGATE_TIME(flush);
+    if (info.rank == 0) {
+      printf("%-10s,%-10d,%-10d,%-10.6f,%-10.6f,%-10.6f,%-10.6f,%-10.6f,%-10.6f,%-10.6f,%-10s,%-10s,%d,%d,%d,%d\n",
+                "Timing", args.iteration, args.request_size, total_init / info.comm_size, total_finalize / info.comm_size ,
+                total_open / info.comm_size, total_close / info.comm_size, total_awrite / info.comm_size, total_write / info.comm_size,
+                usecase, "write-only", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
+    }
   }
   REQUIRE(posttest() == 0);
 }
@@ -531,22 +529,12 @@ TEST_CASE("Read-Only",
     close_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
   }
-  SECTION("storage.unifyfs.buffer") {
+  SECTION("storage.unifyfs") {
     strcpy(usecase, "unifyfs.buffer");
-    int options_ct;
-    unifyfs_cfg_option *options;
-    tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, options_ct, options);
-    fs::path unifyfs_path = "/unifyfs1";
-    //    INFO("setting options by rank " << rank);
-    char *val = strdup(unifyfs_path.c_str());
     unifyfs_handle fshdl;
-    init_time.resumeTime();
-    int rc = unifyfs_initialize(val, options, options_ct, &fshdl);
-    init_time.pauseTime();
-    REQUIRE(rc == UNIFYFS_SUCCESS);
-    // INFO("unifyfs initialized by rank " << rank);
+    tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time);
     unifyfs_gfid gfid;
-    fs::path unifyfs_filename = unifyfs_path / args.filename;
+    fs::path unifyfs_filename = info.unifyfs_path / args.filename;
     char unifyfs_filename_charp[256];
     strcpy(unifyfs_filename_charp, unifyfs_filename.c_str());
     unifyfs_stage ctx;
@@ -559,7 +547,7 @@ TEST_CASE("Read-Only",
     ctx.fshdl = fshdl;
     ctx.block_size = args.request_size * args.iteration;
     prefetch_time.resumeTime();
-    rc = unifyfs_stage_transfer(&ctx, 1, pfs_filename.c_str(),
+    int rc = unifyfs_stage_transfer(&ctx, 1, pfs_filename.c_str(),
                                 unifyfs_filename.c_str());
     prefetch_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
@@ -780,21 +768,13 @@ TEST_CASE("Read-After-Write",
     close_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
   }
-  SECTION("storage.unifyfs.buffer") {
+  SECTION("storage.unifyfs") {
     strcpy(usecase, "unifyfs.buffer");
-    unifyfs_handle fshdl;
     int rc;
-    fs::path unifyfs_path = "/unifyfs1";
     /* Initialize unifyfs */
-    int options_ct;
-    unifyfs_cfg_option *options;
-    REQUIRE(tt::buildUnifyFSOptions(tailorfs::test::READ_AFTER_WRITE,
-                                    options_ct, options) == 0);
-    const char *val = unifyfs_path.c_str();
-    init_time.resumeTime();
-    rc = unifyfs_initialize(val, options, options_ct, &fshdl);
-    init_time.pauseTime();
-    fs::path unifyfs_filename = unifyfs_path / args.filename;
+    unifyfs_handle fshdl;
+    REQUIRE(tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time) == 0);
+    fs::path unifyfs_filename = info.unifyfs_path / args.filename;
 
     if (is_writer) {
       unifyfs_gfid gfid;
@@ -1033,22 +1013,15 @@ TEST_CASE("Update",
   }
   SECTION("storage.unifyfs") {
     strcpy(usecase, "unifyfs");
-    int options_ct;
-    unifyfs_cfg_option *options;
-    tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, options_ct, options);
-    fs::path unifyfs_path = "/unifyfs1";
-    const char *val = unifyfs_path.c_str();
     unifyfs_handle fshdl;
-    init_time.resumeTime();
-    int rc = unifyfs_initialize(val, options, options_ct, &fshdl);
-    init_time.pauseTime();
-    REQUIRE(rc == UNIFYFS_SUCCESS);
+    tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time);
     MPI_Barrier(MPI_COMM_WORLD);
     int rank, comm_size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
-    fs::path unifyfs_filename = unifyfs_path / args.filename;
+    fs::path unifyfs_filename = info.unifyfs_path / args.filename;
     unifyfs_gfid gfid;
+    int rc;
     if (rank % args.ranks_per_node == 0) {
       int create_flags = 0;
       open_time.resumeTime();
@@ -1296,21 +1269,13 @@ TEST_CASE("WORM",
     close_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
   }
-  SECTION("storage.unifyfs.buffer") {
+  SECTION("storage.unifyfs") {
     strcpy(usecase, "unifyfs.buffer");
-    unifyfs_handle fshdl;
     int rc;
-    fs::path unifyfs_path = "/unifyfs1";
     /* Initialize unifyfs */
-    int options_ct;
-    unifyfs_cfg_option *options;
-    REQUIRE(tt::buildUnifyFSOptions(tailorfs::test::READ_AFTER_WRITE,
-                                    options_ct, options) == 0);
-    const char *val = unifyfs_path.c_str();
-    init_time.resumeTime();
-    rc = unifyfs_initialize(val, options, options_ct, &fshdl);
-    init_time.pauseTime();
-    fs::path unifyfs_filename = unifyfs_path / args.filename;
+    unifyfs_handle fshdl;
+    tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time);
+    fs::path unifyfs_filename = info.unifyfs_path / args.filename;
 
     if (is_writer) {
       unifyfs_gfid gfid;
