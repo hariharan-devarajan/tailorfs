@@ -54,9 +54,10 @@ echo "Cleaning up directories"
 echo "jsrun -r 1 -a 1 rm -rf /dev/shm/* /tmp/na_sm* /tmp/unifyfsd.margo-shm"
 jsrun -r 1 -a 1 rm -rf /dev/shm/* ~/unifyfs/logs/* /tmp/unifyfsd.margo-shm
 
+mkdir -p ${pfs}/unifyfs/share-dir
 mkdir -p $BBPATH/unifyfs/data
-echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_SERVER_CORES=8 ${UNIFYFS_EXEC} start --share-dir=${PFS} -d"
-UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_SERVER_CORES=8 ${UNIFYFS_EXEC} start --share-dir=${PFS} -d
+echo "UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_SERVER_CORES=8 ${UNIFYFS_EXEC} start --share-dir=${pfs}/unifyfs/share-dir -d"
+UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_SERVER_CORES=8 ${UNIFYFS_EXEC} start --share-dir=${pfs}/unifyfs/share-dir -d
 
 echo "jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS} -d packed ${TEST_EXEC} ${TEST_ARGS}"
 jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS}  -d packed ${TEST_EXEC} ${TEST_ARGS}

@@ -144,7 +144,7 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl, Timer *init_tim
                 .opt_value = client_local_extents};
   options[7] = {.opt_name = "client.node_local_extents",
                 .opt_value = client_node_local_extents};
-
+  INFO("unifyfs path " << info.unifyfs_path);
   const char *val = info.unifyfs_path.c_str();
   init_time->resumeTime();
   int rc = unifyfs_initialize(val, options, options_ct, fshdl);
@@ -221,9 +221,9 @@ int pretest() {
   MPI_Comm_rank(MPI_COMM_WORLD, &info.rank);
   MPI_Comm_size(MPI_COMM_WORLD, &info.comm_size);
   gethostname(info.hostname, 256);
-  info.pfs = fs::path(PFS_VAR) / "unifyfs";
-  info.bb = fs::path(BB_VAR) / "unifyfs";
-  info.shm = fs::path(SHM_VAR) / "unifyfs";
+  info.pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
+  info.bb = fs::path(BB_VAR) / "unifyfs" / "data";
+  info.shm = fs::path(SHM_VAR) / "unifyfs" / "data";
   return 0;
 }
 int posttest() {
@@ -347,20 +347,31 @@ TEST_CASE("Write-Only",
     MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
     fs::path unifyfs_filename = info.unifyfs_path / args.filename;
     unifyfs_gfid gfid;
-    int rc;
-    if (rank % args.ranks_per_node == 0) {
+    int rc = UNIFYFS_SUCCESS;
+
+    INFO("rank " << info.rank);
+    INFO("unifyfs_filename " << unifyfs_filename);
+    if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
       int create_flags = 0;
       open_time.resumeTime();
       rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(), &gfid);
       open_time.pauseTime();
+    } else if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+      if (rank % args.ranks_per_node == 0) {
+        int create_flags = 0;
+        open_time.resumeTime();
+        rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(), &gfid);
+        open_time.pauseTime();
+      }
+      MPI_Barrier(MPI_COMM_WORLD);
+      if (rank % args.ranks_per_node != 0) {
+        int access_flags = O_WRONLY;
+        open_time.resumeTime();
+        rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
+        open_time.pauseTime();
+      }
     }
-    MPI_Barrier(MPI_COMM_WORLD);
-    if (rank % args.ranks_per_node != 0) {
-      int access_flags = O_WRONLY;
-      open_time.resumeTime();
-      rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
-      open_time.pauseTime();
-    }
+    INFO("unifyfs rc " << strerror(rc));
     REQUIRE(rc == UNIFYFS_SUCCESS);
     REQUIRE(gfid != UNIFYFS_INVALID_GFID);
     if (rank == 0) INFO("Writing data");
@@ -444,9 +455,20 @@ TEST_CASE("Write-Only",
     REQUIRE(rc == UNIFYFS_SUCCESS);
     MPI_Barrier(MPI_COMM_WORLD);
     if (rank == 0) {
-      REQUIRE(fs::file_size(pfs_filename) ==
-              args.request_size * args.iteration * (comm_size));
       INFO("Size of file written " << fs::file_size(pfs_filename));
+      switch (args.file_sharing) {
+        case tt::FileSharing::PER_PROCESS: {
+          REQUIRE(fs::file_size(pfs_filename) ==
+                  args.request_size * args.iteration);
+          break;
+        }
+        case tt::FileSharing::SHARED_FILE: {
+          REQUIRE(fs::file_size(pfs_filename) ==
+                  args.request_size * args.iteration * (comm_size));
+          break;
+        }
+      }
+
     }
     MPI_Barrier(MPI_COMM_WORLD);
 
@@ -461,9 +483,9 @@ TEST_CASE("Write-Only",
     AGGREGATE_TIME(write);
     AGGREGATE_TIME(flush);
     if (info.rank == 0) {
-      printf("%-10s,%-10d,%-10d,%-10.6f,%-10.6f,%-10.6f,%-10.6f,%-10.6f,%-10.6f,%-10.6f,%-10s,%-10s,%d,%d,%d,%d\n",
+      printf("%10s,%10d,%10d,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10s,%10s,%d,%d,%d,%d\n",
                 "Timing", args.iteration, args.request_size, total_init / info.comm_size, total_finalize / info.comm_size ,
-                total_open / info.comm_size, total_close / info.comm_size, total_awrite / info.comm_size, total_write / info.comm_size,
+                total_open / info.comm_size, total_close / info.comm_size, total_awrite / info.comm_size, total_write / info.comm_size, total_flush / info.comm_size,
                 usecase, "write-only", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
     }
   }
