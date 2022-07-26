@@ -307,14 +307,23 @@ TEST_CASE("Write-Only",
       awrite_time, flush_time;
   char usecase[256];
   bool is_run =false;
+  INFO("rank " << info.rank);
   SECTION("storage.pfs") {
     strcpy(usecase, "pfs");
     fs::path filename = info.pfs / args.filename;
     open_time.resumeTime();
     MPI_File fh_orig;
-    int status_orig =
-        MPI_File_open(MPI_COMM_WORLD, filename.c_str(),
-                      MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &fh_orig);
+    int status_orig;
+
+    if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
+      status_orig =
+          MPI_File_open(MPI_COMM_SELF, filename.c_str(),
+                        MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &fh_orig);
+    } else if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+      status_orig =
+          MPI_File_open(MPI_COMM_WORLD, filename.c_str(),
+                        MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &fh_orig);
+    }
     open_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
     for (int i = 0; i < args.iteration; ++i) {
@@ -349,7 +358,6 @@ TEST_CASE("Write-Only",
     unifyfs_gfid gfid;
     int rc = UNIFYFS_SUCCESS;
 
-    INFO("rank " << info.rank);
     INFO("unifyfs_filename " << unifyfs_filename);
     if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
       int create_flags = 0;

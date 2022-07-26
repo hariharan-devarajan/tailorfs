@@ -11,7 +11,7 @@ UNIFYFS_HOSTFILE=$6
 MPI_EXEC=$7
 MPI_PROCS=$8
 TEST_ARGS="${@:9}"
-SLEEP_TIME=10
+SLEEP_TIME=2
 
 error_ct=0
 if [[ ! -f "${TEST_EXEC}" ]]; then
