@@ -432,7 +432,7 @@ TEST_CASE("Write-Only",
     MPI_Barrier(MPI_COMM_WORLD);
     if (rank == 0) INFO("Flushing data");
     fs::path pfs_filename = info.pfs / args.filename;
-    if (rank == 0) {
+    if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
       unifyfs_transfer_request mv_req;
       mv_req.src_path = unifyfs_filename.c_str();
       mv_req.dst_path = pfs_filename.c_str();
@@ -454,7 +454,32 @@ TEST_CASE("Write-Only",
         }
       }
       flush_time.pauseTime();
+    } else if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+      if (rank == 0) {
+        unifyfs_transfer_request mv_req;
+        mv_req.src_path = unifyfs_filename.c_str();
+        mv_req.dst_path = pfs_filename.c_str();
+        mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
+        mv_req.use_parallel = 1;
+        flush_time.resumeTime();
+        rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
+        flush_time.pauseTime();
+        REQUIRE(rc == UNIFYFS_SUCCESS);
+        if (rc == UNIFYFS_SUCCESS) {
+          int waitall = 1;
+          flush_time.resumeTime();
+          rc = unifyfs_wait_transfer(fshdl, 1, &mv_req, waitall);
+          flush_time.pauseTime();
+          if (rc == UNIFYFS_SUCCESS) {
+            for (int i = 0; i < (int)1; i++) {
+              REQUIRE(mv_req.result.error == 0);
+            }
+          }
+        }
+        flush_time.pauseTime();
+      }
     }
+
     MPI_Barrier(MPI_COMM_WORLD);
 
     finalize_time.resumeTime();
