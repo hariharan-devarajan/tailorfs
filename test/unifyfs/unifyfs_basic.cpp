@@ -542,7 +542,7 @@ TEST_CASE("Write-Only",
     AGGREGATE_TIME(write);
     AGGREGATE_TIME(flush);
     if (info.rank == 0) {
-      printf("%10s,%10d,%10d,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10s,%10s,%d,%d,%d,%d\n",
+      PRINT_MSG("%10s,%10d,%10d,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10s,%10s,%d,%d,%d,%d\n",
                 "Timing", args.iteration, args.request_size, total_init / info.comm_size, total_finalize / info.comm_size ,
                 total_open / info.comm_size, total_close / info.comm_size, total_awrite / info.comm_size, total_write / info.comm_size, total_flush / info.comm_size,
                 usecase, "write-only", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
@@ -597,7 +597,10 @@ TEST_CASE("Read-Only",
       auto read_data = std::vector<char>(args.request_size, 'r');
       read_time.resumeTime();
       MPI_Status stat_orig;
-      off_t base_offset = (off_t)info.rank * args.request_size * args.iteration;
+      off_t base_offset = 0;
+      if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+        base_offset = (off_t)info.rank * args.request_size * args.iteration;
+      }
       off_t relative_offset = random_i * args.request_size;
       auto ret_orig = MPI_File_read_at(fh_orig, base_offset + relative_offset,
                                        read_data.data(), args.request_size,
@@ -613,9 +616,9 @@ TEST_CASE("Read-Only",
     REQUIRE(status_orig == MPI_SUCCESS);
   }
   SECTION("storage.unifyfs") {
-    strcpy(usecase, "unifyfs.buffer");
+    strcpy(usecase, "unifyfs");
     unifyfs_handle fshdl;
-    tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time);
+    tt::buildUnifyFSOptions(tailorfs::test::READ_ONLY, &fshdl, &init_time);
     unifyfs_gfid gfid;
     fs::path unifyfs_filename = info.unifyfs_path / filename_str;
     char unifyfs_filename_charp[256];
@@ -699,7 +702,7 @@ TEST_CASE("Read-Only",
       read_req.gfid = gfid;
       read_req.nbytes = args.request_size;
       off_t base_offset = 0;
-      if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
+      if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
         base_offset = (off_t)info.rank * args.request_size * args.iteration;
       }
       off_t relative_offset = random_i * args.request_size;
@@ -742,17 +745,10 @@ TEST_CASE("Read-Only",
   AGGREGATE_TIME(read);
   AGGREGATE_TIME(prefetch);
   if (info.rank == 0) {
-    WARN("Timing" << std::setw(11) << args.iteration << "," << std::setw(11)
-                  << args.request_size << "," << total_init / info.comm_size
-                  << "," << total_finalize / info.comm_size << ","
-                  << total_open / info.comm_size << ","
-                  << total_open / info.comm_size << ","
-                  << total_close / info.comm_size << ","
-                  << total_read / info.comm_size << ","
-                  << total_prefetch / info.comm_size << std::setw(11) << usecase
-                  << "," << std::setw(11) << "read-only"
-                  << "," << args.storage_type << "," << args.access_pattern
-                  << "," << args.file_sharing << "," << args.process_grouping);
+    PRINT_MSG("%10s,%10d,%10d,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10s,%10s,%d,%d,%d,%d\n",
+              "Timing", args.iteration, args.request_size, total_init / info.comm_size, total_finalize / info.comm_size ,
+              total_open / info.comm_size, total_close / info.comm_size, total_read / info.comm_size, total_prefetch / info.comm_size,
+              usecase, "read-only", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
   }
   REQUIRE(posttest() == 0);
 }
@@ -852,8 +848,10 @@ TEST_CASE("Read-After-Write",
         auto read_data = std::vector<char>(args.request_size, 'r');
         read_time.resumeTime();
         MPI_Status stat_orig;
-        off_t base_offset =
-            (off_t)read_rank * args.request_size * args.iteration;
+        off_t base_offset = 0;
+        if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+          base_offset = (off_t)info.rank * args.request_size * args.iteration;
+        }
         off_t relative_offset = i * args.request_size;
         auto ret_orig = MPI_File_read_at_all(
             fh_orig, base_offset + relative_offset, read_data.data(),
@@ -873,11 +871,11 @@ TEST_CASE("Read-After-Write",
     REQUIRE(status_orig == MPI_SUCCESS);
   }
   SECTION("storage.unifyfs") {
-    strcpy(usecase, "unifyfs.buffer");
+    strcpy(usecase, "unifyfs");
     int rc;
     /* Initialize unifyfs */
     unifyfs_handle fshdl;
-    REQUIRE(tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time) == 0);
+    REQUIRE(tt::buildUnifyFSOptions(tailorfs::test::READ_AFTER_WRITE, &fshdl, &init_time) == 0);
     fs::path unifyfs_filename = info.unifyfs_path / filename_str;
 
     if (is_writer) {
@@ -996,8 +994,10 @@ TEST_CASE("Read-After-Write",
         read_req.op = UNIFYFS_IOREQ_OP_READ;
         read_req.gfid = gfid;
         read_req.nbytes = args.request_size;
-        off_t base_offset =
-            (off_t)read_rank * args.request_size * args.iteration;
+        off_t base_offset = 0;
+        if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+          base_offset = (off_t)info.rank * args.request_size * args.iteration;
+        }
         off_t relative_offset = random_i * args.request_size;
         read_req.offset = base_offset + relative_offset;
         read_req.user_buf = read_data.data();
@@ -1039,17 +1039,11 @@ TEST_CASE("Read-After-Write",
   AGGREGATE_TIME(read);
   AGGREGATE_TIME(write);
   if (info.rank == 0) {
-    WARN("Timing" << std::setw(11) << args.iteration << "," << std::setw(11)
-                  << args.request_size << "," << total_init / info.comm_size
-                  << "," << total_finalize / info.comm_size << ","
-                  << total_open / info.comm_size << ","
-                  << total_open / info.comm_size << ","
-                  << total_close / info.comm_size << ","
-                  << total_write / info.comm_size << ","
-                  << total_read / info.comm_size << std::setw(11) << usecase
-                  << "," << std::setw(11) << "raw"
-                  << "," << args.storage_type << "," << args.access_pattern
-                  << "," << args.file_sharing << "," << args.process_grouping);
+
+    PRINT_MSG("%10s,%10d,%10d,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10s,%10s,%d,%d,%d,%d\n",
+              "Timing", args.iteration, args.request_size, total_init / info.comm_size, total_finalize / info.comm_size ,
+              total_open / info.comm_size, total_close / info.comm_size, total_write / info.comm_size, total_read / info.comm_size,
+              usecase, "raw", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
   }
   MPI_Barrier(MPI_COMM_WORLD);
 }
@@ -1101,7 +1095,10 @@ TEST_CASE("Update",
       auto write_data = std::vector<char>(args.request_size, 'w');
       write_time.resumeTime();
       MPI_Status stat_orig;
-      off_t base_offset = (off_t)info.rank * args.request_size * args.iteration;
+      off_t base_offset = 0;
+      if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+        base_offset = (off_t)info.rank * args.request_size * args.iteration;
+      }
       off_t relative_offset = random_i * args.request_size;
       auto ret_orig = MPI_File_write_at_all(
           fh_orig, base_offset + relative_offset, write_data.data(),
@@ -1119,7 +1116,7 @@ TEST_CASE("Update",
   SECTION("storage.unifyfs") {
     strcpy(usecase, "unifyfs");
     unifyfs_handle fshdl;
-    tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time);
+    tt::buildUnifyFSOptions(tailorfs::test::UPDATE, &fshdl, &init_time);
     MPI_Barrier(MPI_COMM_WORLD);
     int rank, comm_size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -1164,7 +1161,10 @@ TEST_CASE("Update",
         write_req[i].op = UNIFYFS_IOREQ_OP_WRITE;
         write_req[i].gfid = gfid;
         write_req[i].nbytes = args.request_size;
-        off_t base_offset = (off_t)rank * args.request_size * args.iteration;
+        off_t base_offset = 0;
+        if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+          base_offset = (off_t)info.rank * args.request_size * args.iteration;
+        }
         off_t relative_offset = j * args.request_size;
         write_req[i].offset = base_offset + relative_offset;
         write_req[i].user_buf =
@@ -1242,18 +1242,10 @@ TEST_CASE("Update",
   AGGREGATE_TIME(write);
   AGGREGATE_TIME(flush);
   if (info.rank == 0) {
-    WARN("Timing" << std::setw(11) << args.iteration << "," << std::setw(11)
-                  << args.request_size << "," << total_init / info.comm_size
-                  << "," << total_finalize / info.comm_size << ","
-                  << total_open / info.comm_size << ","
-                  << total_open / info.comm_size << ","
-                  << total_close / info.comm_size << ","
-                  << total_awrite / info.comm_size << ","
-                  << total_write / info.comm_size << ","
-                  << total_awrite / info.comm_size << "," << std::setw(11)
-                  << usecase << "," << std::setw(11) << "update"
-                  << "," << args.storage_type << "," << args.access_pattern
-                  << "," << args.file_sharing << "," << args.process_grouping);
+    PRINT_MSG("%10s,%10d,%10d,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10s,%10s,%d,%d,%d,%d\n",
+              "Timing", args.iteration, args.request_size, total_init / info.comm_size, total_finalize / info.comm_size ,
+              total_open / info.comm_size, total_close / info.comm_size, total_awrite / info.comm_size, total_write / info.comm_size, total_flush / info.comm_size,
+              usecase, "update", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
   }
   REQUIRE(posttest() == 0);
 }
@@ -1354,8 +1346,10 @@ TEST_CASE("WORM",
           auto read_data = std::vector<char>(args.request_size, 'r');
           read_time.resumeTime();
           MPI_Status stat_orig;
-          off_t base_offset =
-              (off_t)read_rank * args.request_size * args.iteration;
+          off_t base_offset = 0;
+          if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+            base_offset = (off_t)info.rank * args.request_size * args.iteration;
+          }
           off_t relative_offset = i * args.request_size;
           auto ret_orig = MPI_File_read_at_all(
               fh_orig, base_offset + relative_offset, read_data.data(),
@@ -1376,11 +1370,11 @@ TEST_CASE("WORM",
     REQUIRE(status_orig == MPI_SUCCESS);
   }
   SECTION("storage.unifyfs") {
-    strcpy(usecase, "unifyfs.buffer");
+    strcpy(usecase, "unifyfs");
     int rc;
     /* Initialize unifyfs */
     unifyfs_handle fshdl;
-    tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time);
+    tt::buildUnifyFSOptions(tailorfs::test::WORM, &fshdl, &init_time);
     fs::path unifyfs_filename = info.unifyfs_path / filename_str;
 
     if (is_writer) {
@@ -1420,8 +1414,10 @@ TEST_CASE("WORM",
           write_req[i].op = UNIFYFS_IOREQ_OP_WRITE;
           write_req[i].gfid = gfid;
           write_req[i].nbytes = args.request_size;
-          off_t base_offset =
-              (off_t)write_rank * args.request_size * args.iteration;
+          off_t base_offset = 0;
+          if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+            base_offset = (off_t)info.rank * args.request_size * args.iteration;
+          }
           off_t relative_offset = j * args.request_size;
           write_req[i].offset = base_offset + relative_offset;
           write_req[i].user_buf = write_data.data() + (i * args.request_size);
@@ -1544,17 +1540,10 @@ TEST_CASE("WORM",
   AGGREGATE_TIME(read);
   AGGREGATE_TIME(write);
   if (info.rank == 0) {
-    WARN("Timing" << std::setw(11) << args.iteration << "," << std::setw(11)
-                  << args.request_size << "," << total_init / info.comm_size
-                  << "," << total_finalize / info.comm_size << ","
-                  << total_open / info.comm_size << ","
-                  << total_open / info.comm_size << ","
-                  << total_close / info.comm_size << ","
-                  << total_write / info.comm_size << ","
-                  << total_read / info.comm_size << std::setw(11) << usecase
-                  << "," << std::setw(11) << "worm"
-                  << "," << args.storage_type << "," << args.access_pattern
-                  << "," << args.file_sharing << "," << args.process_grouping);
+    PRINT_MSG("%10s,%10d,%10d,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10s,%10s,%d,%d,%d,%d\n",
+              "Timing", args.iteration, args.request_size, total_init / info.comm_size, total_finalize / info.comm_size ,
+              total_open / info.comm_size, total_close / info.comm_size, total_write / info.comm_size, total_read / info.comm_size,
+              usecase, "update", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
   }
   MPI_Barrier(MPI_COMM_WORLD);
 }

@@ -36,12 +36,12 @@ export UNIFYFS_LOG_VERBOSITY=3
 echo "Killing existing unifyfs daemons"
 echo "${UNIFYFS_EXEC} terminate"
 ${UNIFYFS_EXEC} terminate
-#echo "jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1 > /dev/null 2>&1"
-#ps -aef | grep /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs
-#jsrun -r 1 -a 1 `ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
-#echo "Cleaning up directories"
-#echo "jsrun -r 1 -a 1 rm -rf /dev/shm/* /tmp/na_sm* /tmp/unifyfsd.margo-shm"
-#jsrun -r 1 -a 1 rm -rf /dev/shm/* ~/unifyfs/logs/* /tmp/unifyfsd.margo-shm
+echo "jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1 > /dev/null 2>&1"
+ps -aef | grep /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs
+jsrun -r 1 -a 1 `ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
+echo "Cleaning up directories"
+echo "jsrun -r 1 -a 1 rm -rf /dev/shm/* /tmp/na_sm* /tmp/unifyfsd.margo-shm"
+jsrun -r 1 -a 1 rm -rf /dev/shm/* ~/unifyfs/logs/* /tmp/unifyfsd.margo-shm
 
 mkdir -p ${pfs}/unifyfs/share-dir
 export UNIFYFS_LOG_DIR=${UNIFYFS_LOG_DIR}/$NNODES
@@ -58,13 +58,13 @@ echo "Killing UnifyFS daemon"
 echo "${UNIFYFS_EXEC} terminate"
 ${UNIFYFS_EXEC} terminate
 # shellcheck disable=SC2046
-#jsrun -r 1 -a 1 `ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
-#echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
+jsrun -r 1 -a 1 `ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
+echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
 #sleep ${SLEEP_TIME}
 
-#echo "Cleaning up directories"
-#echo "jsrun -r 1 -a 1 rm -rf /dev/shm/* $BBPATH/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm"
-#jsrun -r 1 -a 1 rm -rf /dev/shm/* $BBPATH/unifyfs/* /tmp/kvstore /tmp/unifyfsd.margo-shm
+echo "Cleaning up directories"
+echo "jsrun -r 1 -a 1 rm -rf /dev/shm/* $BBPATH/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm"
+jsrun -r 1 -a 1 rm -rf /dev/shm/* $BBPATH/unifyfs/* /tmp/kvstore /tmp/unifyfsd.margo-shm
 
 if [ $status -gt 0 ]; then
   echo "Test failed with code $status!" >&2
