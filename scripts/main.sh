@@ -1,5 +1,5 @@
 #!/bin/bash
-nodes=(2)
+nodes=(2) #8 16 32 64 128)
 TAILORFS_DIR=/usr/workspace/iopp/software/tailorfs
 for node in "${nodes[@]}"
 do
