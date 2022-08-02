@@ -117,9 +117,9 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl, Timer *init_tim
     case UseCase::READ_AFTER_WRITE:
     case UseCase::UPDATE:
     case UseCase::WORM: {
-      strcpy(client_local_extents, "off");
+      strcpy(client_local_extents, "on");
       options_ct++;
-      strcpy(client_node_local_extents, "off");
+      strcpy(client_node_local_extents, "on");
       options_ct++;
       break;
     }
