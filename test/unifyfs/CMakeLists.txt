@@ -12,7 +12,7 @@ function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile
     set(RANKS_PER_NODE 32)
     set(TEST_ARGS --request_size ${request_size} --iteration ${iteration} --rpn ${RANKS_PER_NODE} --storage_type ${storage_type} --access_pattern ${access_pattern} --file_sharing ${file_sharing} --process_grouping ${process_grouping} --reporter compact ${string})
 
-    add_test(Test_unify_${test_name} ${BASH_PROGRAM}
+    add_test(Test_unifyd_${test_name} ${BASH_PROGRAM}
             ${CMAKE_CURRENT_SOURCE_DIR}/run_single.sh
             ${CMAKE_CURRENT_BINARY_DIR}/${test_exec}
             ${UNIFYFS_EXEC}
@@ -22,10 +22,25 @@ function(unifyfs_daemon unifyfs_logio_spill_dir unifyfs_log_dir unifyfs_hostfile
             ${unifyfs_hostfile}
             ${MPIEXEC_EXECUTABLE}
             ${RANKS_PER_NODE}
-            ${TEST_ARGS} --section "storage.unifyfs")
-    set_property(TEST Test_unify_${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
-    set_property(TEST Test_unify_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH})
-    set_property(TEST Test_unify_${test_name} APPEND PROPERTY ENVIRONMENT SHM_PATH=${SHM_PATH})
+            ${TEST_ARGS} --section "storage.unifyfs" --default_unifyfs 1)
+    set_property(TEST Test_unifyd_${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
+    set_property(TEST Test_unifyd_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH})
+    set_property(TEST Test_unifyd_${test_name} APPEND PROPERTY ENVIRONMENT SHM_PATH=${SHM_PATH})
+
+    add_test(Test_unifyo_${test_name} ${BASH_PROGRAM}
+            ${CMAKE_CURRENT_SOURCE_DIR}/run_single.sh
+            ${CMAKE_CURRENT_BINARY_DIR}/${test_exec}
+            ${UNIFYFS_EXEC}
+            ${unifyfs_logio_spill_dir}
+            ${unifyfs_log_dir}
+            ${pfs}
+            ${unifyfs_hostfile}
+            ${MPIEXEC_EXECUTABLE}
+            ${RANKS_PER_NODE}
+            ${TEST_ARGS} --section "storage.unifyfs" --default_unifyfs 0)
+    set_property(TEST Test_unifyo_${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
+    set_property(TEST Test_unifyo_${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=${PFS_PATH})
+    set_property(TEST Test_unifyo_${test_name} APPEND PROPERTY ENVIRONMENT SHM_PATH=${SHM_PATH})
 
     add_test(Test_pfs_${test_name} ${BASH_PROGRAM}
             ${CMAKE_CURRENT_SOURCE_DIR}/run_single.sh
