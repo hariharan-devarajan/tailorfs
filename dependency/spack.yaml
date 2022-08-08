@@ -1,11 +1,14 @@
 spack:
   specs:
-  - matrix:
-    - [unifyfs@0.9.2 ^mochi-margo@0.9.6 ^mercury~boostsys ^argobots@1.1 ^libfabric@1.12.1
-        ^json-c@0.14, rpclib@2.2.1, boost@1.69.0, catch2@2.13.3]
-    - ['%gcc@8.3.1']
   - cmake
-  - rpclib@2.2.1
+  - gotcha@1.0.3
+  - spath~mpi
+  - mochi-margo@0.9.6 ^libfabric@1.12.1 fabrics=rxm,sockets,tcp ^mercury~boostsys
+  - mochi-thallium@0.9.1 ^libfabric@1.12.1 fabrics=rxm,sockets,tcp
+  - catch2@3.0.1
+  - automake@1.16.5
+  - pkg-config@0.29.2
+  - boost@1.69.0
+  concretizer:
+    unify: true
   view: true
-  repos:
-  - /home/hariharan/software/spack-repos/spack-repo

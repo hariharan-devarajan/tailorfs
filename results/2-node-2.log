@@ -1,0 +1,1656 @@
+Start testing: Jul 07 09:14 PDT
+----------------------------------------------------------
+9/72 Testing: Test_unify_example_read_4_1024
+9/72 Test: Test_unify_example_read_4_1024
+Command: "/usr/bin/bash" "/usr/workspace/iopp/software/tailorfs/test/unifyfs/run_single.sh" "/usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs" "/mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs" "/g/g92/haridev/unifyfs/logs" "/p/gpfs1/haridev/unifyfs" "/g/g92/haridev/unifyfs/hostfile" "/usr/tce/packages/spectrum-mpi/spectrum-mpi-2020.08.19-gcc-8.3.1/bin/mpiexec" "32" "--request_size" "4096" "--iteration" "1024" "--rpn" "32" "[type=read-only]" "--section" "storage.unifyfs.buffer"
+Directory: /usr/workspace/iopp/software/tailorfs/build/test/unifyfs
+"Test_unify_example_read_4_1024" start time: Jul 07 09:14 PDT
+Output:
+----------------------------------------------------------
+Killing existing unifyfs daemons
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs'} | xargs kill -9 > /dev/null 2>&1 > /dev/null 2>&1
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+UNIFYFS_LOG_DIR=/g/g92/haridev/unifyfs/logs UNIFYFS_SERVER_CORES=8 /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs start --share-dir=/p/gpfs1/haridev/unifyfs -d
+
+## options from the command line ##
+cleanup:	0
+consistency:	LAMINATED
+debug:	5
+mountpoint:	(null)
+script:	(null)
+share_dir:	/p/gpfs1/haridev/unifyfs
+server:	(null)
+stage_in:	(null)
+stage_out:	(null)
+stage_parallel:	0
+stage_timeout:	-1
+
+## job allocation (2 nodes) ##
+lassen808
+lassen79
+jsrun -r 1 -a 32 -c 32 -d packed /usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic --request_size 4096 --iteration 1024 --rpn 32 [type=read-only] --section storage.unifyfs.buffer
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 32
+BB_VAR /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data in rank 32
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 0
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 0
+BB_VAR /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data in rank 0
+Size of file to be read 268435456
+Filters: [type=read-only]
+Randomness seeded to: 1337423935
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3441513992
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 322981934
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1791444862
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2980744912
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2118605243
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2993301348
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1510682151
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 997772361
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1999718665
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 161783171
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1751690507
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 221618005
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1672074048
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2955752459
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2482440865
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1555865156
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1988668465
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4256226548
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3949919796
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3113489161
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3211932471
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3202151570
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2123184468
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1576751275
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2947019795
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2829272194
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2993651567
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4161604142
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3330773785
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2934079285
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 598845544
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1663194409
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3576222619
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3845810961
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2361318158
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4145705355
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3985373900
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 957729661
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 380224524
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 590923594
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 954549108
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1106242047
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4055991838
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3206969342
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 928114921
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1955044808
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2722659700
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3921211195
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 986231372
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1681334163
+Timing		,1024	,4096	,0.154510	,0.268077	,0.003070	,0.000000	,157.332714	,0.034737,	unifyfs.buffer
+===============================================================================
+All tests passed (2061 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4150524976
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2631741322
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 251699457
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1174875651
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 375493157
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 85280771
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2749217847
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2728254859
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 534970687
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1340918105
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2236946473
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4208302115
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2019079640
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Killing UnifyFS daemon
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+Stopped unifyfs daemon. sleeping for 10 seconds
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+Finishing test.
+<end of output>
+Test time = 209.94 sec
+----------------------------------------------------------
+Test Passed.
+"Test_unify_example_read_4_1024" end time: Jul 07 09:18 PDT
+"Test_unify_example_read_4_1024" time elapsed: 00:03:29
+----------------------------------------------------------
+
+21/72 Testing: Test_unify_example_read_16_1024
+21/72 Test: Test_unify_example_read_16_1024
+Command: "/usr/bin/bash" "/usr/workspace/iopp/software/tailorfs/test/unifyfs/run_single.sh" "/usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs" "/mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs" "/g/g92/haridev/unifyfs/logs" "/p/gpfs1/haridev/unifyfs" "/g/g92/haridev/unifyfs/hostfile" "/usr/tce/packages/spectrum-mpi/spectrum-mpi-2020.08.19-gcc-8.3.1/bin/mpiexec" "32" "--request_size" "16384" "--iteration" "1024" "--rpn" "32" "[type=read-only]" "--section" "storage.unifyfs.buffer"
+Directory: /usr/workspace/iopp/software/tailorfs/build/test/unifyfs
+"Test_unify_example_read_16_1024" start time: Jul 07 09:18 PDT
+Output:
+----------------------------------------------------------
+Killing existing unifyfs daemons
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs'} | xargs kill -9 > /dev/null 2>&1 > /dev/null 2>&1
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+UNIFYFS_LOG_DIR=/g/g92/haridev/unifyfs/logs UNIFYFS_SERVER_CORES=8 /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs start --share-dir=/p/gpfs1/haridev/unifyfs -d
+
+## options from the command line ##
+cleanup:	0
+consistency:	LAMINATED
+debug:	5
+mountpoint:	(null)
+script:	(null)
+share_dir:	/p/gpfs1/haridev/unifyfs
+server:	(null)
+stage_in:	(null)
+stage_out:	(null)
+stage_parallel:	0
+stage_timeout:	-1
+
+## job allocation (2 nodes) ##
+lassen808
+lassen79
+jsrun -r 1 -a 32 -c 32 -d packed /usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic --request_size 16384 --iteration 1024 --rpn 32 [type=read-only] --section storage.unifyfs.buffer
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 32
+BB_VAR /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data in rank 32
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 0
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 0
+BB_VAR /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data in rank 0
+Size of file to be read 1073741824
+Filters: [type=read-only]
+Randomness seeded to: 3116552010
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3895852209
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1437060034
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2091404041
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2969199381
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1572793544
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2381103531
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1499636124
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 309481837
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1883245244
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3567726983
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 172253475
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4155136201
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1469693402
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 531331860
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 378297832
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 161163634
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1621047991
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2448292943
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3487532094
+Timing		,1024	,16384	,0.184211	,0.265246	,0.003075	,0.000000	,153.521289	,0.072148,	unifyfs.buffer
+===============================================================================
+All tests passed (2061 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 998968104
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3264703416
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4074480582
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2868457597
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 585213249
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3775799052
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3623295373
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4288058662
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1169859837
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 711119721
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1156884681
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1724987236
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3439513289
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 745794842
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 523923509
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 730998916
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1154725287
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3268508823
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2419083399
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2120072880
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1543114899
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 30172152
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2432263046
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1681320262
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3336119347
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1023691970
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3539697286
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3119707529
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3179136480
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2956701490
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3749256735
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 422941362
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2310038795
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2586398964
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 523859383
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 800788444
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3508847705
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 749736281
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 614817514
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1859562279
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1444653569
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2051277998
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3101967850
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 207973178
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Killing UnifyFS daemon
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+Stopped unifyfs daemon. sleeping for 10 seconds
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+Finishing test.
+<end of output>
+Test time = 207.27 sec
+----------------------------------------------------------
+Test Passed.
+"Test_unify_example_read_16_1024" end time: Jul 07 09:21 PDT
+"Test_unify_example_read_16_1024" time elapsed: 00:03:27
+----------------------------------------------------------
+
+33/72 Testing: Test_unify_example_read_64_1024
+33/72 Test: Test_unify_example_read_64_1024
+Command: "/usr/bin/bash" "/usr/workspace/iopp/software/tailorfs/test/unifyfs/run_single.sh" "/usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs" "/mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs" "/g/g92/haridev/unifyfs/logs" "/p/gpfs1/haridev/unifyfs" "/g/g92/haridev/unifyfs/hostfile" "/usr/tce/packages/spectrum-mpi/spectrum-mpi-2020.08.19-gcc-8.3.1/bin/mpiexec" "32" "--request_size" "65536" "--iteration" "1024" "--rpn" "32" "[type=read-only]" "--section" "storage.unifyfs.buffer"
+Directory: /usr/workspace/iopp/software/tailorfs/build/test/unifyfs
+"Test_unify_example_read_64_1024" start time: Jul 07 09:21 PDT
+Output:
+----------------------------------------------------------
+Killing existing unifyfs daemons
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs'} | xargs kill -9 > /dev/null 2>&1 > /dev/null 2>&1
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+UNIFYFS_LOG_DIR=/g/g92/haridev/unifyfs/logs UNIFYFS_SERVER_CORES=8 /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs start --share-dir=/p/gpfs1/haridev/unifyfs -d
+
+## options from the command line ##
+cleanup:	0
+consistency:	LAMINATED
+debug:	5
+mountpoint:	(null)
+script:	(null)
+share_dir:	/p/gpfs1/haridev/unifyfs
+server:	(null)
+stage_in:	(null)
+stage_out:	(null)
+stage_parallel:	0
+stage_timeout:	-1
+
+## job allocation (2 nodes) ##
+lassen808
+lassen79
+jsrun -r 1 -a 32 -c 32 -d packed /usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic --request_size 65536 --iteration 1024 --rpn 32 [type=read-only] --section storage.unifyfs.buffer
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 32
+BB_VAR /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data in rank 32
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 0
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 0
+BB_VAR /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data in rank 0
+Size of file to be read 4294967296
+Filters: [type=read-only]
+Randomness seeded to: 3843827677
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1612094342
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1002340850
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 593823043
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1061319049
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1071733370
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 843137880
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1595997074
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2915594773
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3784162882
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4021654279
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3668038954
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2014569078
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 807723411
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1809308309
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 682587810
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1252118031
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1025180767
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 164461191
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 144430384
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 252710308
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1750865525
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1469649067
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2398413931
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3335689086
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 730693804
+Timing		,1024	,65536	,0.188409	,0.264622	,0.004598	,0.000000	,162.986443	,0.129911,	unifyfs.buffer
+===============================================================================
+All tests passed (2061 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3037109023
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 235058172
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 111875314
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1085832395
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 337994048
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 232159982
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 845780125
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2710314829
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1551981670
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2984919249
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3239410153
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2459215738
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3414783067
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2168876213
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1470429603
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1201718061
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1554553931
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 363745329
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1274793396
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1699435026
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1381165104
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4283709878
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2749153261
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3401037504
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 992414652
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3453099658
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1932946553
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3335412858
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 154915991
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2731567991
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 260325452
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 795091916
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4084199142
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3887502243
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3874434714
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 499796263
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3030589746
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2156866157
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Killing UnifyFS daemon
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+Stopped unifyfs daemon. sleeping for 10 seconds
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+Finishing test.
+<end of output>
+Test time = 216.35 sec
+----------------------------------------------------------
+Test Passed.
+"Test_unify_example_read_64_1024" end time: Jul 07 09:25 PDT
+"Test_unify_example_read_64_1024" time elapsed: 00:03:36
+----------------------------------------------------------
+
+55/72 Testing: Test_unify_example_write_512_1024
+55/72 Test: Test_unify_example_write_512_1024
+Command: "/usr/bin/bash" "/usr/workspace/iopp/software/tailorfs/test/unifyfs/run_single.sh" "/usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs" "/mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs" "/g/g92/haridev/unifyfs/logs" "/p/gpfs1/haridev/unifyfs" "/g/g92/haridev/unifyfs/hostfile" "/usr/tce/packages/spectrum-mpi/spectrum-mpi-2020.08.19-gcc-8.3.1/bin/mpiexec" "32" "--request_size" "524288" "--iteration" "1024" "--rpn" "32" "[type=write-only]" "--section" "storage.unifyfs.buffer"
+Directory: /usr/workspace/iopp/software/tailorfs/build/test/unifyfs
+"Test_unify_example_write_512_1024" start time: Jul 07 09:25 PDT
+Output:
+----------------------------------------------------------
+Killing existing unifyfs daemons
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs'} | xargs kill -9 > /dev/null 2>&1 > /dev/null 2>&1
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+UNIFYFS_LOG_DIR=/g/g92/haridev/unifyfs/logs UNIFYFS_SERVER_CORES=8 /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs start --share-dir=/p/gpfs1/haridev/unifyfs -d
+
+## options from the command line ##
+cleanup:	0
+consistency:	LAMINATED
+debug:	5
+mountpoint:	(null)
+script:	(null)
+share_dir:	/p/gpfs1/haridev/unifyfs
+server:	(null)
+stage_in:	(null)
+stage_out:	(null)
+stage_parallel:	0
+stage_timeout:	-1
+
+## job allocation (2 nodes) ##
+lassen808
+lassen79
+jsrun -r 1 -a 32 -c 32 -d packed /usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic --request_size 524288 --iteration 1024 --rpn 32 [type=write-only] --section storage.unifyfs.buffer
+rank 32 on node lassen808 with BB /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data
+rank 0 on node lassen79 with BB /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data
+Filters: [type=write-only]
+Randomness seeded to: 2731788571
+unifyfs_basic: unifyfs_fid.c:1197: unifyfs_fid_write: Assertion `meta != ((void *)0)' failed.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+unifyfs_basic is a Catch2 v3.0.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Write-Only
+  storage.unifyfs.buffer
+-------------------------------------------------------------------------------
+/usr/workspace/iopp/software/tailorfs/test/unifyfs/unifyfs_basic.cpp:126
+...............................................................................
+
+/usr/workspace/iopp/software/tailorfs/test/unifyfs/unifyfs_basic.cpp:126: FAILED:
+  {Unknown expression after the reported line}
+due to a fatal error condition:
+  SIGABRT - Abort (abnormal termination) signal
+
+===============================================================================
+test cases:    1 |    0 passed | 1 failed
+assertions: 2010 | 2009 passed | 1 failed
+
+[lassen79:27963] *** Process received signal ***
+[lassen79:27963] Signal: Aborted (6)
+[lassen79:27963] Signal code:  (-6)
+<< Rank 0: Generating lwcore_cpu.3710642_508.0 on lassen79 Thu Jul  7 09:25:34 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
+<< Rank 0:  Generated lwcore_cpu.3710642_508.0 on lassen79 Thu Jul  7 09:25:35 PDT 2022 in 1 secs >>
+<< Rank 0: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 09:25:35 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
+<< Rank 0:  Waited 60 secs -> now aborting task on lassen79 Thu Jul  7 09:26:35 PDT 2022 (LLNL_COREDUMP_KILL=task) >>
+[lassen79:27963] -----------------------
+[lassen79:27963] -----------------------
+[lassen79:27963] *** End of error message ***
+ERROR:  One or more process (first noticed rank 0) terminated with signal 6
+Killing UnifyFS daemon
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+Stopped unifyfs daemon. sleeping for 10 seconds
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+Test failed with code 134!
+<end of output>
+Test time =  89.36 sec
+----------------------------------------------------------
+Test Failed.
+"Test_unify_example_write_512_1024" end time: Jul 07 09:26 PDT
+"Test_unify_example_write_512_1024" time elapsed: 00:01:29
+----------------------------------------------------------
+
+57/72 Testing: Test_unify_example_read_512_1024
+57/72 Test: Test_unify_example_read_512_1024
+Command: "/usr/bin/bash" "/usr/workspace/iopp/software/tailorfs/test/unifyfs/run_single.sh" "/usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs" "/mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs" "/g/g92/haridev/unifyfs/logs" "/p/gpfs1/haridev/unifyfs" "/g/g92/haridev/unifyfs/hostfile" "/usr/tce/packages/spectrum-mpi/spectrum-mpi-2020.08.19-gcc-8.3.1/bin/mpiexec" "32" "--request_size" "524288" "--iteration" "1024" "--rpn" "32" "[type=read-only]" "--section" "storage.unifyfs.buffer"
+Directory: /usr/workspace/iopp/software/tailorfs/build/test/unifyfs
+"Test_unify_example_read_512_1024" start time: Jul 07 09:26 PDT
+Output:
+----------------------------------------------------------
+Killing existing unifyfs daemons
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs'} | xargs kill -9 > /dev/null 2>&1 > /dev/null 2>&1
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+UNIFYFS_LOG_DIR=/g/g92/haridev/unifyfs/logs UNIFYFS_SERVER_CORES=8 /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs start --share-dir=/p/gpfs1/haridev/unifyfs -d
+
+## options from the command line ##
+cleanup:	0
+consistency:	LAMINATED
+debug:	5
+mountpoint:	(null)
+script:	(null)
+share_dir:	/p/gpfs1/haridev/unifyfs
+server:	(null)
+stage_in:	(null)
+stage_out:	(null)
+stage_parallel:	0
+stage_timeout:	-1
+
+## job allocation (2 nodes) ##
+lassen808
+lassen79
+jsrun -r 1 -a 32 -c 32 -d packed /usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic --request_size 524288 --iteration 1024 --rpn 32 [type=read-only] --section storage.unifyfs.buffer
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 32
+BB_VAR /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data in rank 32
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 0
+PFS_PATH /p/gpfs1/haridev/unifyfs/data in rank 0
+BB_VAR /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data in rank 0
+Size of file to be read 34359738368
+Filters: [type=read-only]
+Randomness seeded to: 3828662584
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4158289627
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1304246759
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3512163023
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3157854658
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1092392515
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 882182135
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1307250818
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 453894453
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1281948713
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3810873146
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3783275641
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1826167216
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1676341776
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2969498522
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1869090521
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 291357061
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 64285303
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3108123631
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3409415661
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2891646293
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3839920311
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 335335349
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 966336456
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3940173426
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1283553601
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2642967285
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2570691111
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 59803013
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 107029209
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 520916129
+Timing		,1024	,524288	,0.178730	,0.269085	,0.000193	,0.000000	,0.057879	,0.823284,	unifyfs.buffer
+===============================================================================
+All tests passed (2061 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2841736366
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2881595711
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4104637397
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4252621313
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3941662441
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2717168165
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 4282010942
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1793999242
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2953679684
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1046366892
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3464361998
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1325577172
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3867206244
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 62824102
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 11145618
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 518632158
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2951250833
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3769274794
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1474814815
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2696023971
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1324336427
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1304579714
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3810535188
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 786219676
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2781710406
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2706310461
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3586031308
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1254521621
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2096286000
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3785679253
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 1174936969
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 2025514695
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Filters: [type=read-only]
+Randomness seeded to: 3001218323
+===============================================================================
+All tests passed (2060 assertions in 1 test case)
+
+Killing UnifyFS daemon
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+Stopped unifyfs daemon. sleeping for 10 seconds
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+Finishing test.
+<end of output>
+Test time =  32.86 sec
+----------------------------------------------------------
+Test Passed.
+"Test_unify_example_read_512_1024" end time: Jul 07 09:27 PDT
+"Test_unify_example_read_512_1024" time elapsed: 00:00:32
+----------------------------------------------------------
+
+67/72 Testing: Test_unify_example_write_1024_1024
+67/72 Test: Test_unify_example_write_1024_1024
+Command: "/usr/bin/bash" "/usr/workspace/iopp/software/tailorfs/test/unifyfs/run_single.sh" "/usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs" "/mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs" "/g/g92/haridev/unifyfs/logs" "/p/gpfs1/haridev/unifyfs" "/g/g92/haridev/unifyfs/hostfile" "/usr/tce/packages/spectrum-mpi/spectrum-mpi-2020.08.19-gcc-8.3.1/bin/mpiexec" "32" "--request_size" "1048576" "--iteration" "1024" "--rpn" "32" "[type=write-only]" "--section" "storage.unifyfs.buffer"
+Directory: /usr/workspace/iopp/software/tailorfs/build/test/unifyfs
+"Test_unify_example_write_1024_1024" start time: Jul 07 09:27 PDT
+Output:
+----------------------------------------------------------
+Killing existing unifyfs daemons
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs'} | xargs kill -9 > /dev/null 2>&1 > /dev/null 2>&1
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+UNIFYFS_LOG_DIR=/g/g92/haridev/unifyfs/logs UNIFYFS_SERVER_CORES=8 /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs start --share-dir=/p/gpfs1/haridev/unifyfs -d
+
+## options from the command line ##
+cleanup:	0
+consistency:	LAMINATED
+debug:	5
+mountpoint:	(null)
+script:	(null)
+share_dir:	/p/gpfs1/haridev/unifyfs
+server:	(null)
+stage_in:	(null)
+stage_out:	(null)
+stage_parallel:	0
+stage_timeout:	-1
+
+## job allocation (2 nodes) ##
+lassen808
+lassen79
+jsrun -r 1 -a 32 -c 32 -d packed /usr/workspace/iopp/software/tailorfs/build/test/unifyfs/unifyfs_basic --request_size 1048576 --iteration 1024 --rpn 32 [type=write-only] --section storage.unifyfs.buffer
+rank 32 on node lassen808 with BB /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data
+rank 0 on node lassen79 with BB /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/data
+[error] Could not initialize hg_class
+unifyfs_basic: margo_client.c:124: unifyfs_client_rpc_init: Assertion `ctx->mid' failed.
+Filters: [type=write-only]
+Randomness seeded to: 2368264421
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+unifyfs_basic is a Catch2 v3.0.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Write-Only
+  storage.unifyfs.buffer
+-------------------------------------------------------------------------------
+/usr/workspace/iopp/software/tailorfs/test/unifyfs/unifyfs_basic.cpp:126
+...............................................................................
+
+/usr/workspace/iopp/software/tailorfs/test/unifyfs/unifyfs_basic.cpp:126: FAILED:
+  {Unknown expression after the reported line}
+due to a fatal error condition:
+  SIGABRT - Abort (abnormal termination) signal
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 7 | 6 passed | 1 failed
+
+[lassen79:29774] *** Process received signal ***
+[lassen79:29774] Signal: Aborted (6)
+[lassen79:29774] Signal code:  (-6)
+<< Rank 17: Generating lwcore_cpu.3710642_520.17 on lassen79 Thu Jul  7 09:27:35 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
+<< Rank 17:  Generated lwcore_cpu.3710642_520.17 on lassen79 Thu Jul  7 09:27:36 PDT 2022 in 1 secs >>
+<< Rank 17: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 09:27:36 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
+<< Rank 17:  Waited 60 secs -> now aborting task on lassen79 Thu Jul  7 09:28:36 PDT 2022 (LLNL_COREDUMP_KILL=task) >>
+[lassen79:29774] -----------------------
+[lassen79:29774] -----------------------
+[lassen79:29774] *** End of error message ***
+ERROR:  One or more process (first noticed rank 17) terminated with signal 6
+Killing UnifyFS daemon
+/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs terminate
+Stopped unifyfs daemon. sleeping for 10 seconds
+Cleaning up directories
+jsrun -r 1 -a 1 rm -rf /dev/shm/* /mnt/bb_a58242475879bedf6ccd991f48792d1b/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm
+Test failed with code 134!
+<end of output>
+Test time =  87.48 sec
+----------------------------------------------------------
+Test Failed.
+"Test_unify_example_write_1024_1024" end time: Jul 07 09:28 PDT
+"Test_unify_example_write_1024_1024" time elapsed: 00:01:27
+----------------------------------------------------------
+
+End testing: Jul 07 09:28 PDT
