@@ -1,3 +1,10 @@
 [submodule "external/hcl"]
 	path = external/hcl
 	url = git@github.com:hariharan-devarajan/hcl.git
+[submodule "external/UnifyFS"]
+	path = external/UnifyFS
+	url = git@github.com:hariharan-devarajan/UnifyFS.git
+	branch = hari/node_local_extents
+[submodule "external/brahma"]
+	path = external/brahma
+	url = git@github.com:hariharan-devarajan/brahma.git
