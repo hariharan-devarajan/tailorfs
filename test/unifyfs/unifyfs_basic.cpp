@@ -7,7 +7,8 @@
 
 #include <experimental/filesystem>
 #include <iomanip>
-#include <tailorfs/unifyfs-stage-transfer.cpp>
+
+#include "tailorfs/util/unifyfs-stage-transfer.cpp"
 
 const uint64_t GB = 1024L * 1024L * 1024L;
 #define CONVERT_ENUM(name, value) \

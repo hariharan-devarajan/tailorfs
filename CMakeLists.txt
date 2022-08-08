@@ -5,11 +5,16 @@ set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${CMAKE_SOURCE_DIR}/dependency/.spack
 set(CMAKE_CXX_STANDARD 14)
 set(TAILORFS_CMAKE_DIR ${CMAKE_SOURCE_DIR}/CMake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${TAILORFS_CMAKE_DIR})
-add_subdirectory(external/brahma)
-find_package(unifyfs REQUIRED)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -rdynamic")
 set(DEPENDENCY_LIB )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -rdynamic")
+include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
+add_subdirectory(external/brahma)
+set(DEPENDENCY_LIB ${DEPENDENCY_LIB} brahma)
+include_directories(external/brahma/include)
+
+find_package(unifyfs REQUIRED)
 if (NOT ${UNIFYFS_FOUND})
     message(FATAL_ERROR "UnifyFS is needed for TailorFS build")
 else()
@@ -22,11 +27,18 @@ if (MPI_FOUND)
     include_directories(${MPI_CXX_INCLUDE_DIRS})
     set(DEPENDENCY_LIB ${DEPENDENCY_LIB} ${MPI_CXX_LIBRARIES})
 endif ()
-include_directories(${CMAKE_SOURCE_DIR}/src)
 
 
-add_executable(tailorfs main.cpp)
+set(TAILORFS_SRC src/tailorfs/tailorfs.cpp)
+set(TAILORFS_PRIVATE_INCLUDE src/tailorfs/brahma/posix.h)
+set(TAILORFS_PUBLIC_INCLUDE include/tailorfs/tailorfs.h)
+
+add_library(tailorfs SHARED  ${TAILORFS_PUBLIC_INCLUDE} ${TAILORFS_PRIVATE_INCLUDE} ${TAILORFS_SRC})
 target_link_libraries(tailorfs ${DEPENDENCY_LIB})
+add_dependencies(tailorfs brahma)
+
+add_executable(tailorfs_exe main.cpp)
+target_link_libraries(tailorfs_exe tailorfs ${DEPENDENCY_LIB})
 
 option(BUILD_TEST "Build the unit tests" ON)
 if (BUILD_TEST)

@@ -1,7 +1,7 @@
 #ifndef UNIFYFS_STAGE_H
 #define UNIFYFS_STAGE_H
 
-#include <unifyfs/unifyfs_api.h>
+#include "unifyfs/unifyfs_api.h"
 
 #ifndef UNIFYFS_STAGE_MD5_BLOCKSIZE
 #define UNIFYFS_STAGE_MD5_BLOCKSIZE (1048576)
