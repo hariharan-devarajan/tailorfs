@@ -262,9 +262,39 @@ TEST_CASE("GenerateConfig",
   const int NUM_FILES = args.num_apps * args.num_files_per_app;
   json file_repo = json::array({});
   for (int file_index = 0; file_index < NUM_FILES; ++file_index) {
-    file_repo.push_back((info.pfs / (args.file_prefix + "_" +
+    mimir::FileAdvice file_advice;
+    file_advice._name = (info.pfs / (args.file_prefix + "_" +
                                      std::to_string(file_index) + ".dat"))
-                            .string());
+                            .string();
+    file_advice._format = Format::FORMAT_BINARY;
+    file_advice._size_mb = args.io_size_per_app_mb / args.num_files_per_app;
+    file_advice._io_amount_mb =
+        args.io_size_per_app_mb / args.num_files_per_app;
+    /* File access type*/
+    int wo_file = floor(NUM_FILES * args.wo_file_ptg);
+    int ro_file = floor(NUM_FILES * args.ro_file_ptg);
+    int raw_file = floor(NUM_FILES * args.raw_file_ptg);
+    int update_file = floor(NUM_FILES * args.update_file_ptg);
+    int worm_file = NUM_FILES - wo_file - ro_file - raw_file - update_file;
+    if (file_index < wo_file) {
+      file_advice._write_distribution._0_4kb = 1.0;
+    } else if (file_index < ro_file) {
+      file_advice._read_distribution._0_4kb = 1.0;
+      file_advice._prefetch = true;
+    } else if (file_index < raw_file) {
+      file_advice._read_distribution._0_4kb = 1.0;
+      file_advice._write_distribution._0_4kb = 1.0;
+    } else if (file_index < update_file) {
+      file_advice._write_distribution._0_4kb = 1.0;
+    } else if (file_index < worm_file) {
+      file_advice._write_distribution._0_4kb = 1.0;
+      file_advice._read_distribution._0_4kb = 1.0;
+    }
+    file_advice._current_device = 2;
+    file_advice._placement_device = 0;
+    file_advice._per_io_data = 0.75;
+    file_advice._per_io_metadata = 0.25;
+    file_repo.push_back(file_advice);
   }
   j["file_repo"] = file_repo;
 
@@ -382,7 +412,47 @@ TEST_CASE("GenerateConfig",
   std::ofstream out(config_file.c_str());
   out << j;
   out.close();
-
   std::cout << j.dump() << std::endl;
+
+  /**
+   * Verification
+   */
+  std::ifstream t(config_file.c_str());
+  t.seekg(0, std::ios::end);
+  size_t size = t.tellg();
+  std::string buffer(size, ' ');
+  t.seekg(0);
+  t.read(&buffer[0], size);
+  t.close();
+  json read_json = json::parse(buffer);
+  mimir::JobConfigurationAdvice jc_r;
+  read_json["job"].get_to(jc_r);
+  REQUIRE(jc_r == job_conf_advice);
+  mimir::WorkflowAdvice w_r;
+  read_json["workflow"].get_to(w_r);
+  REQUIRE(w_r == workflow_advice);
+
+  auto app_r_json = read_json["app_repo"].begin();
+  auto app_json = app_repo.begin();
+  while (app_r_json != read_json["app_repo"].end()) {
+    mimir::ApplicationAdvice app, app_r;
+    app_r_json->get_to(app_r);
+    app_json->get_to(app);
+    REQUIRE(app == app_r);
+    app_json++;
+    app_r_json++;
+  }
+
+  auto file_r_json = read_json["file_repo"].begin();
+  auto file_json = file_repo.begin();
+  while (file_r_json != read_json["file_repo"].end()) {
+    mimir::FileAdvice file, file_r;
+    file_r_json->get_to(file_r);
+    file_json->get_to(file);
+    REQUIRE(file == file_r);
+    file_json++;
+    file_r_json++;
+  }
+
   REQUIRE(posttest() == 0);
 }
