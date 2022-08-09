@@ -14,6 +14,11 @@ add_subdirectory(external/brahma)
 set(DEPENDENCY_LIB ${DEPENDENCY_LIB} brahma)
 include_directories(external/brahma/include)
 
+add_subdirectory(external/mimir)
+set(DEPENDENCY_LIB ${DEPENDENCY_LIB} mimir)
+include_directories(external/mimir/include)
+
+
 find_package(unifyfs REQUIRED)
 if (NOT ${UNIFYFS_FOUND})
     message(FATAL_ERROR "UnifyFS is needed for TailorFS build")

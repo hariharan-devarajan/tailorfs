@@ -5,3 +5,6 @@
 [submodule "external/brahma"]
 	path = external/brahma
 	url = git@github.com:hariharan-devarajan/brahma.git
+[submodule "external/mimir"]
+	path = external/mimir
+	url = git@github.com:hariharan-devarajan/mimir.git
