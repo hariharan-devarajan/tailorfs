@@ -11,24 +11,7 @@
 #include "tailorfs/util/unifyfs-stage-transfer.cpp"
 
 const uint64_t GB = 1024L * 1024L * 1024L;
-#define CONVERT_ENUM(name, value) \
-  "[name=" + std::to_string(static_cast<int>(value)) + "]"
 
-#define DEFINE_CLARA_OPS(TYPE)                                 \
-  std::ostream &operator<<(std::ostream &out, const TYPE &c) { \
-    out << static_cast<int>(c) << std::endl;                   \
-    return out;                                                \
-  }                                                            \
-  TYPE &operator>>(const std::stringstream &out, TYPE &c) {    \
-    c = static_cast<TYPE>(atoi(out.str().c_str()));            \
-    return c;                                                  \
-  }
-#define AGGREGATE_TIME(name)                                      \
-  double total_##name = 0.0;                                      \
-  auto name##_a = name##_time.getElapsedTime();                   \
-  MPI_Reduce(&name##_a, &total_##name, 1, MPI_DOUBLE, MPI_SUM, 0, \
-             MPI_COMM_WORLD);
-#define PRINT_MSG(format, ...) fprintf (stderr, format, __VA_ARGS__)
 namespace tailorfs::test {}
 
 namespace fs = std::experimental::filesystem;

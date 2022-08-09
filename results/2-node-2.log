@@ -1176,10 +1176,10 @@ assertions: 2010 | 2009 passed | 1 failed
 [lassen79:27963] *** Process received signal ***
 [lassen79:27963] Signal: Aborted (6)
 [lassen79:27963] Signal code:  (-6)
-<< Rank 0: Generating lwcore_cpu.3710642_508.0 on lassen79 Thu Jul  7 09:25:34 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
-<< Rank 0:  Generated lwcore_cpu.3710642_508.0 on lassen79 Thu Jul  7 09:25:35 PDT 2022 in 1 secs >>
-<< Rank 0: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 09:25:35 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
-<< Rank 0:  Waited 60 secs -> now aborting task on lassen79 Thu Jul  7 09:26:35 PDT 2022 (LLNL_COREDUMP_KILL=task) >>
+<< RankIndex 0: Generating lwcore_cpu.3710642_508.0 on lassen79 Thu Jul  7 09:25:34 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
+<< RankIndex 0:  Generated lwcore_cpu.3710642_508.0 on lassen79 Thu Jul  7 09:25:35 PDT 2022 in 1 secs >>
+<< RankIndex 0: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 09:25:35 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
+<< RankIndex 0:  Waited 60 secs -> now aborting task on lassen79 Thu Jul  7 09:26:35 PDT 2022 (LLNL_COREDUMP_KILL=task) >>
 [lassen79:27963] -----------------------
 [lassen79:27963] -----------------------
 [lassen79:27963] *** End of error message ***
@@ -1631,10 +1631,10 @@ assertions: 7 | 6 passed | 1 failed
 [lassen79:29774] *** Process received signal ***
 [lassen79:29774] Signal: Aborted (6)
 [lassen79:29774] Signal code:  (-6)
-<< Rank 17: Generating lwcore_cpu.3710642_520.17 on lassen79 Thu Jul  7 09:27:35 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
-<< Rank 17:  Generated lwcore_cpu.3710642_520.17 on lassen79 Thu Jul  7 09:27:36 PDT 2022 in 1 secs >>
-<< Rank 17: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 09:27:36 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
-<< Rank 17:  Waited 60 secs -> now aborting task on lassen79 Thu Jul  7 09:28:36 PDT 2022 (LLNL_COREDUMP_KILL=task) >>
+<< RankIndex 17: Generating lwcore_cpu.3710642_520.17 on lassen79 Thu Jul  7 09:27:35 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
+<< RankIndex 17:  Generated lwcore_cpu.3710642_520.17 on lassen79 Thu Jul  7 09:27:36 PDT 2022 in 1 secs >>
+<< RankIndex 17: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 09:27:36 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
+<< RankIndex 17:  Waited 60 secs -> now aborting task on lassen79 Thu Jul  7 09:28:36 PDT 2022 (LLNL_COREDUMP_KILL=task) >>
 [lassen79:29774] -----------------------
 [lassen79:29774] -----------------------
 [lassen79:29774] *** End of error message ***

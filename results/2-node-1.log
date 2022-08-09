@@ -19022,7 +19022,7 @@ assertions: 2010 | 2009 passed | 1 failed
 [lassen79:63104] *** Process received signal ***
 [lassen79:63104] Signal: Aborted (6)
 [lassen79:63104] Signal code:  (-6)
-<< Rank 2: Generating lwcore_cpu.3710642_384.2 on lassen79 Thu Jul  7 05:37:19 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
+<< RankIndex 2: Generating lwcore_cpu.3710642_384.2 on lassen79 Thu Jul  7 05:37:19 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
 Filters: [type=write-only]
 Randomness seeded to: 382933275
 
@@ -19050,12 +19050,12 @@ unifyfs_basic: unifyfs_fid.c:1197: unifyfs_fid_write: Assertion `meta != ((void 
 test cases:    1 |    0 passed | 1 failed
 assertions: 2010 | 2009 passed | 1 failed
 
-<< Rank 32: Generating lwcore_cpu.3710642_384.32 on lassen808 Thu Jul  7 05:37:20 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
-<< Rank 2:  Generated lwcore_cpu.3710642_384.2 on lassen79 Thu Jul  7 05:37:20 PDT 2022 in 1 secs >>
-<< Rank 2: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 05:37:20 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
-<< Rank 32:  Generated lwcore_cpu.3710642_384.32 on lassen808 Thu Jul  7 05:37:21 PDT 2022 in 1 secs >>
-<< Rank 32: Waiting 60 secs before aborting task on lassen808 Thu Jul  7 05:37:21 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
-<< Rank 2:  Waited 60 secs -> now aborting task on lassen79 Thu Jul  7 05:38:20 PDT 2022 (LLNL_COREDUMP_KILL=task) >>
+<< RankIndex 32: Generating lwcore_cpu.3710642_384.32 on lassen808 Thu Jul  7 05:37:20 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
+<< RankIndex 2:  Generated lwcore_cpu.3710642_384.2 on lassen79 Thu Jul  7 05:37:20 PDT 2022 in 1 secs >>
+<< RankIndex 2: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 05:37:20 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
+<< RankIndex 32:  Generated lwcore_cpu.3710642_384.32 on lassen808 Thu Jul  7 05:37:21 PDT 2022 in 1 secs >>
+<< RankIndex 32: Waiting 60 secs before aborting task on lassen808 Thu Jul  7 05:37:21 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
+<< RankIndex 2:  Waited 60 secs -> now aborting task on lassen79 Thu Jul  7 05:38:20 PDT 2022 (LLNL_COREDUMP_KILL=task) >>
 [lassen79:63104] -----------------------
 [lassen79:63104] -----------------------
 [lassen79:63104] *** End of error message ***
@@ -22864,9 +22864,9 @@ assertions: 2010 | 2009 passed | 1 failed
 [lassen79:73300] *** Process received signal ***
 [lassen79:73300] Signal: Aborted (6)
 [lassen79:73300] Signal code:  (-6)
-<< Rank 2: Generating lwcore_cpu.3710642_454.2 on lassen79 Thu Jul  7 05:50:56 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
-<< Rank 2:  Generated lwcore_cpu.3710642_454.2 on lassen79 Thu Jul  7 05:50:57 PDT 2022 in 1 secs >>
-<< Rank 2: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 05:50:57 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
+<< RankIndex 2: Generating lwcore_cpu.3710642_454.2 on lassen79 Thu Jul  7 05:50:56 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
+<< RankIndex 2:  Generated lwcore_cpu.3710642_454.2 on lassen79 Thu Jul  7 05:50:57 PDT 2022 in 1 secs >>
+<< RankIndex 2: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 05:50:57 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
 unifyfs_basic: unifyfs_fid.c:1197: unifyfs_fid_write: Assertion `meta != ((void *)0)' failed.
 Filters: [type=write-only]
 Randomness seeded to: 2578263698
@@ -22894,7 +22894,7 @@ assertions: 2010 | 2009 passed | 1 failed
 [lassen79:73298] *** Process received signal ***
 [lassen79:73298] Signal: Aborted (6)
 [lassen79:73298] Signal code:  (-6)
-<< Rank 0: Generating lwcore_cpu.3710642_454.0 on lassen79 Thu Jul  7 05:50:58 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
+<< RankIndex 0: Generating lwcore_cpu.3710642_454.0 on lassen79 Thu Jul  7 05:50:58 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
 Filters: [type=write-only]
 Randomness seeded to: 1760743595
 unifyfs_basic: unifyfs_fid.c:1197: unifyfs_fid_write: Assertion `meta != ((void *)0)' failed.
@@ -22922,12 +22922,12 @@ assertions: 2010 | 2009 passed | 1 failed
 [lassen808:89392] *** Process received signal ***
 [lassen808:89392] Signal: Aborted (6)
 [lassen808:89392] Signal code:  (-6)
-<< Rank 41: Generating lwcore_cpu.3710642_454.41 on lassen808 Thu Jul  7 05:50:59 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
-<< Rank 0:  Generated lwcore_cpu.3710642_454.0 on lassen79 Thu Jul  7 05:50:59 PDT 2022 in 1 secs >>
-<< Rank 0: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 05:50:59 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
-<< Rank 41:  Generated lwcore_cpu.3710642_454.41 on lassen808 Thu Jul  7 05:51:00 PDT 2022 in 1 secs >>
-<< Rank 41: Waiting 60 secs before aborting task on lassen808 Thu Jul  7 05:51:00 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
-<< Rank 2:  Waited 60 secs -> now aborting task on lassen79 Thu Jul  7 05:51:58 PDT 2022 (LLNL_COREDUMP_KILL=task) >>
+<< RankIndex 41: Generating lwcore_cpu.3710642_454.41 on lassen808 Thu Jul  7 05:50:59 PDT 2022 (LLNL_COREDUMP_FORMAT_CPU=lwcore) >>
+<< RankIndex 0:  Generated lwcore_cpu.3710642_454.0 on lassen79 Thu Jul  7 05:50:59 PDT 2022 in 1 secs >>
+<< RankIndex 0: Waiting 60 secs before aborting task on lassen79 Thu Jul  7 05:50:59 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
+<< RankIndex 41:  Generated lwcore_cpu.3710642_454.41 on lassen808 Thu Jul  7 05:51:00 PDT 2022 in 1 secs >>
+<< RankIndex 41: Waiting 60 secs before aborting task on lassen808 Thu Jul  7 05:51:00 PDT 2022 (LLNL_COREDUMP_WAIT_FOR_OTHERS=60) >>
+<< RankIndex 2:  Waited 60 secs -> now aborting task on lassen79 Thu Jul  7 05:51:58 PDT 2022 (LLNL_COREDUMP_KILL=task) >>
 [lassen79:73300] -----------------------
 [lassen79:73300] -----------------------
 [lassen79:73300] *** End of error message ***

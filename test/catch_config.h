@@ -6,6 +6,8 @@
 #define TAILORFS_CATCH_CONFIG_H
 
 #define CATCH_CONFIG_RUNNER
+#include <cpp-logger/logger.h>
+
 #include <catch2/catch_all.hpp>
 //#include <mpi.h>
 
@@ -13,10 +15,43 @@ namespace cl = Catch::Clara;
 
 cl::Parser define_options();
 
-int init(int* argc, char*** argv);
+int init(int *argc, char ***argv);
 int finalize();
 
-int main(int argc, char* argv[]) {
+#define CONVERT_ENUM(name, value) \
+  "[" + std::string(#name) + "=" + std::to_string(static_cast<int>(value)) + "]"
+
+#define CONVERT_VAL(name, value) \
+  "[" + std::string(#name) + "=" + std::to_string(value) + "]"
+
+#define DEFINE_CLARA_OPS(TYPE)                                 \
+  std::ostream &operator<<(std::ostream &out, const TYPE &c) { \
+    out << static_cast<int>(c) << std::endl;                   \
+    return out;                                                \
+  }                                                            \
+  TYPE &operator>>(const std::stringstream &out, TYPE &c) {    \
+    c = static_cast<TYPE>(atoi(out.str().c_str()));            \
+    return c;                                                  \
+  }
+#define AGGREGATE_TIME(name)                                      \
+  double total_##name = 0.0;                                      \
+  auto name##_a = name##_time.getElapsedTime();                   \
+  MPI_Reduce(&name##_a, &total_##name, 1, MPI_DOUBLE, MPI_SUM, 0, \
+             MPI_COMM_WORLD);
+#define TEST_LOGGER cpplogger::Logger::Instance("TAILORFS")
+
+#define TEST_LOGGER_INFO_ARGS(format, ...) \
+  cpplogger::Logger::Instance("TAILORFS")  \
+      ->log(cpplogger::LOG_INFO, format, __VA_ARGS__);
+
+#define TEST_LOGGER_INFO(format) \
+  cpplogger::Logger::Instance("TAILORFS")->log(cpplogger::LOG_INFO, format);
+
+#define PRINT_MSG(format, ...)            \
+  cpplogger::Logger::Instance("TAILORFS") \
+      ->log(cpplogger::LOG_PRINT, format, __VA_ARGS__);
+
+int main(int argc, char *argv[]) {
   Catch::Session session;
   auto cli = session.cli() | define_options();
   session.cli(cli);

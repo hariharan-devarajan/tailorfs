@@ -8,3 +8,6 @@
 [submodule "external/mimir"]
 	path = external/mimir
 	url = git@github.com:hariharan-devarajan/mimir.git
+[submodule "external/cpp-logger"]
+	path = external/cpp-logger
+	url = git@github.com:hariharan-devarajan/cpp-logger.git
