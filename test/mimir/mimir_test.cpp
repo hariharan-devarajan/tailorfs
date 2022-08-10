@@ -7,9 +7,12 @@
 #include <fstream>
 #include <iostream>
 #include <unordered_set>
+
 namespace tailorfs::mimir::test {}
 namespace tt = tailorfs::mimir::test;
 namespace fs = std::experimental::filesystem;
+
+using namespace mimir;
 
 /**
  * Test data structures
@@ -213,72 +216,29 @@ std::vector<std::string> split(std::string x, char delim = ' ') {
       std::vector<std::string>(set_splitted.begin(), set_splitted.end());
   return splitted;
 }
-
-/**
- * Test cases
- */
-TEST_CASE("GenerateConfig",
-          CONVERT_VAL(ranks_per_node, args.ranks_per_node) +
-              CONVERT_ENUM(storage_type, args.storage_type) +
-              CONVERT_VAL(num_apps, args.num_apps) +
-              CONVERT_VAL(num_process_per_app, args.num_process_per_app) +
-              CONVERT_VAL(num_files_per_app, args.num_files_per_app) +
-              CONVERT_VAL(fpp_percentage, args.fpp_percentage) +
-              CONVERT_VAL(sequential_percentage, args.sequential_percentage) +
-              CONVERT_VAL(wo_file_ptg, args.wo_file_ptg) +
-              CONVERT_VAL(ro_file_ptg, args.ro_file_ptg) +
-              CONVERT_VAL(raw_file_ptg, args.raw_file_ptg) +
-              CONVERT_VAL(update_file_ptg, args.update_file_ptg) +
-              CONVERT_VAL(worm_file_ptg, args.worm_file_ptg) +
-              CONVERT_VAL(all_app_ptg, args.all_app_ptg) +
-              CONVERT_VAL(split_app_ptg, args.split_app_ptg) +
-              CONVERT_VAL(alt_app_ptg, args.alt_app_ptg)) {
-  REQUIRE(pretest() == 0);
-  using json = nlohmann::json;
-  json j;
-  fs::path config_file = args.config_file;
-  if (fs::exists(config_file)) fs::remove(config_file);
-  using namespace mimir;
+int create_config(mimir::Config &config) {
   auto LSB_HOSTS = std::getenv("LSB_HOSTS");
   if (LSB_HOSTS == nullptr) {
     LSB_HOSTS = "localhost";
   }
   auto node_names = split(LSB_HOSTS);
-
-  json conf = {{"ranks_per_node", args.ranks_per_node},
-               {"storage_type", args.storage_type},
-               {"num_apps", args.num_apps},
-               {"num_process_per_app", args.num_process_per_app},
-               {"fpp_percentage", args.fpp_percentage},
-               {"sequential_percentage", args.sequential_percentage},
-               {"wo_file_ptg", args.wo_file_ptg},
-               {"ro_file_ptg", args.ro_file_ptg},
-               {"raw_file_ptg", args.raw_file_ptg},
-               {"update_file_ptg", args.update_file_ptg},
-               {"worm_file_ptg", args.worm_file_ptg},
-               {"all_app_ptg", args.all_app_ptg},
-               {"split_app_ptg", args.split_app_ptg},
-               {"alt_app_ptg", args.alt_app_ptg}};
-  j["conf"] = conf;
-  mimir::JobConfigurationAdvice job_conf_advice;
-  job_conf_advice._job_id = 0;
-  job_conf_advice._devices.clear();
+  config._job_config._job_id = 0;
+  config._job_config._devices.clear();
   int num_devices = 3;  // shm, bb, and pfs
-  job_conf_advice._devices.emplace_back(info.shm.c_str(), 64 * 1024);  // shm
-  job_conf_advice._devices.emplace_back(info.bb.c_str(), 512 * 1024);  // bb
-  job_conf_advice._devices.emplace_back(info.pfs.c_str(),
-                                        2 * 1024 * 1024);  // pfs
-  job_conf_advice._job_time_minutes = 30;
-  job_conf_advice._num_cores_per_node = args.ranks_per_node;
-  job_conf_advice._num_gpus_per_node = 4;
-  job_conf_advice._num_nodes = node_names.size();
-  job_conf_advice._node_names = node_names;
-  job_conf_advice._rpc_port = 8888;
-  job_conf_advice._rpc_threads = 4;
-  job_conf_advice._priority = 100;
-  j["job"] = job_conf_advice;
+  config._job_config._devices.emplace_back(info.shm.c_str(), 64 * 1024);  // shm
+  config._job_config._devices.emplace_back(info.bb.c_str(), 512 * 1024);  // bb
+  config._job_config._devices.emplace_back(info.pfs.c_str(),
+                                           2 * 1024 * 1024);  // pfs
+  config._job_config._job_time_minutes = 30;
+  config._job_config._num_cores_per_node = args.ranks_per_node;
+  config._job_config._num_gpus_per_node = 4;
+  config._job_config._num_nodes = node_names.size();
+  config._job_config._node_names = node_names;
+  config._job_config._rpc_port = 8888;
+  config._job_config._rpc_threads = 4;
+  config._job_config._priority = 100;
+
   const int NUM_FILES = args.num_apps * args.num_files_per_app;
-  json file_repo = json::array({});
   for (int file_index = 0; file_index < NUM_FILES; ++file_index) {
     mimir::FileAdvice file_advice;
     file_advice._name = (info.pfs / (args.file_prefix + "_" +
@@ -312,31 +272,28 @@ TEST_CASE("GenerateConfig",
     file_advice._placement_device = 0;
     file_advice._per_io_data = 0.75;
     file_advice._per_io_metadata = 0.25;
-    file_repo.push_back(file_advice);
+    config._file_repo.push_back(file_advice);
   }
-  j["file_repo"] = file_repo;
-
-  json app_repo = json::array({});
   mimir::WorkflowAdvice workflow_advice;
   for (uint32_t app_index = 0; app_index < args.num_apps; ++app_index) {
     mimir::ApplicationAdvice app_advice;
     /* Application info */
-    app_advice._name = std::to_string(app_index);
+    app_advice._name = "app-" + std::to_string(app_index);
     /* app file dag*/
     app_advice._application_file_dag.applications.push_back(app_index);
     workflow_advice._application_file_dag.applications.push_back(app_index);
 
     app_advice._num_cpu_cores_used =
-        floor(job_conf_advice._node_names.size() *
-              job_conf_advice._num_cores_per_node * 1.0 / args.num_apps);
+        floor(config._job_config._node_names.size() *
+              config._job_config._num_cores_per_node * 1.0 / args.num_apps);
     app_advice._num_gpus_used =
-        floor(job_conf_advice._node_names.size() *
-              job_conf_advice._num_gpus_per_node * 1.0 / args.num_apps);
+        floor(config._job_config._node_names.size() *
+              config._job_config._num_gpus_per_node * 1.0 / args.num_apps);
     app_advice._io_size_mb = args.io_size_per_app_mb;
     app_advice._per_io_data = 0.75;
     app_advice._per_io_metadata = 0.25;
     app_advice._runtime_minutes =
-        job_conf_advice._job_time_minutes / args.num_apps;
+        config._job_config._job_time_minutes / args.num_apps;
     app_advice._ts_distribution._0_4kb = 1.0;
     /* Access Pattern */
     int num_files_seq = floor(1.0 * NUM_FILES * args.sequential_percentage);
@@ -412,21 +369,63 @@ TEST_CASE("GenerateConfig",
       rank_in_app++;
       rank_in_app = rank_in_app % args.num_process_per_app;
     }
-    app_repo.push_back(app_advice);
+    config._app_repo.push_back(app_advice);
   }
-  j["app_repo"] = app_repo;
 
-  workflow_advice._num_cpu_cores_used =
-      job_conf_advice._node_names.size() * job_conf_advice._num_cores_per_node;
-  workflow_advice._num_gpus_used =
-      job_conf_advice._node_names.size() * job_conf_advice._num_gpus_per_node;
+  workflow_advice._num_cpu_cores_used = config._job_config._node_names.size() *
+                                        config._job_config._num_cores_per_node;
+  workflow_advice._num_gpus_used = config._job_config._node_names.size() *
+                                   config._job_config._num_gpus_per_node;
   workflow_advice._num_apps = args.num_apps;
   workflow_advice._io_size_mb = args.io_size_per_app_mb * args.num_apps;
   workflow_advice._per_io_data = 0.75;
   workflow_advice._per_io_metadata = 0.25;
-  workflow_advice._runtime_minutes = job_conf_advice._job_time_minutes;
+  workflow_advice._runtime_minutes = config._job_config._job_time_minutes;
   workflow_advice._ts_distribution._0_4kb = 1.0;
-  j["workflow"] = workflow_advice;
+}
+
+/**
+ * Test cases
+ */
+TEST_CASE("GenerateConfig",
+          CONVERT_VAL(ranks_per_node, args.ranks_per_node) +
+              CONVERT_ENUM(storage_type, args.storage_type) +
+              CONVERT_VAL(num_apps, args.num_apps) +
+              CONVERT_VAL(num_process_per_app, args.num_process_per_app) +
+              CONVERT_VAL(num_files_per_app, args.num_files_per_app) +
+              CONVERT_VAL(fpp_percentage, args.fpp_percentage) +
+              CONVERT_VAL(sequential_percentage, args.sequential_percentage) +
+              CONVERT_VAL(wo_file_ptg, args.wo_file_ptg) +
+              CONVERT_VAL(ro_file_ptg, args.ro_file_ptg) +
+              CONVERT_VAL(raw_file_ptg, args.raw_file_ptg) +
+              CONVERT_VAL(update_file_ptg, args.update_file_ptg) +
+              CONVERT_VAL(worm_file_ptg, args.worm_file_ptg) +
+              CONVERT_VAL(all_app_ptg, args.all_app_ptg) +
+              CONVERT_VAL(split_app_ptg, args.split_app_ptg) +
+              CONVERT_VAL(alt_app_ptg, args.alt_app_ptg)) {
+  REQUIRE(pretest() == 0);
+
+  fs::path config_file = args.config_file;
+  if (fs::exists(config_file)) fs::remove(config_file);
+  mimir::Config config;
+  create_config(config);
+  using json = nlohmann::json;
+  json j = config;
+  json conf = {{"ranks_per_node", args.ranks_per_node},
+               {"storage_type", args.storage_type},
+               {"num_apps", args.num_apps},
+               {"num_process_per_app", args.num_process_per_app},
+               {"fpp_percentage", args.fpp_percentage},
+               {"sequential_percentage", args.sequential_percentage},
+               {"wo_file_ptg", args.wo_file_ptg},
+               {"ro_file_ptg", args.ro_file_ptg},
+               {"raw_file_ptg", args.raw_file_ptg},
+               {"update_file_ptg", args.update_file_ptg},
+               {"worm_file_ptg", args.worm_file_ptg},
+               {"all_app_ptg", args.all_app_ptg},
+               {"split_app_ptg", args.split_app_ptg},
+               {"alt_app_ptg", args.alt_app_ptg}};
+  j["conf"] = conf;
   std::ofstream out(config_file.c_str());
   out << j;
   out.close();
@@ -443,34 +442,36 @@ TEST_CASE("GenerateConfig",
   t.read(&buffer[0], size);
   t.close();
   json read_json = json::parse(buffer);
-  mimir::JobConfigurationAdvice jc_r;
-  read_json["job"].get_to(jc_r);
-  REQUIRE(jc_r == job_conf_advice);
-  mimir::WorkflowAdvice w_r;
-  read_json["workflow"].get_to(w_r);
-  REQUIRE(w_r == workflow_advice);
+  mimir::Config config_r;
+  read_json.get_to(config_r);
+  REQUIRE(config_r == config);
+  REQUIRE(posttest() == 0);
+}
 
-  auto app_r_json = read_json["app_repo"].begin();
-  auto app_json = app_repo.begin();
-  while (app_r_json != read_json["app_repo"].end()) {
-    mimir::ApplicationAdvice app, app_r;
-    app_r_json->get_to(app_r);
-    app_json->get_to(app);
-    REQUIRE(app == app_r);
-    app_json++;
-    app_r_json++;
-  }
+TEST_CASE("LoadConfig",
+          CONVERT_VAL(ranks_per_node, args.ranks_per_node) +
+              CONVERT_ENUM(storage_type, args.storage_type) +
+              CONVERT_VAL(num_apps, args.num_apps) +
+              CONVERT_VAL(num_process_per_app, args.num_process_per_app) +
+              CONVERT_VAL(num_files_per_app, args.num_files_per_app) +
+              CONVERT_VAL(fpp_percentage, args.fpp_percentage) +
+              CONVERT_VAL(sequential_percentage, args.sequential_percentage) +
+              CONVERT_VAL(wo_file_ptg, args.wo_file_ptg) +
+              CONVERT_VAL(ro_file_ptg, args.ro_file_ptg) +
+              CONVERT_VAL(raw_file_ptg, args.raw_file_ptg) +
+              CONVERT_VAL(update_file_ptg, args.update_file_ptg) +
+              CONVERT_VAL(worm_file_ptg, args.worm_file_ptg) +
+              CONVERT_VAL(all_app_ptg, args.all_app_ptg) +
+              CONVERT_VAL(split_app_ptg, args.split_app_ptg) +
+              CONVERT_VAL(alt_app_ptg, args.alt_app_ptg)) {
+  REQUIRE(pretest() == 0);
 
-  auto file_r_json = read_json["file_repo"].begin();
-  auto file_json = file_repo.begin();
-  while (file_r_json != read_json["file_repo"].end()) {
-    mimir::FileAdvice file, file_r;
-    file_r_json->get_to(file_r);
-    file_json->get_to(file);
-    REQUIRE(file == file_r);
-    file_json++;
-    file_r_json++;
-  }
-
+  const char *MIMIR_CONFIG_PATH = std::getenv(mimir::MIMIR_CONFIG_PATH);
+  REQUIRE(MIMIR_CONFIG_PATH != nullptr);
+  REQUIRE(mimir_init_config() == 0);
+  mimir::Config gen_config;
+  create_config(gen_config);
+  auto loaded_config = MIMIR_CONFIG();
+  REQUIRE(loaded_config->is_same(gen_config));
   REQUIRE(posttest() == 0);
 }

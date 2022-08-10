@@ -64,11 +64,20 @@ function(create_test)
             --all_app_ptg ${all_app_ptg}
             --split_app_ptg ${split_app_ptg}
             --alt_app_ptg ${alt_app_ptg}
-            --reporter compact)
-    set(test_name test_config_${machine}_${config_file_suffix})
-    add_test(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/mimir_test ${TEST_ARGS})
+            --reporter compact
+            )
+    set(test_name test_generate_config_${machine}_${config_file_suffix})
+    add_test(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/mimir_test ${TEST_ARGS} GenerateConfig)
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT pfs=$ENV{pfs})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT BBPATH=$ENV{BBPATH})
+
+
+    set(test_name test_load_config_${machine}_${config_file_suffix})
+    add_test(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/mimir_test ${TEST_ARGS} LoadConfig)
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT pfs=$ENV{pfs})
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=$ENV{pfs})
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT BBPATH=$ENV{BBPATH})
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT MIMIR_CONFIG_PATH=${config_file})
 endfunction()
 foreach (machine ${machines})
     if (${machine} STREQUAL "local")
