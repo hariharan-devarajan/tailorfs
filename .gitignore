@@ -5,4 +5,21 @@
 /external/UnifyFS/t/
 /dependency/loads
 /build_4/
+*.dirstamp*
+*.t
 
+/external/UnifyFS/t/api/.dirstamp
+/external/UnifyFS/t/common/.dirstamp
+/external/UnifyFS/t/std/.dirstamp
+/external/UnifyFS/t/api/api_test.t
+/external/UnifyFS/t/common/seg_tree_test.t
+/external/UnifyFS/t/common/slotmap_test.t
+/external/UnifyFS/t/sys/statfs-static.t
+/external/UnifyFS/t/std/stdio-static.t
+/external/UnifyFS/t/sys/sysio-static.t
+/external/UnifyFS/client/unifyfs-api.pc
+/external/UnifyFS/util/unifyfs-api-client/src/unifyfs-laminate
+/external/UnifyFS/util/unifyfs-api-client/src/unifyfs-remove
+/external/UnifyFS/util/unifyfs-stage/src/unifyfs-stage
+/external/UnifyFS/util/scripts/lsfcsm/unifyfs_lsfcsm_epilog
+/external/UnifyFS/util/scripts/lsfcsm/unifyfs_lsfcsm_prolog
