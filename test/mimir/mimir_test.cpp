@@ -86,6 +86,9 @@ cl::Parser define_options() {
   return cl::Opt(args.debug, "debug")["--debug"]("Enable debugging.") |
          cl::Opt(args.ranks_per_node,
                  "ranks_per_node")["--ranks_per_node"]("# ranks per node.") |
+         cl::Opt(args.io_size_per_app_mb,
+                 "io_size_per_app_mb")["--io_size_per_app_mb"](
+             "io size per app MB.") |
          cl::Opt(args.config_file, "config_file")["--config_file"](
              "Name of the config file (JSON).") |
          cl::Opt(args.file_prefix,
@@ -152,11 +155,11 @@ int pretest() {
               args.worm_file_ptg + args.update_file_ptg ==
           1.0);
   REQUIRE(args.all_app_ptg + args.split_app_ptg + args.alt_app_ptg == 1.0);
-
-  REQUIRE(args.wo_file_ptg + args.ro_file_ptg ==
-          args.all_app_ptg);  // as wo and ro can only be on all processes
+  if (args.wo_file_ptg == 1.0 || args.ro_file_ptg == 1.0) {
+    REQUIRE(args.all_app_ptg == 1.0);
+  }
   if (args.split_app_ptg > 0.0 || args.alt_app_ptg > 0.0) {
-    REQUIRE(info.comm_size > 1);
+    REQUIRE(args.ranks_per_node > 1);
   }
   TEST_LOGGER_INFO("Validated args");
   INFO("rank " << info.rank);
@@ -242,6 +245,21 @@ TEST_CASE("GenerateConfig",
   }
   auto node_names = split(LSB_HOSTS);
 
+  json conf = {{"ranks_per_node", args.ranks_per_node},
+               {"storage_type", args.storage_type},
+               {"num_apps", args.num_apps},
+               {"num_process_per_app", args.num_process_per_app},
+               {"fpp_percentage", args.fpp_percentage},
+               {"sequential_percentage", args.sequential_percentage},
+               {"wo_file_ptg", args.wo_file_ptg},
+               {"ro_file_ptg", args.ro_file_ptg},
+               {"raw_file_ptg", args.raw_file_ptg},
+               {"update_file_ptg", args.update_file_ptg},
+               {"worm_file_ptg", args.worm_file_ptg},
+               {"all_app_ptg", args.all_app_ptg},
+               {"split_app_ptg", args.split_app_ptg},
+               {"alt_app_ptg", args.alt_app_ptg}};
+  j["conf"] = conf;
   mimir::JobConfigurationAdvice job_conf_advice;
   job_conf_advice._job_id = 0;
   job_conf_advice._devices.clear();
