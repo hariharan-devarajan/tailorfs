@@ -444,7 +444,7 @@ TEST_CASE("GenerateConfig",
   json read_json = json::parse(buffer);
   mimir::Config config_r;
   read_json.get_to(config_r);
-  REQUIRE(config_r == config);
+  REQUIRE(config_r.is_same(config));
   REQUIRE(posttest() == 0);
 }
 
