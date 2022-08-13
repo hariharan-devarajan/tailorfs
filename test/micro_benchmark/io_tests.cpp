@@ -42,7 +42,6 @@ struct Arguments {
   AccessPattern access_pattern = AccessPattern::SEQUENTIAL;
   FileSharing file_sharing = FileSharing::PER_PROCESS;
   ProcessGrouping process_grouping = ProcessGrouping::ALL_PROCESS;
-  bool default_unifyfs = false;
 };
 struct Info {
   fs::path pfs;
@@ -90,7 +89,8 @@ cl::Parser define_options() {
              "Transfer size used for performing I/O") |
          cl::Opt(args.iteration,
                  "iteration")["-i"]["--iteration"]("Number of Iterations") |
-         cl::Opt(args.ranks_per_node, "rpn")["-n"]["--rpn"]("Ranks per node") |
+         cl::Opt(args.ranks_per_node,
+                 "rpn")["-n"]["--ranks_per_node"]("Ranks per node") |
          cl::Opt(args.storage_type, "storage_type")["-s"]["--storage_type"](
              "Where to store the data 0-> SHM, 1->NODE_LOCAL_SSD, 2-> "
              "SHARED_SSD, 3->PFS") |
@@ -103,10 +103,7 @@ cl::Parser define_options() {
                  "process_grouping")["-c"]["--process_grouping"](
              "How the process are grouped: 0-> ALL, 1-> SPLIT_PROCESS_HALF, "
              "2-> SPLIT_PROCESS_ALTERNATE") |
-         cl::Opt(args.debug, "debug")["-d"]["--debug"]("Enable Debug") |
-         cl::Opt(args.default_unifyfs,
-                 "default_unifyfs")["-u"]["--default_unifyfs"](
-             "Enable default unifyfs");
+         cl::Opt(args.debug, "debug")["-d"]["--debug"]("Enable Debug");
 }
 
 /**
@@ -280,16 +277,17 @@ TEST_CASE("Write-Only",
     REQUIRE(status_orig == MPI_SUCCESS);
     for (int i = 0; i < args.iteration; ++i) {
       auto write_data = std::vector<char>(args.request_size, 'w');
-      write_time.resumeTime();
+
       MPI_Status stat_orig;
       off_t base_offset = (off_t)info.rank * args.request_size * args.iteration;
       off_t relative_offset = i * args.request_size;
+      write_time.resumeTime();
       auto ret_orig = MPI_File_write_at_all(
           fh_orig, base_offset + relative_offset, write_data.data(),
           args.request_size, MPI_CHAR, &stat_orig);
+      write_time.pauseTime();
       int written_bytes;
       MPI_Get_count(&stat_orig, MPI_CHAR, &written_bytes);
-      write_time.pauseTime();
       REQUIRE(written_bytes == args.request_size);
     }
     close_time.resumeTime();
@@ -308,11 +306,12 @@ TEST_CASE("Write-Only",
       PRINT_MSG(
           "%10s,%10d,%10d,"
           "%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f,"
-          "%10s,%10s,%d,%d,%d,%d\n",
+          "%10s,%10s,"
+          "%d,%d,%d,%d\n",
           "Timing", args.iteration, args.request_size,
           total_init / info.comm_size, total_finalize / info.comm_size,
           total_open / info.comm_size, total_close / info.comm_size,
-          total_write / info.comm_size, 0, interface, "wo", args.storage_type,
+          total_write / info.comm_size, 0.0, interface, "wo", args.storage_type,
           args.access_pattern, args.file_sharing, args.process_grouping);
     }
   }
