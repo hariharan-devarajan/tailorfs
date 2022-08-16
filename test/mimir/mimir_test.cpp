@@ -217,9 +217,11 @@ std::vector<std::string> split(std::string x, char delim = ' ') {
   return splitted;
 }
 int create_config(mimir::Config &config) {
-  auto LSB_HOSTS = std::getenv("LSB_HOSTS");
-  if (LSB_HOSTS == nullptr) {
+  std::string LSB_HOSTS;
+  if (std::getenv("LSB_HOSTS") == nullptr) {
     LSB_HOSTS = "localhost";
+  } else {
+    LSB_HOSTS = std::getenv("LSB_HOSTS");
   }
   auto node_names = split(LSB_HOSTS);
   config._job_config._job_id = 0;
@@ -382,6 +384,7 @@ int create_config(mimir::Config &config) {
   workflow_advice._per_io_metadata = 0.25;
   workflow_advice._runtime_minutes = config._job_config._job_time_minutes;
   workflow_advice._ts_distribution._0_4kb = 1.0;
+  return 0;
 }
 
 /**

@@ -39,7 +39,7 @@ endif ()
 
 set(TAILORFS_SRC src/tailorfs/tailorfs.cpp)
 set(TAILORFS_PRIVATE_INCLUDE src/tailorfs/brahma/posix.h)
-set(TAILORFS_PUBLIC_INCLUDE include/tailorfs/tailorfs.h)
+set(TAILORFS_PUBLIC_INCLUDE include/tailorfs/tailorfs.h include/tailorfs/macro.h)
 
 add_library(tailorfs SHARED ${TAILORFS_PUBLIC_INCLUDE} ${TAILORFS_PRIVATE_INCLUDE} ${TAILORFS_SRC})
 target_link_libraries(tailorfs ${DEPENDENCY_LIB})
