@@ -15,6 +15,7 @@ set(DEPENDENCY_LIB ${DEPENDENCY_LIB} brahma)
 include_directories(external/brahma/include)
 
 add_subdirectory(external/cpp-logger)
+set(DEPENDENCY_LIB ${DEPENDENCY_LIB} cpp-logger)
 include_directories(external/cpp-logger/include)
 
 add_subdirectory(external/mimir)
@@ -37,8 +38,8 @@ if (MPI_FOUND)
 endif ()
 
 
-set(TAILORFS_SRC src/tailorfs/tailorfs.cpp)
-set(TAILORFS_PRIVATE_INCLUDE src/tailorfs/brahma/posix.h)
+set(TAILORFS_SRC src/tailorfs/brahma/posix.cpp src/tailorfs/brahma/stdio.cpp)
+set(TAILORFS_PRIVATE_INCLUDE src/tailorfs/brahma/posix.h src/tailorfs/brahma/stdio.h)
 set(TAILORFS_PUBLIC_INCLUDE include/tailorfs/tailorfs.h include/tailorfs/macro.h)
 
 add_library(tailorfs SHARED ${TAILORFS_PUBLIC_INCLUDE} ${TAILORFS_PRIVATE_INCLUDE} ${TAILORFS_SRC})

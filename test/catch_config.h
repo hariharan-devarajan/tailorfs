@@ -7,9 +7,10 @@
 
 #define CATCH_CONFIG_RUNNER
 #include <cpp-logger/logger.h>
+#include <tailorfs/tailorfs.h>
 
 #include <catch2/catch_all.hpp>
-//#include <mpi.h>
+// #include <mpi.h>
 
 namespace cl = Catch::Clara;
 
@@ -52,6 +53,7 @@ int finalize();
       ->log(cpplogger::LOG_PRINT, format, __VA_ARGS__);
 
 int main(int argc, char *argv[]) {
+  // tfs_init();
   Catch::Session session;
   auto cli = session.cli() | define_options();
   session.cli(cli);
@@ -62,6 +64,7 @@ int main(int argc, char *argv[]) {
   int test_return_code = session.run();
   returnCode = finalize();
   if (returnCode != 0) return returnCode;
+  // tfs_finalize();
   exit(test_return_code);
 }
 #endif  // TAILORFS_CATCH_CONFIG_H

@@ -243,8 +243,8 @@ int create_config(mimir::Config &config) {
   const int NUM_FILES = args.num_apps * args.num_files_per_app;
   for (int file_index = 0; file_index < NUM_FILES; ++file_index) {
     mimir::FileAdvice file_advice;
-    file_advice._name = (info.pfs / (args.file_prefix + "_" +
-                                     std::to_string(file_index) + ".dat"))
+    file_advice._name = (info.pfs / (args.file_prefix + ".dat" + "_" +
+                                     std::to_string(file_index)))
                             .string();
     file_advice._format = Format::FORMAT_BINARY;
     file_advice._size_mb = args.io_size_per_app_mb / args.num_files_per_app;

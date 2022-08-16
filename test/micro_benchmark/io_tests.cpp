@@ -126,9 +126,9 @@ int pretest() {
   MPI_Comm_rank(MPI_COMM_WORLD, &info.rank);
   MPI_Comm_size(MPI_COMM_WORLD, &info.comm_size);
   gethostname(info.hostname, 256);
-  info.pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
-  info.bb = fs::path(BB_VAR) / "unifyfs" / "data";
-  info.shm = fs::path(SHM_VAR) / "unifyfs" / "data";
+  info.pfs = fs::path(PFS_VAR) / "tailorfs" / "data";
+  info.bb = fs::path(BB_VAR) / "tailorfs" / "data";
+  info.shm = fs::path(SHM_VAR) / "tailorfs" / "data";
   return 0;
 }
 int posttest() {
@@ -227,8 +227,7 @@ TEST_CASE("Write-Only",
   REQUIRE(pretest() == 0);
   switch (args.file_sharing) {
     case tt::FileSharing::PER_PROCESS: {
-      args.filename = args.filename + "_" + std::to_string(info.rank) + "_of_" +
-                      std::to_string(info.comm_size);
+      args.filename = args.filename + "_" + std::to_string(info.rank);
       break;
     }
     case tt::FileSharing::SHARED_FILE: {
@@ -329,8 +328,7 @@ TEST_CASE("Read-Only",
   INFO(args.filename);
   switch (args.file_sharing) {
     case tt::FileSharing::PER_PROCESS: {
-      filename_str = args.filename + "_" + std::to_string(info.rank) + "_of_" +
-                     std::to_string(info.comm_size);
+      filename_str = args.filename + "_" + std::to_string(info.rank);
       break;
     }
     case tt::FileSharing::SHARED_FILE: {
@@ -479,11 +477,9 @@ TEST_CASE("Read-After-Write",
     }
   } else if (tt::FileSharing::PER_PROCESS == args.file_sharing) {
     if (is_writer) {
-      filename_str = args.filename + "_" + std::to_string(write_rank) + "_of_" +
-                     std::to_string(write_comm_size);
+      filename_str = args.filename + "_" + std::to_string(write_rank);
     } else {
-      filename_str = args.filename + "_" + std::to_string(read_rank) + "_of_" +
-                     std::to_string(read_comm_size);
+      filename_str = args.filename + "_" + std::to_string(read_rank);
     }
   } else {
     REQUIRE(1 == 0);
@@ -650,8 +646,7 @@ TEST_CASE("Update", std::string("[type=update]") +
   REQUIRE(pretest() == 0);
   switch (args.file_sharing) {
     case tt::FileSharing::PER_PROCESS: {
-      args.filename = args.filename + "_" + std::to_string(info.rank) + "_of_" +
-                      std::to_string(info.comm_size);
+      args.filename = args.filename + "_" + std::to_string(info.rank);
       create_file(info.pfs / args.filename, args.request_size * args.iteration);
       break;
     }
@@ -806,11 +801,9 @@ TEST_CASE("WORM",
     }
   } else if (tt::FileSharing::PER_PROCESS == args.file_sharing) {
     if (is_writer) {
-      filename_str = args.filename + "_" + std::to_string(write_rank) + "_of_" +
-                     std::to_string(write_comm_size);
+      filename_str = args.filename + "_" + std::to_string(write_rank);
     } else {
-      filename_str = args.filename + "_" + std::to_string(read_rank) + "_of_" +
-                     std::to_string(read_comm_size);
+      filename_str = args.filename + "_" + std::to_string(read_rank);
     }
   } else {
     REQUIRE(1 == 0);

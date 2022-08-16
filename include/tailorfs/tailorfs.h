@@ -6,19 +6,27 @@
 #define TAILORFS_TAILORFS_H
 
 #include <brahma/brahma.h>
-#include <cpp-logger/logger.h>
 #include <mimir/mimir.h>
 #include <tailorfs/brahma/posix.h>
+#include <tailorfs/brahma/stdio.h>
+#include <tailorfs/macro.h>
 
-void __attribute__((constructor)) tailorfs_init() {
+inline void tfs_init() {
+  init_mimir();
   mimir_init_config();
   insert_loaded_intents();
   brahma_gotcha_wrap("tailorfs", 1);
-  brahma::POSIXTest::get_instance();
+  brahma::POSIXTailorFS::get_instance();
+  brahma::STDIOTailorFS::get_instance();
 }
-void __attribute__((destructor)) tailorfs_finalize() {
+inline void tfs_finalize() {
+  free_bindings();
   remove_loaded_intents();
   mimir_finalize_config();
+  finalize_mimir();
 }
+
+void __attribute__((constructor)) tailorfs_init() { tfs_init(); }
+void __attribute__((destructor)) tailorfs_finalize() { tfs_finalize(); }
 
 #endif  // TAILORFS_TAILORFS_H
