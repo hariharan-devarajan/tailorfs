@@ -4,10 +4,14 @@
 #include <cpp-logger/logger.h>
 #include <tailorfs/brahma/posix.h>
 
+#include "tailorfs/core/fsview_manager.h"
+
 int brahma::POSIXTailorFS::open(const char *pathname, int flags, mode_t mode) {
   BRAHMA_MAP_OR_FAIL(open);
   int ret = -1;
   if (is_traced(pathname)) {
+    tailorfs::FSID id;
+    auto status = FSVIEW_MANAGER->get_fsview(pathname, id);
     ret = __real_open(pathname, flags, mode);
     TAILORFS_LOGPRINT("open(%s, %d, %u) = %d", pathname, flags,
                       (unsigned int)mode, ret);

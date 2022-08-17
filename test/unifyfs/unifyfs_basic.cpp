@@ -10,8 +10,6 @@
 
 #include "tailorfs/util/unifyfs-stage-transfer.cpp"
 
-const uint64_t GB = 1024L * 1024L * 1024L;
-
 namespace tailorfs::test {}
 
 namespace fs = std::experimental::filesystem;
@@ -63,7 +61,8 @@ tailorfs::test::Arguments args;
 tailorfs::test::Info info;
 
 namespace tailorfs::test {
-int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl, Timer *init_time) {
+int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl,
+                        Timer *init_time) {
   int options_ct = 0;
   char unifyfs_consistency[32] = "LAMINATED";
   options_ct++;
@@ -73,7 +72,7 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl, Timer *init_tim
   if (!args.default_unifyfs) {
     strcpy(logio_chunk_size, std::to_string(args.request_size).c_str());
   } else {
-    strcpy(logio_chunk_size, std::to_string(1024L*1024L).c_str());
+    strcpy(logio_chunk_size, std::to_string(1024L * 1024L).c_str());
   }
   options_ct++;
   char logio_shmem_size[32];
@@ -103,9 +102,10 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl, Timer *init_tim
   } else {
     strcpy(logio_spill_size,
            std::to_string(args.request_size * args.iteration + 1024L * 1024L)
-               .c_str());strcpy(logio_spill_size,
-                                std::to_string(1024L*1024L * args.iteration + 1024L * 1024L)
-                                    .c_str());
+               .c_str());
+    strcpy(
+        logio_spill_size,
+        std::to_string(1024L * 1024L * args.iteration + 1024L * 1024L).c_str());
   }
   options_ct++;
   char client_local_extents[32];
@@ -136,10 +136,13 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl, Timer *init_tim
                   .opt_value = unifyfs_consistency};
     options[1] = {.opt_name = "client.fsync_persist",
                   .opt_value = client_fsync_persist};
-    options[2] = {.opt_name = "logio.chunk_size", .opt_value = logio_chunk_size};
-    options[3] = {.opt_name = "logio.shmem_size", .opt_value = logio_shmem_size};
+    options[2] = {.opt_name = "logio.chunk_size",
+                  .opt_value = logio_chunk_size};
+    options[3] = {.opt_name = "logio.shmem_size",
+                  .opt_value = logio_shmem_size};
     options[4] = {.opt_name = "logio.spill_dir", .opt_value = logio_spill_dir};
-    options[5] = {.opt_name = "logio.spill_size", .opt_value = logio_spill_size};
+    options[5] = {.opt_name = "logio.spill_size",
+                  .opt_value = logio_spill_size};
     options[6] = {.opt_name = "client.local_extents",
                   .opt_value = client_local_extents};
     options[7] = {.opt_name = "client.node_local_extents",
@@ -155,9 +158,12 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl, Timer *init_tim
     unifyfs_cfg_option *options = static_cast<unifyfs_cfg_option *>(
         calloc(options_ct, sizeof(unifyfs_cfg_option)));
     options[0] = {.opt_name = "logio.spill_dir", .opt_value = logio_spill_dir};
-    options[1] = {.opt_name = "logio.spill_size", .opt_value = logio_spill_size};
-    options[2] = {.opt_name = "logio.shmem_size", .opt_value = logio_shmem_size};
-    options[3] = {.opt_name = "logio.chunk_size", .opt_value = logio_chunk_size};
+    options[1] = {.opt_name = "logio.spill_size",
+                  .opt_value = logio_spill_size};
+    options[2] = {.opt_name = "logio.shmem_size",
+                  .opt_value = logio_shmem_size};
+    options[3] = {.opt_name = "logio.chunk_size",
+                  .opt_value = logio_chunk_size};
     INFO("unifyfs path " << info.unifyfs_path);
     const char *val = info.unifyfs_path.c_str();
     init_time->resumeTime();
@@ -215,7 +221,9 @@ cl::Parser define_options() {
              "How the process are grouped: 0-> ALL, 1-> SPLIT_PROCESS_HALF, "
              "2-> SPLIT_PROCESS_ALTERNATE") |
          cl::Opt(args.debug, "debug")["-d"]["--debug"]("Enable Debug") |
-         cl::Opt(args.default_unifyfs, "default_unifyfs")["-u"]["--default_unifyfs"]("Enable default unifyfs");
+         cl::Opt(args.default_unifyfs,
+                 "default_unifyfs")["-u"]["--default_unifyfs"](
+             "Enable default unifyfs");
 }
 
 /**
@@ -281,9 +289,9 @@ int create_file(fs::path filename, uint64_t blocksize) {
   off_t base_offset = 0;
   switch (args.file_sharing) {
     case tt::FileSharing::PER_PROCESS: {
-      status_orig =
-          MPI_File_open(MPI_COMM_SELF, filename.c_str(),
-                        MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &fh_orig);
+      status_orig = MPI_File_open(MPI_COMM_SELF, filename.c_str(),
+                                  MPI_MODE_RDWR | MPI_MODE_CREATE,
+                                  MPI_INFO_NULL, &fh_orig);
       char msg[MPI_MAX_ERROR_STRING];
       int resultlen;
       MPI_Error_string(status_orig, msg, &resultlen);
@@ -292,9 +300,9 @@ int create_file(fs::path filename, uint64_t blocksize) {
       break;
     }
     case tt::FileSharing::SHARED_FILE: {
-      status_orig =
-          MPI_File_open(MPI_COMM_WORLD, filename.c_str(),
-                        MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &fh_orig);
+      status_orig = MPI_File_open(MPI_COMM_WORLD, filename.c_str(),
+                                  MPI_MODE_RDWR | MPI_MODE_CREATE,
+                                  MPI_INFO_NULL, &fh_orig);
       base_offset = (off_t)info.rank * blocksize;
       REQUIRE(status_orig == MPI_SUCCESS);
       break;
@@ -355,7 +363,7 @@ TEST_CASE("Write-Only",
   Timer init_time, finalize_time, open_time, close_time, write_time,
       awrite_time, flush_time;
   char usecase[256];
-  bool is_run =false;
+  bool is_run = false;
   INFO("rank " << info.rank);
   SECTION("storage.pfs") {
     strcpy(usecase, "pfs");
@@ -365,13 +373,13 @@ TEST_CASE("Write-Only",
     int status_orig;
 
     if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
-      status_orig =
-          MPI_File_open(MPI_COMM_SELF, filename.c_str(),
-                        MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &fh_orig);
+      status_orig = MPI_File_open(MPI_COMM_SELF, filename.c_str(),
+                                  MPI_MODE_RDWR | MPI_MODE_CREATE,
+                                  MPI_INFO_NULL, &fh_orig);
     } else if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-      status_orig =
-          MPI_File_open(MPI_COMM_WORLD, filename.c_str(),
-                        MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &fh_orig);
+      status_orig = MPI_File_open(MPI_COMM_WORLD, filename.c_str(),
+                                  MPI_MODE_RDWR | MPI_MODE_CREATE,
+                                  MPI_INFO_NULL, &fh_orig);
     }
     open_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
@@ -393,11 +401,13 @@ TEST_CASE("Write-Only",
     status_orig = MPI_File_close(&fh_orig);
     close_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
-    is_run =true;
+    is_run = true;
   }
   SECTION("storage.unifyfs") {
-    if (!args.default_unifyfs) strcpy(usecase, "unifyfso");
-    else strcpy(usecase, "unifyfsd");
+    if (!args.default_unifyfs)
+      strcpy(usecase, "unifyfso");
+    else
+      strcpy(usecase, "unifyfsd");
     unifyfs_handle fshdl;
     tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time);
     MPI_Barrier(MPI_COMM_WORLD);
@@ -418,7 +428,8 @@ TEST_CASE("Write-Only",
       if (rank % args.ranks_per_node == 0) {
         int create_flags = 0;
         open_time.resumeTime();
-        rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(), &gfid);
+        rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(),
+                            &gfid);
         open_time.pauseTime();
       }
       MPI_Barrier(MPI_COMM_WORLD);
@@ -551,13 +562,12 @@ TEST_CASE("Write-Only",
           break;
         }
       }
-
     }
     MPI_Barrier(MPI_COMM_WORLD);
 
-    is_run =true;
+    is_run = true;
   }
-  if(is_run) {
+  if (is_run) {
     AGGREGATE_TIME(init);
     AGGREGATE_TIME(finalize);
     AGGREGATE_TIME(open);
@@ -565,15 +575,17 @@ TEST_CASE("Write-Only",
     AGGREGATE_TIME(write);
     AGGREGATE_TIME(flush);
     if (info.rank == 0) {
-      PRINT_MSG("%10s,%10d,%10d,"
-                "%10.6f,%10.6f,%10.6f,%10.6f,"
-                "%10.6f,%10.6f,%10.6f,%10.6f,"
-                "%10s,%10s,%d,%d,%d,%d\n",
-                "Timing", args.iteration, args.request_size,
-                total_init / info.comm_size, total_finalize / info.comm_size ,
-                total_open / info.comm_size, total_close / info.comm_size,
-                total_write / info.comm_size, 0, total_flush / info.comm_size, 0,
-                usecase, "wo", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
+      PRINT_MSG(
+          "%10s,%10d,%10d,"
+          "%10.6f,%10.6f,%10.6f,%10.6f,"
+          "%10.6f,%10.6f,%10.6f,%10.6f,"
+          "%10s,%10s,%d,%d,%d,%d\n",
+          "Timing", args.iteration, args.request_size,
+          total_init / info.comm_size, total_finalize / info.comm_size,
+          total_open / info.comm_size, total_close / info.comm_size,
+          total_write / info.comm_size, 0, total_flush / info.comm_size, 0,
+          usecase, "wo", args.storage_type, args.access_pattern,
+          args.file_sharing, args.process_grouping);
     }
   }
   REQUIRE(posttest() == 0);
@@ -591,7 +603,7 @@ TEST_CASE("Read-Only",
   switch (args.file_sharing) {
     case tt::FileSharing::PER_PROCESS: {
       filename_str = args.filename + "_" + std::to_string(info.rank) + "_of_" +
-                      std::to_string(info.comm_size);
+                     std::to_string(info.comm_size);
       break;
     }
     case tt::FileSharing::SHARED_FILE: {
@@ -644,9 +656,10 @@ TEST_CASE("Read-Only",
     REQUIRE(status_orig == MPI_SUCCESS);
   }
   SECTION("storage.unifyfs") {
-
-    if (!args.default_unifyfs) strcpy(usecase, "unifyfso");
-    else strcpy(usecase, "unifyfsd");
+    if (!args.default_unifyfs)
+      strcpy(usecase, "unifyfso");
+    else
+      strcpy(usecase, "unifyfsd");
     unifyfs_handle fshdl;
     tt::buildUnifyFSOptions(tailorfs::test::READ_ONLY, &fshdl, &init_time);
     unifyfs_gfid gfid;
@@ -674,7 +687,6 @@ TEST_CASE("Read-Only",
       }
     }
 
-
     int file_index = 1;
     ctx.fshdl = fshdl;
     ctx.block_size = args.request_size * args.iteration;
@@ -683,7 +695,6 @@ TEST_CASE("Read-Only",
                                     unifyfs_filename.c_str());
     prefetch_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
-
 
     // INFO("prefetch done by rank " << rank);
     int access_flags = O_RDONLY;
@@ -775,15 +786,17 @@ TEST_CASE("Read-Only",
   AGGREGATE_TIME(read);
   AGGREGATE_TIME(prefetch);
   if (info.rank == 0) {
-    PRINT_MSG("%10s,%10d,%10d,"
-              "%10.6f,%10.6f,%10.6f,%10.6f,"
-              "%10.6f,%10.6f,%10.6f,%10.6f,"
-              "%10s,%10s,%d,%d,%d,%d\n",
-              "Timing", args.iteration, args.request_size,
-              total_init / info.comm_size, total_finalize / info.comm_size ,
-              total_open / info.comm_size, total_close / info.comm_size,
-              0, total_read / info.comm_size, 0, total_prefetch / info.comm_size,
-              usecase, "ro", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
+    PRINT_MSG(
+        "%10s,%10d,%10d,"
+        "%10.6f,%10.6f,%10.6f,%10.6f,"
+        "%10.6f,%10.6f,%10.6f,%10.6f,"
+        "%10s,%10s,%d,%d,%d,%d\n",
+        "Timing", args.iteration, args.request_size,
+        total_init / info.comm_size, total_finalize / info.comm_size,
+        total_open / info.comm_size, total_close / info.comm_size, 0,
+        total_read / info.comm_size, 0, total_prefetch / info.comm_size,
+        usecase, "ro", args.storage_type, args.access_pattern,
+        args.file_sharing, args.process_grouping);
   }
   REQUIRE(posttest() == 0);
 }
@@ -813,7 +826,7 @@ TEST_CASE("Read-After-Write",
     is_reader = true;
 
   } else if (args.process_grouping == tt::ProcessGrouping::SPLIT_PROCESS_HALF) {
-    is_writer = info.rank / (info.comm_size/2) == 0;
+    is_writer = info.rank / (info.comm_size / 2) == 0;
     is_reader = !is_writer;
     MPI_Comm_split(MPI_COMM_WORLD, is_writer, info.rank, &writer_comm);
     MPI_Comm_split(MPI_COMM_WORLD, is_reader, info.rank, &reader_comm);
@@ -840,11 +853,11 @@ TEST_CASE("Read-After-Write",
     }
   } else if (tt::FileSharing::PER_PROCESS == args.file_sharing) {
     if (is_writer) {
-      filename_str = args.filename + "_" + std::to_string(write_rank) +
-                      "_of_" + std::to_string(write_comm_size);
+      filename_str = args.filename + "_" + std::to_string(write_rank) + "_of_" +
+                     std::to_string(write_comm_size);
     } else {
       filename_str = args.filename + "_" + std::to_string(read_rank) + "_of_" +
-                      std::to_string(read_comm_size);
+                     std::to_string(read_comm_size);
     }
   } else {
     REQUIRE(1 == 0);
@@ -865,7 +878,7 @@ TEST_CASE("Read-After-Write",
                                     MPI_MODE_WRONLY | MPI_MODE_CREATE,
                                     MPI_INFO_NULL, &fh_orig);
         open_time.pauseTime();
-      } else  if (tt::FileSharing::SHARED_FILE == args.file_sharing) {
+      } else if (tt::FileSharing::SHARED_FILE == args.file_sharing) {
         open_time.resumeTime();
         status_orig = MPI_File_open(writer_comm, pfs_filename.c_str(),
                                     MPI_MODE_WRONLY | MPI_MODE_CREATE,
@@ -904,7 +917,7 @@ TEST_CASE("Read-After-Write",
         status_orig = MPI_File_open(MPI_COMM_SELF, pfs_filename.c_str(),
                                     MPI_MODE_RDONLY, MPI_INFO_NULL, &fh_orig);
         open_time.pauseTime();
-      } else  if (tt::FileSharing::SHARED_FILE == args.file_sharing) {
+      } else if (tt::FileSharing::SHARED_FILE == args.file_sharing) {
         open_time.resumeTime();
         status_orig = MPI_File_open(reader_comm, pfs_filename.c_str(),
                                     MPI_MODE_RDONLY, MPI_INFO_NULL, &fh_orig);
@@ -946,19 +959,22 @@ TEST_CASE("Read-After-Write",
     REQUIRE(status_orig == MPI_SUCCESS);
   }
   SECTION("storage.unifyfs") {
-
-    if (!args.default_unifyfs) strcpy(usecase, "unifyfso");
-    else strcpy(usecase, "unifyfsd");
+    if (!args.default_unifyfs)
+      strcpy(usecase, "unifyfso");
+    else
+      strcpy(usecase, "unifyfsd");
     int rc;
     /* Initialize unifyfs */
     unifyfs_handle fshdl;
-    REQUIRE(tt::buildUnifyFSOptions(tailorfs::test::READ_AFTER_WRITE, &fshdl, &init_time) == 0);
+    REQUIRE(tt::buildUnifyFSOptions(tailorfs::test::READ_AFTER_WRITE, &fshdl,
+                                    &init_time) == 0);
     fs::path unifyfs_filename = info.unifyfs_path / filename_str;
     INFO("unifyfs_filename " << unifyfs_filename);
     if (is_writer) {
       unifyfs_gfid gfid;
       /* Create or Open file for production */
-      if (write_rank == 0 || tt::FileSharing::PER_PROCESS == args.file_sharing) {
+      if (write_rank == 0 ||
+          tt::FileSharing::PER_PROCESS == args.file_sharing) {
         int create_flags = 0;
         open_time.resumeTime();
         rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(),
@@ -968,7 +984,8 @@ TEST_CASE("Read-After-Write",
         REQUIRE(gfid != UNIFYFS_INVALID_GFID);
       }
       MPI_Barrier(writer_comm);
-      if (write_rank != 0 && tt::FileSharing::PER_PROCESS != args.file_sharing) {
+      if (write_rank != 0 &&
+          tt::FileSharing::PER_PROCESS != args.file_sharing) {
         int access_flags = O_WRONLY;
         open_time.resumeTime();
         rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
@@ -1119,15 +1136,17 @@ TEST_CASE("Read-After-Write",
   AGGREGATE_TIME(read);
   AGGREGATE_TIME(write);
   if (info.rank == 0) {
-    PRINT_MSG("%10s,%10d,%10d,"
-              "%10.6f,%10.6f,%10.6f,%10.6f,"
-              "%10.6f,%10.6f,%10.6f,%10.6f,"
-              "%10s,%10s,%d,%d,%d,%d\n",
-              "Timing", args.iteration, args.request_size,
-              total_init / info.comm_size, total_finalize / info.comm_size ,
-              total_open / info.comm_size, total_close / info.comm_size,
-              total_write / write_comm_size, total_read / read_comm_size, 0, 0,
-              usecase, "raw", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
+    PRINT_MSG(
+        "%10s,%10d,%10d,"
+        "%10.6f,%10.6f,%10.6f,%10.6f,"
+        "%10.6f,%10.6f,%10.6f,%10.6f,"
+        "%10s,%10s,%d,%d,%d,%d\n",
+        "Timing", args.iteration, args.request_size,
+        total_init / info.comm_size, total_finalize / info.comm_size,
+        total_open / info.comm_size, total_close / info.comm_size,
+        total_write / write_comm_size, total_read / read_comm_size, 0, 0,
+        usecase, "raw", args.storage_type, args.access_pattern,
+        args.file_sharing, args.process_grouping);
   }
   MPI_Barrier(MPI_COMM_WORLD);
 }
@@ -1149,7 +1168,8 @@ TEST_CASE("Update",
     }
     case tt::FileSharing::SHARED_FILE: {
       args.filename = args.filename + "_" + std::to_string(info.comm_size);
-      create_file(info.pfs / args.filename, args.request_size * args.iteration * info.comm_size);
+      create_file(info.pfs / args.filename,
+                  args.request_size * args.iteration * info.comm_size);
       break;
     }
   }
@@ -1159,7 +1179,7 @@ TEST_CASE("Update",
   Timer init_time, finalize_time, open_time, close_time, write_time,
       awrite_time, flush_time;
   char usecase[256];
-  bool is_run =false;
+  bool is_run = false;
   INFO("rank " << info.rank);
   SECTION("storage.pfs") {
     strcpy(usecase, "pfs");
@@ -1169,13 +1189,13 @@ TEST_CASE("Update",
     int status_orig;
 
     if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
-      status_orig =
-          MPI_File_open(MPI_COMM_SELF, filename.c_str(),
-                        MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &fh_orig);
+      status_orig = MPI_File_open(MPI_COMM_SELF, filename.c_str(),
+                                  MPI_MODE_RDWR | MPI_MODE_CREATE,
+                                  MPI_INFO_NULL, &fh_orig);
     } else if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-      status_orig =
-          MPI_File_open(MPI_COMM_WORLD, filename.c_str(),
-                        MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &fh_orig);
+      status_orig = MPI_File_open(MPI_COMM_WORLD, filename.c_str(),
+                                  MPI_MODE_RDWR | MPI_MODE_CREATE,
+                                  MPI_INFO_NULL, &fh_orig);
     }
     open_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
@@ -1201,12 +1221,13 @@ TEST_CASE("Update",
     status_orig = MPI_File_close(&fh_orig);
     close_time.pauseTime();
     REQUIRE(status_orig == MPI_SUCCESS);
-    is_run =true;
+    is_run = true;
   }
   SECTION("storage.unifyfs") {
-
-    if (!args.default_unifyfs) strcpy(usecase, "unifyfso");
-    else strcpy(usecase, "unifyfsd");
+    if (!args.default_unifyfs)
+      strcpy(usecase, "unifyfso");
+    else
+      strcpy(usecase, "unifyfsd");
     unifyfs_handle fshdl;
     tt::buildUnifyFSOptions(tailorfs::test::WRITE_ONLY, &fshdl, &init_time);
     MPI_Barrier(MPI_COMM_WORLD);
@@ -1227,7 +1248,8 @@ TEST_CASE("Update",
       if (rank % args.ranks_per_node == 0) {
         int create_flags = 0;
         open_time.resumeTime();
-        rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(), &gfid);
+        rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(),
+                            &gfid);
         open_time.pauseTime();
       }
       MPI_Barrier(MPI_COMM_WORLD);
@@ -1248,8 +1270,8 @@ TEST_CASE("Update",
     int j = 0;
     while (processed < args.iteration) {
       auto num_req_to_buf = args.iteration - processed >= max_buff
-                            ? max_buff
-                            : args.iteration - processed;
+                                ? max_buff
+                                : args.iteration - processed;
       auto write_data =
           std::vector<char>(args.request_size * num_req_to_buf, 'w');
       int write_req_ct = num_req_to_buf + 1;
@@ -1350,9 +1372,9 @@ TEST_CASE("Update",
     finalize_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
     MPI_Barrier(MPI_COMM_WORLD);
-    is_run =true;
+    is_run = true;
   }
-  if(is_run) {
+  if (is_run) {
     AGGREGATE_TIME(init);
     AGGREGATE_TIME(finalize);
     AGGREGATE_TIME(open);
@@ -1361,15 +1383,17 @@ TEST_CASE("Update",
     AGGREGATE_TIME(write);
     AGGREGATE_TIME(flush);
     if (info.rank == 0) {
-      PRINT_MSG("%10s,%10d,%10d,"
-                "%10.6f,%10.6f,%10.6f,%10.6f,"
-                "%10.6f,%10.6f,%10.6f,%10.6f,"
-                "%10s,%10s,%d,%d,%d,%d\n",
-                "Timing", args.iteration, args.request_size,
-                total_init / info.comm_size, total_finalize / info.comm_size ,
-                total_open / info.comm_size, total_close / info.comm_size,
-                total_write / info.comm_size, 0, total_flush / info.comm_size, 0,
-                usecase, "up", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
+      PRINT_MSG(
+          "%10s,%10d,%10d,"
+          "%10.6f,%10.6f,%10.6f,%10.6f,"
+          "%10.6f,%10.6f,%10.6f,%10.6f,"
+          "%10s,%10s,%d,%d,%d,%d\n",
+          "Timing", args.iteration, args.request_size,
+          total_init / info.comm_size, total_finalize / info.comm_size,
+          total_open / info.comm_size, total_close / info.comm_size,
+          total_write / info.comm_size, 0, total_flush / info.comm_size, 0,
+          usecase, "up", args.storage_type, args.access_pattern,
+          args.file_sharing, args.process_grouping);
     }
   }
   REQUIRE(posttest() == 0);
@@ -1401,7 +1425,7 @@ TEST_CASE("WORM",
     is_reader = true;
 
   } else if (args.process_grouping == tt::ProcessGrouping::SPLIT_PROCESS_HALF) {
-    is_writer = info.rank / (info.comm_size/2) == 0;
+    is_writer = info.rank / (info.comm_size / 2) == 0;
     is_reader = !is_writer;
     MPI_Comm_split(MPI_COMM_WORLD, is_writer, info.rank, &writer_comm);
     MPI_Comm_split(MPI_COMM_WORLD, is_reader, info.rank, &reader_comm);
@@ -1428,8 +1452,8 @@ TEST_CASE("WORM",
     }
   } else if (tt::FileSharing::PER_PROCESS == args.file_sharing) {
     if (is_writer) {
-      filename_str = args.filename + "_" + std::to_string(write_rank) +
-                     "_of_" + std::to_string(write_comm_size);
+      filename_str = args.filename + "_" + std::to_string(write_rank) + "_of_" +
+                     std::to_string(write_comm_size);
     } else {
       filename_str = args.filename + "_" + std::to_string(read_rank) + "_of_" +
                      std::to_string(read_comm_size);
@@ -1454,7 +1478,7 @@ TEST_CASE("WORM",
                                     MPI_MODE_WRONLY | MPI_MODE_CREATE,
                                     MPI_INFO_NULL, &fh_orig);
         open_time.pauseTime();
-      } else  if (tt::FileSharing::SHARED_FILE == args.file_sharing) {
+      } else if (tt::FileSharing::SHARED_FILE == args.file_sharing) {
         open_time.resumeTime();
         status_orig = MPI_File_open(writer_comm, pfs_filename.c_str(),
                                     MPI_MODE_WRONLY | MPI_MODE_CREATE,
@@ -1466,7 +1490,8 @@ TEST_CASE("WORM",
       MPI_Error_string(status_orig, msg, &resultlen);
       INFO("status_orig " << msg);
       REQUIRE(status_orig == MPI_SUCCESS);
-      auto write_data = std::vector<char>(args.request_size * args.iteration, 'w');
+      auto write_data =
+          std::vector<char>(args.request_size * args.iteration, 'w');
       write_time.resumeTime();
       MPI_Status stat_orig;
       off_t base_offset = 0;
@@ -1490,7 +1515,7 @@ TEST_CASE("WORM",
         status_orig = MPI_File_open(MPI_COMM_SELF, pfs_filename.c_str(),
                                     MPI_MODE_RDONLY, MPI_INFO_NULL, &fh_orig);
         open_time.pauseTime();
-      } else  if (tt::FileSharing::SHARED_FILE == args.file_sharing) {
+      } else if (tt::FileSharing::SHARED_FILE == args.file_sharing) {
         open_time.resumeTime();
         status_orig = MPI_File_open(reader_comm, pfs_filename.c_str(),
                                     MPI_MODE_RDONLY, MPI_INFO_NULL, &fh_orig);
@@ -1529,18 +1554,22 @@ TEST_CASE("WORM",
     REQUIRE(status_orig == MPI_SUCCESS);
   }
   SECTION("storage.unifyfs") {
-    if (!args.default_unifyfs) strcpy(usecase, "unifyfso");
-    else strcpy(usecase, "unifyfsd");
+    if (!args.default_unifyfs)
+      strcpy(usecase, "unifyfso");
+    else
+      strcpy(usecase, "unifyfsd");
     int rc;
     /* Initialize unifyfs */
     unifyfs_handle fshdl;
-    REQUIRE(tt::buildUnifyFSOptions(tailorfs::test::READ_AFTER_WRITE, &fshdl, &init_time) == 0);
+    REQUIRE(tt::buildUnifyFSOptions(tailorfs::test::READ_AFTER_WRITE, &fshdl,
+                                    &init_time) == 0);
     fs::path unifyfs_filename = info.unifyfs_path / filename_str;
     INFO("unifyfs_filename " << unifyfs_filename);
     if (is_writer) {
       unifyfs_gfid gfid;
       /* Create or Open file for production */
-      if (write_rank == 0 || tt::FileSharing::PER_PROCESS == args.file_sharing) {
+      if (write_rank == 0 ||
+          tt::FileSharing::PER_PROCESS == args.file_sharing) {
         int create_flags = 0;
         open_time.resumeTime();
         rc = unifyfs_create(fshdl, create_flags, unifyfs_filename.c_str(),
@@ -1550,7 +1579,8 @@ TEST_CASE("WORM",
         REQUIRE(gfid != UNIFYFS_INVALID_GFID);
       }
       MPI_Barrier(writer_comm);
-      if (write_rank != 0 && tt::FileSharing::PER_PROCESS != args.file_sharing) {
+      if (write_rank != 0 &&
+          tt::FileSharing::PER_PROCESS != args.file_sharing) {
         int access_flags = O_WRONLY;
         open_time.resumeTime();
         rc = unifyfs_open(fshdl, access_flags, unifyfs_filename.c_str(), &gfid);
@@ -1565,8 +1595,8 @@ TEST_CASE("WORM",
       int j = 0;
       while (processed < args.iteration) {
         auto num_req_to_buf = args.iteration - processed >= max_buff
-                              ? max_buff
-                              : args.iteration - processed;
+                                  ? max_buff
+                                  : args.iteration - processed;
         auto write_data =
             std::vector<char>(args.request_size * num_req_to_buf, 'w');
         int write_req_ct = num_req_to_buf + 1;
@@ -1638,54 +1668,54 @@ TEST_CASE("WORM",
           for (size_t i = 0; i < prefetch_ct; i++) {
             if (read_sync[i].result.error != 0)
               INFO("UNIFYFS ERROR: "
-                       << "OP_READ req failed - "
-                       << strerror(read_sync[i].result.error));
+                   << "OP_READ req failed - "
+                   << strerror(read_sync[i].result.error));
             REQUIRE(read_sync[i].result.error == 0);
           }
         }
       }
 
       /* Read data from file */
-        for (int i = 0; i < args.iteration; ++i) {
-          off_t random_i = i;
-          if (args.access_pattern == tt::AccessPattern::RANDOM) {
-            random_i = rand() % args.iteration;
-          }
-          auto read_data = std::vector<char>(args.request_size, 'r');
-          unifyfs_io_request read_req;
-          read_req.op = UNIFYFS_IOREQ_OP_READ;
-          read_req.gfid = gfid;
-          read_req.nbytes = args.request_size;
-          off_t base_offset = 0;
-          if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-            base_offset = (off_t)read_rank * args.request_size * args.iteration;
-          }
-          off_t relative_offset = random_i * args.request_size;
-          read_req.offset = base_offset + relative_offset;
-          read_req.user_buf = read_data.data();
+      for (int i = 0; i < args.iteration; ++i) {
+        off_t random_i = i;
+        if (args.access_pattern == tt::AccessPattern::RANDOM) {
+          random_i = rand() % args.iteration;
+        }
+        auto read_data = std::vector<char>(args.request_size, 'r');
+        unifyfs_io_request read_req;
+        read_req.op = UNIFYFS_IOREQ_OP_READ;
+        read_req.gfid = gfid;
+        read_req.nbytes = args.request_size;
+        off_t base_offset = 0;
+        if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+          base_offset = (off_t)read_rank * args.request_size * args.iteration;
+        }
+        off_t relative_offset = random_i * args.request_size;
+        read_req.offset = base_offset + relative_offset;
+        read_req.user_buf = read_data.data();
+        read_time.resumeTime();
+        rc = unifyfs_dispatch_io(fshdl, 1, &read_req);
+        read_time.pauseTime();
+        if (rc == UNIFYFS_SUCCESS) {
+          int waitall = 1;
           read_time.resumeTime();
-          rc = unifyfs_dispatch_io(fshdl, 1, &read_req);
+          rc = unifyfs_wait_io(fshdl, 1, &read_req, waitall);
           read_time.pauseTime();
           if (rc == UNIFYFS_SUCCESS) {
-            int waitall = 1;
-            read_time.resumeTime();
-            rc = unifyfs_wait_io(fshdl, 1, &read_req, waitall);
-            read_time.pauseTime();
-            if (rc == UNIFYFS_SUCCESS) {
-              if (read_req.result.error != 0)
-                INFO("UNIFYFS ERROR: "
-                         << "OP_READ req failed - "
-                         << strerror(read_req.result.error));
-              REQUIRE(read_req.result.error == 0);
-              if (read_req.result.count != args.request_size)
-                INFO("UNIFYFS ERROR: "
-                         << "OP_READ req failed - rank " << info.rank << " iter "
-                         << random_i << ", and read only " << read_req.result.count
-                         << " of " << args.request_size << " with offset "
-                         << read_req.offset);
-              REQUIRE(read_req.result.count == args.request_size);
-            }
+            if (read_req.result.error != 0)
+              INFO("UNIFYFS ERROR: "
+                   << "OP_READ req failed - "
+                   << strerror(read_req.result.error));
+            REQUIRE(read_req.result.error == 0);
+            if (read_req.result.count != args.request_size)
+              INFO("UNIFYFS ERROR: "
+                   << "OP_READ req failed - rank " << info.rank << " iter "
+                   << random_i << ", and read only " << read_req.result.count
+                   << " of " << args.request_size << " with offset "
+                   << read_req.offset);
+            REQUIRE(read_req.result.count == args.request_size);
           }
+        }
       }
     }
     MPI_Barrier(MPI_COMM_WORLD);
@@ -1701,15 +1731,17 @@ TEST_CASE("WORM",
   AGGREGATE_TIME(read);
   AGGREGATE_TIME(write);
   if (info.rank == 0) {
-    PRINT_MSG("%10s,%10d,%10d,"
-              "%10.6f,%10.6f,%10.6f,%10.6f,"
-              "%10.6f,%10.6f,%10.6f,%10.6f,"
-              "%10s,%10s,%d,%d,%d,%d\n",
-              "Timing", args.iteration, args.request_size,
-              total_init / info.comm_size, total_finalize / info.comm_size ,
-              total_open / info.comm_size, total_close / info.comm_size,
-              total_write / write_comm_size, total_read / read_comm_size, 0, 0,
-              usecase, "worm", args.storage_type, args.access_pattern, args.file_sharing, args.process_grouping);
+    PRINT_MSG(
+        "%10s,%10d,%10d,"
+        "%10.6f,%10.6f,%10.6f,%10.6f,"
+        "%10.6f,%10.6f,%10.6f,%10.6f,"
+        "%10s,%10s,%d,%d,%d,%d\n",
+        "Timing", args.iteration, args.request_size,
+        total_init / info.comm_size, total_finalize / info.comm_size,
+        total_open / info.comm_size, total_close / info.comm_size,
+        total_write / write_comm_size, total_read / read_comm_size, 0, 0,
+        usecase, "worm", args.storage_type, args.access_pattern,
+        args.file_sharing, args.process_grouping);
   }
   MPI_Barrier(MPI_COMM_WORLD);
 }

@@ -11,6 +11,9 @@
 #include <tailorfs/brahma/stdio.h>
 #include <tailorfs/macro.h>
 
+#include "tailorfs/core/fsview_manager.h"
+#include "tailorfs/core/singleton.h"
+
 inline void tfs_init() {
   init_mimir();
   mimir_init_config();
@@ -18,8 +21,11 @@ inline void tfs_init() {
   brahma_gotcha_wrap("tailorfs", 1);
   brahma::POSIXTailorFS::get_instance();
   brahma::STDIOTailorFS::get_instance();
+  FSVIEW_MANAGER->initialize();
 }
 inline void tfs_finalize() {
+  FSVIEW_MANAGER->finalize();
+  FSVIEW_MANAGER.reset();
   free_bindings();
   remove_loaded_intents();
   mimir_finalize_config();

@@ -4,6 +4,7 @@
 
 #ifndef TAILORFS_MACRO_H
 #define TAILORFS_MACRO_H
+#include <cpp-logger/logger.h>
 #define TAILORFS_LOGGER cpplogger::Logger::Instance("TAILORFS")
 #define TAILORFS_LOGINFO(format, ...) \
   TAILORFS_LOGGER->log(cpplogger::LOG_INFO, format, __VA_ARGS__);

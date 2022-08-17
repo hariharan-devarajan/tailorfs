@@ -282,8 +282,8 @@ int create_config(mimir::Config &config) {
     /* Application info */
     app_advice._name = "app-" + std::to_string(app_index);
     /* app file dag*/
-    app_advice._application_file_dag.applications.push_back(app_index);
-    workflow_advice._application_file_dag.applications.push_back(app_index);
+    app_advice._application_file_dag.applications.emplace(app_index);
+    workflow_advice._application_file_dag.applications.emplace(app_index);
 
     app_advice._num_cpu_cores_used =
         floor(config._job_config._node_names.size() *
@@ -307,19 +307,19 @@ int create_config(mimir::Config &config) {
     /* Rank file map*/
     for (int rank_index = 0; rank_index < args.num_process_per_app;
          ++rank_index) {
-      app_advice._rank_file_dag.ranks.push_back(rank_index);
+      app_advice._rank_file_dag.ranks.emplace(rank_index);
     }
     int rank_in_app = 0;
     for (uint32_t file_index = app_index * args.num_files_per_app;
          file_index < (app_index + 1) * args.num_files_per_app; ++file_index) {
       /* Rank file map*/
-      app_advice._rank_file_dag.files.push_back(file_index);
+      app_advice._rank_file_dag.files.emplace(file_index);
       /* App file dag */
-      app_advice._application_file_dag.files.push_back(file_index);
+      app_advice._application_file_dag.files.emplace(file_index);
       app_advice._application_file_dag.edges.emplace_back(app_index,
                                                           file_index);
 
-      workflow_advice._application_file_dag.files.push_back(file_index);
+      workflow_advice._application_file_dag.files.emplace(file_index);
       workflow_advice._application_file_dag.edges.emplace_back(app_index,
                                                                file_index);
 

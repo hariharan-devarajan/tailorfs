@@ -6,8 +6,6 @@
 #include <experimental/filesystem>
 #include <iomanip>
 
-const uint64_t GB = 1024L * 1024L * 1024L;
-
 namespace tailorfs::test {}
 
 namespace fs = std::experimental::filesystem;

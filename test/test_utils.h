@@ -10,9 +10,6 @@
 #include <cstdio>
 #include <string>
 
-const uint32_t KB = 1024;
-const uint32_t MB = 1024 * 1024;
-
 size_t GetRandomOffset(size_t i, unsigned int offset_seed, size_t stride,
                        size_t total_size) {
   return abs((int)(((i * rand_r(&offset_seed)) % stride) % total_size));

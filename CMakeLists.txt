@@ -52,11 +52,30 @@ if (MPI_FOUND)
 endif ()
 
 
-set(TAILORFS_SRC src/tailorfs/brahma/posix.cpp src/tailorfs/brahma/stdio.cpp)
+set(TAILORFS_SRC
+        src/tailorfs/brahma/posix.cpp
+        src/tailorfs/brahma/stdio.cpp
+        src/tailorfs/core/fsview_manager.cpp
+        src/tailorfs/core/fsview/mpiio_fsview.cpp
+        src/tailorfs/core/fsview/unifyfs_fsview.cpp)
 set(TAILORFS_PRIVATE_INCLUDE src/tailorfs/brahma/posix.h src/tailorfs/brahma/stdio.h)
 set(TAILORFS_PUBLIC_INCLUDE include/tailorfs/tailorfs.h include/tailorfs/macro.h)
 
-add_library(${PROJECT_NAME} SHARED ${TAILORFS_PUBLIC_INCLUDE} ${TAILORFS_PRIVATE_INCLUDE} ${TAILORFS_SRC})
+add_library(${PROJECT_NAME} SHARED)
+target_sources(${PROJECT_NAME}
+        PRIVATE
+        ${TAILORFS_SRC}
+        )
+target_include_directories(${PROJECT_NAME}
+        PRIVATE
+        # where the library itself will look for its internal headers
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        PUBLIC
+        # where top-level project will look for the library's public headers
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        # where external projects will look for the library's public headers
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+        )
 target_link_libraries(${PROJECT_NAME} ${DEPENDENCY_LIB})
 add_dependencies(${PROJECT_NAME} brahma)
 add_dependencies(${PROJECT_NAME} cpp-logger)
