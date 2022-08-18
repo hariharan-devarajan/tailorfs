@@ -13,11 +13,16 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 add_subdirectory(external/cpp-logger)
 add_subdirectory(external/brahma)
 add_dependencies(brahma cpp-logger)
-
-
 add_subdirectory(external/mimir)
-set(DEPENDENCY_LIB ${DEPENDENCY_LIB} mimir)
-include_directories(external/mimir/include)
+
+find_package(mimir REQUIRED)
+if (${MIMIR_FOUND})
+    message(STATUS "[MIMIR] found mimir at ${MIMIR_INCLUDE_DIRS}")
+    include_directories(${MIMIR_INCLUDE_DIRS})
+    set(DEPENDENCY_LIB ${DEPENDENCY_LIB} ${MIMIR_LIBRARIES})
+else ()
+    message(FATAL_ERROR "-- [MIMIR] is needed for ${PROJECT_NAME} build")
+endif ()
 
 find_package(cpp-logger REQUIRED)
 if (${CPP_LOGGER_FOUND})

@@ -8,22 +8,29 @@
 #include <brahma/brahma.h>
 #include <fcntl.h>
 #include <mimir/mimir.h>
+#include <tailorfs/core/datastructure.h>
+#include <tailorfs/macro.h>
 
 #include <memory>
 #include <unordered_set>
 
-#include "tailorfs/macro.h"
-
+using namespace tailorfs;
 namespace brahma {
 class POSIXTailorFS : public POSIX {
  private:
   typedef int FileDescriptor;
   static std::shared_ptr<POSIXTailorFS> instance;
   std::unordered_set<std::string> filenames;
+  std::unordered_set<std::string> excluded_filenames;
   std::unordered_set<FileDescriptor> fds;
+  std::unordered_map<FileDescriptor, FSID> fsid_map;
+  std::unordered_map<FSID, std::pair<MPI_File, off_t>> mpiio_map;
+  std::unordered_map<FSID, std::pair<unifyfs_gfid, off_t>> unifyfs_map;
 
   inline bool is_traced(const char *filename) {
-    auto iter = filenames.find(filename);
+    auto iter = excluded_filenames.find(filename);
+    if (iter != excluded_filenames.end()) return false;
+    iter = filenames.find(filename);
     if (iter != filenames.end()) return true;
     return false;
   }

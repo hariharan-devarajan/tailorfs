@@ -2,7 +2,7 @@ set(examples mimir_test)
 
 function(gcc_base example)
     add_executable(${example} ${example}.cpp ${TEST_SRC})
-    target_link_libraries(${example} ${TEST_LIBS})
+    target_link_libraries(${example} ${TEST_LIBS} ${MIMIR_LIBRARIES})
 endfunction()
 
 foreach (example ${examples})

@@ -8,16 +8,15 @@
 #include <iostream>
 #include <unordered_set>
 
-namespace tailorfs::mimir::test {}
-namespace tt = tailorfs::mimir::test;
+namespace tailorfs::test {}
+namespace tt = tailorfs::test;
 namespace fs = std::experimental::filesystem;
 
 using namespace mimir;
-
 /**
  * Test data structures
  */
-namespace tailorfs::mimir::test {
+namespace tailorfs::test {
 
 enum StorageType : int { SHM = 0, LOCAL_SSD = 1, PFS = 2 };
 struct Arguments {
@@ -56,7 +55,7 @@ struct Info {
   char hostname[256];
   std::string original_filename;
 };
-}  // namespace tailorfs::mimir::test
+}  // namespace tailorfs::test
 tt::Arguments args;
 tt::Info info;
 

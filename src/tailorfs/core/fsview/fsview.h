@@ -29,8 +29,8 @@ class FSView {
   virtual TailorFSStatus initialize(I& payload) = 0;
   virtual TailorFSStatus open(O& payload) = 0;
   virtual TailorFSStatus close(C& payload) = 0;
-  virtual TailorFSStatus write(R& payload) = 0;
-  virtual TailorFSStatus read(W& payload) = 0;
+  virtual TailorFSStatus write(W& payload) = 0;
+  virtual TailorFSStatus read(R& payload) = 0;
   virtual TailorFSStatus finalize(F& payload) = 0;
 };
 }  // namespace tailorfs

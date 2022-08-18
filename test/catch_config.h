@@ -7,7 +7,6 @@
 
 #define CATCH_CONFIG_RUNNER
 #include <cpp-logger/logger.h>
-#include <tailorfs/tailorfs.h>
 
 #include <catch2/catch_all.hpp>
 // #include <mpi.h>

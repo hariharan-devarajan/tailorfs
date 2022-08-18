@@ -9,7 +9,8 @@
 namespace tailorfs {
 typedef enum ErrorCode : TailorFSStatus {
   TAILORFS_SUCCESS = 0,
-  TAILORFS_NOT_FOUND = -1
+  TAILORFS_NOT_FOUND = -1,
+  TAILORFS_FAILED = -2
 } ErrorCode;
 }
 #endif  // TAILORFS_ERROR_CODE_H

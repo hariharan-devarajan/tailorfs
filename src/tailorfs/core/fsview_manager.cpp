@@ -87,6 +87,8 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
         id = iter->second;
         id._id++;
       }
+      strcpy(init_args.feature.unifyfs_namespace,
+             std::to_string(id._id).c_str());
       id._feature_hash = std::hash<UnifyFSFeature>()(init_args.feature);
       UNIFYFSVIEW(id)->initialize(init_args);
       fsid_map.insert_or_assign(FSViewType::UNIFYFS, id);
@@ -120,7 +122,9 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
         MPIIOInit init_args;
         if (file_intent._current_device != fastest_storage_index) {
           init_args.feature.redirection.redirection = true;
-          init_args.feature.redirection.storage =
+          init_args.feature.redirection.original_storage =
+              storages[file_intent._current_device];
+          init_args.feature.redirection.new_storage =
               storages[fastest_storage_index];
         }
         id._feature_hash = std::hash<MPIIOFeature>()(init_args.feature);
