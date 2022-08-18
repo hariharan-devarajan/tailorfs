@@ -76,7 +76,7 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl,
   }
   options_ct++;
   char logio_shmem_size[32];
-  strcpy(logio_shmem_size, "0");
+  strcpy(logio_shmem_size, std::to_string(1024L * 1024L * 1024L).c_str());
   options_ct++;
   char logio_spill_dir[256];
   fs::path splill_dir;
@@ -338,12 +338,12 @@ int create_file(fs::path filename, uint64_t blocksize) {
  * Test cases
  */
 TEST_CASE("Write-Only",
-          "[type=write-only]"
-          "[optimization=buffered_write]" CONVERT_ENUM(access_pattern,
-                                                       args.access_pattern)
-              CONVERT_ENUM(storage_type, args.storage_type)
-                  CONVERT_ENUM(file_sharing, args.file_sharing)
-                      CONVERT_ENUM(process_grouping, args.process_grouping)) {
+          std::string("[type=write-only]") +
+              std::string("[optimization=buffered_write]") +
+              CONVERT_ENUM(access_pattern, args.access_pattern) +
+              CONVERT_ENUM(storage_type, args.storage_type) +
+              CONVERT_ENUM(file_sharing, args.file_sharing) +
+              CONVERT_ENUM(process_grouping, args.process_grouping)) {
   REQUIRE(pretest() == 0);
   switch (args.file_sharing) {
     case tt::FileSharing::PER_PROCESS: {
@@ -591,12 +591,12 @@ TEST_CASE("Write-Only",
   REQUIRE(posttest() == 0);
 }
 TEST_CASE("Read-Only",
-          "[type=read-only]"
-          "[optimization=buffered_read]" CONVERT_ENUM(access_pattern,
-                                                      args.access_pattern)
-              CONVERT_ENUM(storage_type, args.storage_type)
-                  CONVERT_ENUM(file_sharing, args.file_sharing)
-                      CONVERT_ENUM(process_grouping, args.process_grouping)) {
+          std::string("[type=read-only]") +
+              std::string("[optimization=buffered_read]") +
+              CONVERT_ENUM(access_pattern, args.access_pattern) +
+              CONVERT_ENUM(storage_type, args.storage_type) +
+              CONVERT_ENUM(file_sharing, args.file_sharing) +
+              CONVERT_ENUM(process_grouping, args.process_grouping)) {
   REQUIRE(pretest() == 0);
   std::string filename_str;
   INFO(args.filename);
@@ -801,12 +801,12 @@ TEST_CASE("Read-Only",
   REQUIRE(posttest() == 0);
 }
 TEST_CASE("Read-After-Write",
-          "[type=raw]"
-          "[optimization=node_local_io]" CONVERT_ENUM(access_pattern,
-                                                      args.access_pattern)
-              CONVERT_ENUM(storage_type, args.storage_type)
-                  CONVERT_ENUM(file_sharing, args.file_sharing)
-                      CONVERT_ENUM(process_grouping, args.process_grouping)) {
+          std::string("[type=raw]") +
+              std::string("[optimization=node_local_io]") +
+              CONVERT_ENUM(access_pattern, args.access_pattern) +
+              CONVERT_ENUM(storage_type, args.storage_type) +
+              CONVERT_ENUM(file_sharing, args.file_sharing) +
+              CONVERT_ENUM(process_grouping, args.process_grouping)) {
   std::string filename_str;
   REQUIRE(pretest() == 0);
 
@@ -1151,13 +1151,12 @@ TEST_CASE("Read-After-Write",
   MPI_Barrier(MPI_COMM_WORLD);
 }
 
-TEST_CASE("Update",
-          "[type=update]"
-          "[optimization=buffered_write]" CONVERT_ENUM(access_pattern,
-                                                       args.access_pattern)
-              CONVERT_ENUM(storage_type, args.storage_type)
-                  CONVERT_ENUM(file_sharing, args.file_sharing)
-                      CONVERT_ENUM(process_grouping, args.process_grouping)) {
+TEST_CASE("Update", std::string("[type=update]") +
+                        std::string("[optimization=buffered_write]") +
+                        CONVERT_ENUM(access_pattern, args.access_pattern) +
+                        CONVERT_ENUM(storage_type, args.storage_type) +
+                        CONVERT_ENUM(file_sharing, args.file_sharing) +
+                        CONVERT_ENUM(process_grouping, args.process_grouping)) {
   REQUIRE(pretest() == 0);
   switch (args.file_sharing) {
     case tt::FileSharing::PER_PROCESS: {
@@ -1399,12 +1398,11 @@ TEST_CASE("Update",
   REQUIRE(posttest() == 0);
 }
 
-TEST_CASE("WORM",
-          "[type=worm]"
-          "[optimization=node_local_io]" CONVERT_ENUM(access_pattern,
-                                                      args.access_pattern)
-              CONVERT_ENUM(storage_type, args.storage_type)
-                  CONVERT_ENUM(file_sharing, args.file_sharing)
+TEST_CASE("WORM", std::string("[type=worm]") +
+                      std::string("[optimization=node_local_io]") +
+                      CONVERT_ENUM(access_pattern, args.access_pattern) +
+                      CONVERT_ENUM(storage_type, args.storage_type) +
+                      CONVERT_ENUM(file_sharing, args.file_sharing) +
                       CONVERT_ENUM(process_grouping, args.process_grouping)) {
   std::string filename_str;
   REQUIRE(pretest() == 0);
