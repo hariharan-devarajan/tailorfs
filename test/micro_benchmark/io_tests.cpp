@@ -107,12 +107,6 @@ cl::Parser define_options() {
 /**
  * Helper functions
  */
-void delete_directory_contents(const fs::path &dir_path) {
-  if (fs::exists(dir_path)) {
-    for (const auto &entry : fs::directory_iterator(dir_path))
-      fs::remove_all(entry.path());
-  }
-}
 int pretest() {
   info.original_filename = args.filename;
   const char *PFS_VAR = std::getenv("pfs");
@@ -156,7 +150,6 @@ int clean_directories() {
   MPI_Barrier(MPI_COMM_WORLD);
   return 0;
 }
-
 int create_file(fs::path filename, uint64_t blocksize) {
   MPI_Barrier(MPI_COMM_WORLD);
   MPI_File fh_orig;

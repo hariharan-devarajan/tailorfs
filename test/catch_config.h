@@ -23,6 +23,8 @@ int finalize();
 
 #define CONVERT_VAL(name, value) \
   "[" + std::string(#name) + "=" + std::to_string(value) + "]"
+#define CONVERT_STR(name, value) \
+  "[" + std::string(#name) + "=" + std::string(value) + "]"
 
 #define DEFINE_CLARA_OPS(TYPE)                                 \
   std::ostream &operator<<(std::ostream &out, const TYPE &c) { \

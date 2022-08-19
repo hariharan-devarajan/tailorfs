@@ -1,7 +1,7 @@
 
 set(UNIFYFS_FOUND TRUE)
 
-if(NOT TARGET unifyfs::unifyfs)
+if (NOT TARGET unifyfs::unifyfs)
     # Include directories
     find_path(UNIFYFS_INCLUDE_DIRS unifyfs.h PATH_SUFFIXES include/)
     if (NOT IS_DIRECTORY "${UNIFYFS_INCLUDE_DIRS}")
@@ -32,5 +32,5 @@ if(NOT TARGET unifyfs::unifyfs)
     # handle the QUIETLY and REQUIRED arguments and set ortools to TRUE
     # if all listed variables are TRUE
     find_package_handle_standard_args(unifyfs
-            REQUIRED_VARS UNIFYFS_FOUND UNIFYFS_LIBRARIES UNIFYFS_EXEC UNIFYFSD_EXEC UNIFYFS_API_LIBRARIES UNIFYFS_INCLUDE_DIRS)
-endif()
+            REQUIRED_VARS UNIFYFS_FOUND UNIFYFS_ROOT_DIR UNIFYFS_LIBRARIES UNIFYFS_EXEC UNIFYFSD_EXEC UNIFYFS_API_LIBRARIES UNIFYFS_INCLUDE_DIRS)
+endif ()
