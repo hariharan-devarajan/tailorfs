@@ -78,7 +78,7 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl,
   }
   options_ct++;
   char logio_shmem_size[32];
-  strcpy(logio_shmem_size, std::to_string(1024L * 1024L * 1024L).c_str());
+  strcpy(logio_shmem_size, std::to_string(1024L * 1024L * 1024L ).c_str());
   options_ct++;
   char logio_spill_dir[256];
   fs::path splill_dir;
@@ -106,9 +106,6 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl,
            std::to_string(args.request_size * args.iteration + 1024L * 1024L)
                .c_str());
   } else {
-    strcpy(logio_spill_size,
-           std::to_string(args.request_size * args.iteration + 1024L * 1024L)
-               .c_str());
     strcpy(
         logio_spill_size,
         std::to_string(1024L * 1024L * args.iteration + 1024L * 1024L).c_str());
@@ -1094,7 +1091,8 @@ TEST_CASE("Read-After-Write",
       }
     }
     is_run = true;
-  } else if (args.interface == tt::Interface::STDIO) {
+  }
+  else if (args.interface == tt::Interface::STDIO) {
     usecase = "STDIO";
     if (is_writer) {
       open_time.resumeTime();
@@ -1165,7 +1163,7 @@ TEST_CASE("Read-After-Write",
         open_time.pauseTime();
       } else if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
         open_time.resumeTime();
-        status_orig = MPI_File_open(MPI_COMM_WORLD, full_filename_path.c_str(),
+        status_orig = MPI_File_open(writer_comm, full_filename_path.c_str(),
                                     MPI_MODE_RDWR | MPI_MODE_CREATE,
                                     MPI_INFO_NULL, &fh_orig);
 
@@ -1177,7 +1175,7 @@ TEST_CASE("Read-After-Write",
         MPI_Status stat_orig;
         off_t base_offset = 0;
         if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-          base_offset = (off_t)info.rank * args.request_size * args.iteration;
+          base_offset = (off_t)write_rank * args.request_size * args.iteration;
         }
         off_t relative_offset = i * args.request_size;
         write_time.resumeTime();
@@ -1212,7 +1210,7 @@ TEST_CASE("Read-After-Write",
         MPI_Status stat_orig;
         off_t base_offset = 0;
         if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-          base_offset = (off_t)info.rank * args.request_size * args.iteration;
+          base_offset = (off_t)read_rank * args.request_size * args.iteration;
         }
         off_t relative_offset = random_i * args.request_size;
         read_time.resumeTime();
@@ -1973,7 +1971,8 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
       }
     }
     is_run = true;
-  } else if (args.interface == tt::Interface::STDIO) {
+  }
+  else if (args.interface == tt::Interface::STDIO) {
     usecase = "STDIO";
     if (is_writer) {
       open_time.resumeTime();
@@ -2043,7 +2042,7 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
         open_time.pauseTime();
       } else if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
         open_time.resumeTime();
-        status_orig = MPI_File_open(MPI_COMM_WORLD, full_filename_path.c_str(),
+        status_orig = MPI_File_open(writer_comm, full_filename_path.c_str(),
                                     MPI_MODE_RDWR | MPI_MODE_CREATE,
                                     MPI_INFO_NULL, &fh_orig);
 
@@ -2055,7 +2054,7 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
       MPI_Status stat_orig;
       off_t base_offset = 0;
       if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-        base_offset = (off_t)info.rank * args.request_size * args.iteration;
+        base_offset = (off_t)write_rank * args.request_size * args.iteration;
       }
       write_time.resumeTime();
       auto ret_orig = MPI_File_write_at_all(
@@ -2088,7 +2087,7 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
         MPI_Status stat_orig;
         off_t base_offset = 0;
         if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-          base_offset = (off_t)info.rank * args.request_size * args.iteration;
+          base_offset = (off_t)read_rank * args.request_size * args.iteration;
         }
         off_t relative_offset = random_i * args.request_size;
         read_time.resumeTime();

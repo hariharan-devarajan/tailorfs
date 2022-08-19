@@ -77,7 +77,7 @@ elif [ "${MACHINE}" = "lassen" ]; then
 
     echo "Run UnifyFS daemon"
     UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_SERVER_CORES=8 ${UNIFYFS_ROOT_DIR}/bin/unifyfs start --share-dir=${pfs}/unifyfs/share-dir -d
-
+    sleep ${SLEEP_TIME}	
     echo "Run Test"
     jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS}  -d packed ${TEST_EXEC} ${TEST_ARGS}
     status=$?
@@ -88,7 +88,7 @@ elif [ "${MACHINE}" = "lassen" ]; then
     # shellcheck disable=SC2046
     jsrun -r 1 -a 1 `ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
     echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
-    #sleep ${SLEEP_TIME}
+    sleep ${SLEEP_TIME}
 
     echo "Cleaning up directories"
     echo "jsrun -r 1 -a 1 rm -rf /dev/shm/* $BBPATH/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm"
