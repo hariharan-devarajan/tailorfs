@@ -40,7 +40,7 @@ if [ "${MACHINE}" = "local" ]; then
     rm -rf ${pfs}/unifyfsd ${BBPATH}/unifyfsd $UNIFYFS_LOG_DIR/*
     mkdir -p ${pfs}/unifyfsd ${BBPATH}/unifyfsd
     echo "${UNIFYFS_ROOT_DIR}/bin/unifyfsd start --sharedfs-dir=${pfs}/unifyfsd --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${BBPATH}/unifyfsd &"
-    ${UNIFYFS_ROOT_DIR}/bin/unifyfsd start --sharedfs-dir=${PFS_PATH}/unifyfsd --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${BBPATH}/unifyfsd &
+    ${UNIFYFS_ROOT_DIR}/bin/unifyfsd start --sharedfs-dir=${pfs}/unifyfsd --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${BBPATH}/unifyfsd &
     UNIFYFS_EXEC_PID=$!
     echo "process spawned ${UNIFYFS_EXEC_PID}"
     sleep ${SLEEP_TIME}
