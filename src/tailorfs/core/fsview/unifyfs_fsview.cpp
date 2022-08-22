@@ -6,9 +6,14 @@
 
 #include <fcntl.h>
 
+#include <regex>
+
+#include "tailorfs/core/process_state.h"
 #include "tailorfs/error_code.h"
 #include "tailorfs/macro.h"
+#include "tailorfs/util/unifyfs-stage.h"
 TailorFSStatus tailorfs::UnifyFSFSView::Initialize(UnifyFSInit& payload) {
+  feature = payload.feature;
   int options_ct = 8;
   char unifyfs_consistency[32] = "LAMINATED";
   char client_fsync_persist[32] = "off";
@@ -58,7 +63,36 @@ TailorFSStatus tailorfs::UnifyFSFSView::Initialize(UnifyFSInit& payload) {
 }
 TailorFSStatus tailorfs::UnifyFSFSView::Open(UnifyFSOpen& payload) {
   int rc = UNIFYFS_SUCCESS;
-  fs::path unify_filename = unifyfs_namespace / fs::path(payload.filename);
+  std::string unify_filename = std::string(payload.filename);
+  if (payload.is_create) {
+    if (feature.redirection.is_enabled) {
+      unify_filename = std::regex_replace(
+          unify_filename,
+          std::regex(feature.redirection.original_storage._mount_point),
+          unifyfs_namespace.string());
+      if (feature.redirection.type == RedirectionType::PREFETCH ||
+          feature.redirection.type == RedirectionType::BOTH) {
+        unifyfs_stage ctx;
+        ctx.checksum = 0;
+        ctx.data_dist = UNIFYFS_STAGE_DATA_BALANCED;
+        ctx.mode = UNIFYFS_STAGE_MODE_PARALLEL;
+        ctx.mountpoint = unify_filename.data();
+        if (feature.is_shared) {
+          ctx.total_ranks = PROCESS_STATE->comm_size;
+          ctx.rank = PROCESS_STATE->rank;
+        } else {
+          ctx.total_ranks = 1;
+          ctx.rank = 0;
+        }
+        int file_index = 1;
+        ctx.fshdl = fshdl;
+        ctx.block_size = feature.transfer_size;
+        rc = unifyfs_stage_transfer(&ctx, file_index, payload.filename,
+                                    unify_filename.c_str());
+      }
+    }
+  }
+
   if (payload.is_create) {
     rc = unifyfs_create(fshdl, payload.flags, unify_filename.c_str(),
                         &payload.gfid);
@@ -68,6 +102,14 @@ TailorFSStatus tailorfs::UnifyFSFSView::Open(UnifyFSOpen& payload) {
   }
   if (payload.flags & O_RDONLY) {
     rc = unifyfs_laminate(fshdl, unify_filename.c_str());
+  }
+  /* TODO(hari) add prefetch logic */
+  if (feature.redirection.is_enabled) {
+    if (payload.is_create) {
+      redirect_map.insert_or_assign(
+          payload.gfid, std::pair<std::string, std::string>(payload.filename,
+                                                            unify_filename));
+    }
   }
   return (rc == UNIFYFS_SUCCESS) ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }
@@ -96,6 +138,46 @@ TailorFSStatus tailorfs::UnifyFSFSView::Close(UnifyFSClose& payload) {
         } else {
           TAILORFS_LOGERROR("Error while waiting for op %d. rc %d, message %s",
                             reqs[i].op, rc, strerror(rc));
+        }
+      }
+    }
+  }
+  /* TODO(hari) add flush logic */
+  if (feature.redirection.is_enabled) {
+    auto iter = redirect_map.find(payload.gfid);
+    if (iter != redirect_map.end()) {
+      if (feature.redirection.type == RedirectionType::FLUSH ||
+          feature.redirection.type == RedirectionType::BOTH) {
+        if (!feature.is_shared) {
+          unifyfs_transfer_request mv_req;
+          mv_req.src_path = iter->second.second.c_str();
+          mv_req.dst_path = iter->second.first.c_str();
+          mv_req.mode = UNIFYFS_TRANSFER_MODE_COPY;
+          mv_req.use_parallel = 1;
+          rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
+          if (rc == UNIFYFS_SUCCESS) {
+            int waitall = 1;
+            rc = unifyfs_wait_transfer(fshdl, 1, &mv_req, waitall);
+            if (rc == UNIFYFS_SUCCESS) {
+              rc = mv_req.result.error;
+            }
+          }
+        } else {
+          if (PROCESS_STATE->rank == 0) {
+            unifyfs_transfer_request mv_req;
+            mv_req.src_path = iter->second.second.c_str();
+            mv_req.dst_path = iter->second.first.c_str();
+            mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
+            mv_req.use_parallel = 1;
+            rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
+            if (rc == UNIFYFS_SUCCESS) {
+              int waitall = 1;
+              rc = unifyfs_wait_transfer(fshdl, 1, &mv_req, waitall);
+              if (rc == UNIFYFS_SUCCESS) {
+                rc = mv_req.result.error;
+              }
+            }
+          }
         }
       }
     }

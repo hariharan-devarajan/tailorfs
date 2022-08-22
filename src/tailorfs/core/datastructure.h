@@ -15,7 +15,7 @@ struct FSID {
   FSViewType _type;
   uint16_t _feature_hash;
   uint8_t _id;
-  FSID() : _type(FSViewType::NONE), _feature_hash(0), _id(0) {}
+  FSID() : _type(FSViewType::FS_NONE), _feature_hash(0), _id(0) {}
   FSID(const FSID& other)
       : _type(other._type),
         _feature_hash(other._feature_hash),
@@ -37,6 +37,7 @@ struct FSID {
 };
 
 struct RedirectFeature {
+  RedirectionType type;
   bool is_enabled;
   mimir::Storage original_storage;
   mimir::Storage new_storage;
@@ -46,8 +47,10 @@ struct UnifyFSFeature {
   off_t transfer_size;
   mimir::Storage shm;
   mimir::Storage splill;
+  bool is_shared;
   bool enable_read_optimization;
   char unifyfs_namespace[32];
+  RedirectFeature redirection;
 };
 
 struct FSViewInit {};
@@ -229,6 +232,7 @@ template <>
 struct hash<tailorfs::RedirectFeature> {
   size_t operator()(const tailorfs::RedirectFeature& k) const {
     size_t hash_val = hash<bool>()(k.is_enabled);
+    hash_val ^= hash<uint8_t>()(k.type);
     hash_val ^= hash<mimir::Storage>()(k.original_storage);
     hash_val ^= hash<mimir::Storage>()(k.new_storage);
     return hash_val;
@@ -242,6 +246,8 @@ struct hash<tailorfs::UnifyFSFeature> {
     hash_val ^= hash<mimir::Storage>()(k.shm);
     hash_val ^= hash<mimir::Storage>()(k.splill);
     hash_val ^= hash<off_t>()(k.transfer_size);
+    hash_val ^= hash<bool>()(k.is_shared);
+    hash_val ^= hash<tailorfs::RedirectFeature>()(k.redirection);
     return hash_val;
   }
 };

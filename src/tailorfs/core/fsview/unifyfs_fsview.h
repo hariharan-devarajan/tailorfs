@@ -15,9 +15,12 @@ namespace tailorfs {
 class UnifyFSFSView : public FSView<UnifyFSInit, UnifyFSFinalize, UnifyFSOpen,
                                     UnifyFSClose, UnifyFSRead, UnifyFSWrite> {
  private:
+  UnifyFSFeature feature;
   unifyfs_handle fshdl;
   fs::path unifyfs_namespace;
   std::unordered_map<unifyfs_gfid, std::vector<UnifyFSIORequest>> pending_req;
+  std::unordered_map<unifyfs_gfid, std::pair<std::string, std::string>>
+      redirect_map;
 
  public:
   UnifyFSFSView() = default;

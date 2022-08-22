@@ -61,6 +61,7 @@ set(TAILORFS_SRC
         src/tailorfs/brahma/posix.cpp
         src/tailorfs/brahma/stdio.cpp
         src/tailorfs/core/fsview_manager.cpp
+        src/tailorfs/core/process_state.cpp
         src/tailorfs/core/fsview/stdio_fsview.cpp
         src/tailorfs/core/fsview/mpiio_fsview.cpp
         src/tailorfs/core/fsview/posix_fsview.cpp

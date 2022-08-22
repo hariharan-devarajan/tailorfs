@@ -19,6 +19,11 @@ TailorFSStatus tailorfs::MPIIOFSView::Open(MPIIOOpen& payload) {
     filename = std::regex_replace(
         filename, std::regex(redirection.original_storage._mount_point),
         redirection.new_storage._mount_point);
+    if (redirection.type == RedirectionType::PREFETCH ||
+        redirection.type == RedirectionType::BOTH) {
+      fs::copy_file(fs::absolute(payload.filename), fs::absolute(filename),
+                    fs::copy_options::overwrite_existing);
+    }
   }
   int status_orig =
       MPI_File_open(payload.communicator, filename.c_str(), payload.flags,
@@ -31,15 +36,15 @@ TailorFSStatus tailorfs::MPIIOFSView::Open(MPIIOOpen& payload) {
   return status_orig == 0 ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }
 TailorFSStatus tailorfs::MPIIOFSView::Close(MPIIOClose& payload) {
-  int status_orig;
+  int status_orig = MPI_File_close(&payload.file_ptr);
   if (redirection.is_enabled) {
     auto iter = redirect_map.find(payload.file_ptr);
-    if (iter != redirect_map.end()) {
-      status_orig = MPI_File_close(&payload.file_ptr);
-      fs::copy_file(iter->second.second, fs::absolute(iter->second.first),
-                    fs::copy_options::overwrite_existing);
-    } else {
-      status_orig = MPI_File_close(&payload.file_ptr);
+    if (redirection.type == RedirectionType::FLUSH ||
+        redirection.type == RedirectionType::BOTH) {
+      if (iter != redirect_map.end()) {
+        fs::copy_file(iter->second.second, fs::absolute(iter->second.first),
+                      fs::copy_options::overwrite_existing);
+      }
     }
     fs::remove(iter->second.second);
   }

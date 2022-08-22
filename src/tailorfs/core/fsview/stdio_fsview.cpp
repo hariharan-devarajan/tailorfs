@@ -20,6 +20,11 @@ TailorFSStatus tailorfs::STDIOFSView::Open(tailorfs::STDIOOpen& payload) {
     filename = std::regex_replace(
         filename, std::regex(redirection.original_storage._mount_point),
         redirection.new_storage._mount_point);
+    if (redirection.type == RedirectionType::PREFETCH ||
+        redirection.type == RedirectionType::BOTH) {
+      fs::copy_file(fs::absolute(payload.filename), fs::absolute(filename),
+                    fs::copy_options::overwrite_existing);
+    }
   }
   FILE* fh = fopen(filename.c_str(), payload.mode);
   if (redirection.is_enabled) {
@@ -34,9 +39,12 @@ TailorFSStatus tailorfs::STDIOFSView::Close(tailorfs::STDIOClose& payload) {
   status_orig = fclose(payload.fh);
   if (redirection.is_enabled) {
     auto iter = redirect_map.find(payload.fh);
-    if (iter != redirect_map.end()) {
-      fs::copy_file(iter->second.second, fs::absolute(iter->second.first),
-                    fs::copy_options::overwrite_existing);
+    if (redirection.type == RedirectionType::FLUSH ||
+        redirection.type == RedirectionType::BOTH) {
+      if (iter != redirect_map.end()) {
+        fs::copy_file(iter->second.second, fs::absolute(iter->second.first),
+                      fs::copy_options::overwrite_existing);
+      }
     }
     fs::remove(iter->second.second);
   }
