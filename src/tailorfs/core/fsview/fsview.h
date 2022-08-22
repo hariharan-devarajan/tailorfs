@@ -26,12 +26,12 @@ template <
         nullptr>
 class FSView {
  public:
-  virtual TailorFSStatus initialize(I& payload) = 0;
-  virtual TailorFSStatus open(O& payload) = 0;
-  virtual TailorFSStatus close(C& payload) = 0;
-  virtual TailorFSStatus write(W& payload) = 0;
-  virtual TailorFSStatus read(R& payload) = 0;
-  virtual TailorFSStatus finalize(F& payload) = 0;
+  virtual TailorFSStatus Initialize(I& payload) = 0;
+  virtual TailorFSStatus Open(O& payload) = 0;
+  virtual TailorFSStatus Close(C& payload) = 0;
+  virtual TailorFSStatus Write(W& payload) = 0;
+  virtual TailorFSStatus Read(R& payload) = 0;
+  virtual TailorFSStatus Finalize(F& payload) = 0;
 };
 }  // namespace tailorfs
 #endif  // TAILORFS_FSVIEW_H

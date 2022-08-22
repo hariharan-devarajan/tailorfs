@@ -8,7 +8,7 @@
 
 #include "tailorfs/error_code.h"
 #include "tailorfs/macro.h"
-TailorFSStatus tailorfs::UnifyFSFSView::initialize(UnifyFSInit& payload) {
+TailorFSStatus tailorfs::UnifyFSFSView::Initialize(UnifyFSInit& payload) {
   int options_ct = 8;
   char unifyfs_consistency[32] = "LAMINATED";
   char client_fsync_persist[32] = "off";
@@ -56,7 +56,7 @@ TailorFSStatus tailorfs::UnifyFSFSView::initialize(UnifyFSInit& payload) {
   }
   return (rc == UNIFYFS_SUCCESS) ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }
-TailorFSStatus tailorfs::UnifyFSFSView::open(UnifyFSOpen& payload) {
+TailorFSStatus tailorfs::UnifyFSFSView::Open(UnifyFSOpen& payload) {
   int rc = UNIFYFS_SUCCESS;
   fs::path unify_filename = unifyfs_namespace / fs::path(payload.filename);
   if (payload.is_create) {
@@ -71,7 +71,7 @@ TailorFSStatus tailorfs::UnifyFSFSView::open(UnifyFSOpen& payload) {
   }
   return (rc == UNIFYFS_SUCCESS) ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }
-TailorFSStatus tailorfs::UnifyFSFSView::close(UnifyFSClose& payload) {
+TailorFSStatus tailorfs::UnifyFSFSView::Close(UnifyFSClose& payload) {
   auto iter = pending_req.find(payload.gfid);
   int rc = UNIFYFS_SUCCESS;
   if (iter != pending_req.end()) {
@@ -102,7 +102,7 @@ TailorFSStatus tailorfs::UnifyFSFSView::close(UnifyFSClose& payload) {
   }
   return (rc == UNIFYFS_SUCCESS) ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }
-TailorFSStatus tailorfs::UnifyFSFSView::write(UnifyFSWrite& payload) {
+TailorFSStatus tailorfs::UnifyFSFSView::Write(UnifyFSWrite& payload) {
   unifyfs_io_request write_req;
   write_req.op = UNIFYFS_IOREQ_OP_WRITE;
   write_req.gfid = payload.gfid;
@@ -126,7 +126,7 @@ TailorFSStatus tailorfs::UnifyFSFSView::write(UnifyFSWrite& payload) {
   }
   return (rc == UNIFYFS_SUCCESS) ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }
-TailorFSStatus tailorfs::UnifyFSFSView::read(UnifyFSRead& payload) {
+TailorFSStatus tailorfs::UnifyFSFSView::Read(UnifyFSRead& payload) {
   unifyfs_io_request read_req;
   read_req.op = UNIFYFS_IOREQ_OP_WRITE;
   read_req.gfid = payload.gfid;
@@ -150,7 +150,7 @@ TailorFSStatus tailorfs::UnifyFSFSView::read(UnifyFSRead& payload) {
   }
   return (rc == UNIFYFS_SUCCESS) ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }
-TailorFSStatus tailorfs::UnifyFSFSView::finalize(UnifyFSFinalize& payload) {
+TailorFSStatus tailorfs::UnifyFSFSView::Finalize(UnifyFSFinalize& payload) {
   int rc = unifyfs_finalize(fshdl);
   return (rc == UNIFYFS_SUCCESS) ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }

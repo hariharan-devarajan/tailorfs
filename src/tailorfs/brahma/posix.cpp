@@ -21,9 +21,9 @@ int brahma::POSIXTailorFS::open(const char *pathname, int flags, mode_t mode) {
         MPIIOOpen args{};
         args.filename = pathname;
         auto mpiio_fsview = MPIIOFSVIEW(id);
-        mpiio_fsview->convert(flags, args.flags);
+        mpiio_fsview->Convert(flags, args.flags);
         args.communicator = MPI_COMM_SELF;
-        status = mpiio_fsview->open(args);
+        status = mpiio_fsview->Open(args);
         if (status == TAILORFS_SUCCESS) {
           mpiio_map.insert_or_assign(
               id, std::pair<MPI_File, off_t>(args.file_ptr, 0));
@@ -50,7 +50,7 @@ int brahma::POSIXTailorFS::open(const char *pathname, int flags, mode_t mode) {
           args.flags = args.flags & O_RDWR;
         }
         auto fsview = UNIFYFSVIEW(id);
-        status = fsview->open(args);
+        status = fsview->Open(args);
         if (status == TAILORFS_SUCCESS) {
           unifyfs_map.insert_or_assign(
               id, std::pair<unifyfs_gfid, off_t>(args.gfid, 0));
@@ -86,7 +86,7 @@ int brahma::POSIXTailorFS::close(int fd) {
           MPIIOClose args{};
           args.file_ptr = mpiio_iter->second.first;
           auto mpiio_fsview = MPIIOFSVIEW(iter->second);
-          TailorFSStatus status = mpiio_fsview->close(args);
+          TailorFSStatus status = mpiio_fsview->Close(args);
           if (status == TAILORFS_SUCCESS) {
             mpiio_map.erase(iter->second);
             TAILORFS_LOGINFO("Closing file using MPIIO - success", "");
@@ -100,7 +100,7 @@ int brahma::POSIXTailorFS::close(int fd) {
             UnifyFSClose args{};
             args.gfid = unifyfs_iter->second.first;
             auto fsview = UNIFYFSVIEW(iter->second);
-            TailorFSStatus status = fsview->close(args);
+            TailorFSStatus status = fsview->Close(args);
             if (status == TAILORFS_SUCCESS) {
               unifyfs_map.erase(iter->second);
               TAILORFS_LOGINFO("Closing file using UnifyFS - success", "");
@@ -138,7 +138,7 @@ ssize_t brahma::POSIXTailorFS::write(int fd, const void *buf, size_t count) {
           args.count = count;
           args.type = MPI_CHAR;
           auto mpiio_fsview = MPIIOFSVIEW(iter->second);
-          TailorFSStatus status = mpiio_fsview->write(args);
+          TailorFSStatus status = mpiio_fsview->Write(args);
           if (status == TAILORFS_SUCCESS) {
             mpiio_iter->second.second += args.written_bytes;
             mpiio_map.insert_or_assign(iter->second, mpiio_iter->second);
@@ -158,7 +158,7 @@ ssize_t brahma::POSIXTailorFS::write(int fd, const void *buf, size_t count) {
             args.offset = unifyfs_iter->second.second;
             args.nbytes = count;
             auto fsview = UNIFYFSVIEW(iter->second);
-            TailorFSStatus status = fsview->write(args);
+            TailorFSStatus status = fsview->Write(args);
             if (status == TAILORFS_SUCCESS) {
               unifyfs_iter->second.second += args.nbytes;
               unifyfs_map.insert_or_assign(iter->second, unifyfs_iter->second);
@@ -200,7 +200,7 @@ ssize_t brahma::POSIXTailorFS::read(int fd, void *buf, size_t count) {
           args.count = count;
           args.type = MPI_CHAR;
           auto mpiio_fsview = MPIIOFSVIEW(iter->second);
-          TailorFSStatus status = mpiio_fsview->read(args);
+          TailorFSStatus status = mpiio_fsview->Read(args);
           if (status == TAILORFS_SUCCESS) {
             mpiio_iter->second.second += args.read_bytes;
             mpiio_map.insert_or_assign(iter->second, mpiio_iter->second);
@@ -220,7 +220,7 @@ ssize_t brahma::POSIXTailorFS::read(int fd, void *buf, size_t count) {
             args.offset = unifyfs_iter->second.second;
             args.nbytes = count;
             auto fsview = UNIFYFSVIEW(iter->second);
-            TailorFSStatus status = fsview->read(args);
+            TailorFSStatus status = fsview->Read(args);
             if (status == TAILORFS_SUCCESS) {
               unifyfs_iter->second.second += args.nbytes;
               unifyfs_map.insert_or_assign(iter->second, unifyfs_iter->second);

@@ -25,12 +25,12 @@ class UnifyFSFSView : public FSView<UnifyFSInit, UnifyFSFinalize, UnifyFSOpen,
   UnifyFSFSView(UnifyFSFSView&& other) = default;
   UnifyFSFSView& operator=(const UnifyFSFSView& t) = default;
 
-  TailorFSStatus initialize(UnifyFSInit& payload) override;
-  TailorFSStatus open(UnifyFSOpen& payload) override;
-  TailorFSStatus close(UnifyFSClose& payload) override;
-  TailorFSStatus write(UnifyFSWrite& payload) override;
-  TailorFSStatus read(UnifyFSRead& payload) override;
-  TailorFSStatus finalize(UnifyFSFinalize& payload) override;
+  TailorFSStatus Initialize(UnifyFSInit& payload) override;
+  TailorFSStatus Open(UnifyFSOpen& payload) override;
+  TailorFSStatus Close(UnifyFSClose& payload) override;
+  TailorFSStatus Write(UnifyFSWrite& payload) override;
+  TailorFSStatus Read(UnifyFSRead& payload) override;
+  TailorFSStatus Finalize(UnifyFSFinalize& payload) override;
 };
 }  // namespace tailorfs
 

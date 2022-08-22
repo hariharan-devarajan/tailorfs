@@ -13,11 +13,15 @@
 #include <memory>
 #include <unordered_map>
 
+#include "posix_fsview.h"
+#include "stdio_fsview.h"
 #include "tailorfs/error_code.h"
 namespace tailorfs {
 class FSViewFactory {
  private:
   std::unordered_map<FSID, std::shared_ptr<MPIIOFSView>> mpiio_map;
+  std::unordered_map<FSID, std::shared_ptr<POSIXFSView>> posix_map;
+  std::unordered_map<FSID, std::shared_ptr<STDIOFSView>> stdio_map;
   std::unordered_map<FSID, std::shared_ptr<UnifyFSFSView>> unifyfs_map;
 
  public:
@@ -32,6 +36,30 @@ class FSViewFactory {
     }
     unifyfs_map.clear();
     return TAILORFS_SUCCESS;
+  }
+  template <typename T, typename = typename std::enable_if<
+                            std::is_same<T, STDIOFSView>::value>::type>
+  std::shared_ptr<STDIOFSView> get_fsview(const FSID& id) {
+    std::shared_ptr<STDIOFSView> instance;
+    auto iter = stdio_map.find(id);
+    if (iter == stdio_map.end()) {
+      instance = std::make_shared<STDIOFSView>();
+      stdio_map.emplace(id, instance);
+    } else
+      instance = iter->second;
+    return instance;
+  }
+  template <typename T, typename = typename std::enable_if<
+                            std::is_same<T, POSIXFSView>::value>::type>
+  std::shared_ptr<POSIXFSView> get_fsview(const FSID& id) {
+    std::shared_ptr<POSIXFSView> instance;
+    auto iter = posix_map.find(id);
+    if (iter == posix_map.end()) {
+      instance = std::make_shared<POSIXFSView>();
+      posix_map.emplace(id, instance);
+    } else
+      instance = iter->second;
+    return instance;
   }
   template <typename T, typename = typename std::enable_if<
                             std::is_same<T, MPIIOFSView>::value>::type>
@@ -62,6 +90,8 @@ class FSViewFactory {
 #define FSVIEW_FACTORY \
   tailorfs::Singleton<tailorfs::FSViewFactory>::get_instance()
 
+#define POSIXFSVIEW(id) FSVIEW_FACTORY->get_fsview<tailorfs::POSIXFSView>(id)
+#define STDIOFSVIEW(id) FSVIEW_FACTORY->get_fsview<tailorfs::STDIOFSView>(id)
 #define MPIIOFSVIEW(id) FSVIEW_FACTORY->get_fsview<tailorfs::MPIIOFSView>(id)
 #define UNIFYFSVIEW(id) FSVIEW_FACTORY->get_fsview<tailorfs::UnifyFSFSView>(id)
 
