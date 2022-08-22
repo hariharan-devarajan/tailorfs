@@ -40,7 +40,7 @@ if [ "${MACHINE}" = "local" ]; then
     rm -rf ${pfs}/unifyfsd ${BBPATH}/unifyfsd $UNIFYFS_LOG_DIR/*
     mkdir -p ${pfs}/unifyfsd ${BBPATH}/unifyfsd
     echo "${UNIFYFS_ROOT_DIR}/bin/unifyfsd start --sharedfs-dir=${pfs}/unifyfsd --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${BBPATH}/unifyfsd &"
-    ${UNIFYFS_ROOT_DIR}/bin/unifyfsd start --sharedfs-dir=${PFS_PATH}/unifyfsd --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${BBPATH}/unifyfsd &
+    ${UNIFYFS_ROOT_DIR}/bin/unifyfsd start --sharedfs-dir=${pfs}/unifyfsd --log-dir $UNIFYFS_LOG_DIR --runstate-dir ${BBPATH}/unifyfsd &
     UNIFYFS_EXEC_PID=$!
     echo "process spawned ${UNIFYFS_EXEC_PID}"
     sleep ${SLEEP_TIME}
@@ -65,13 +65,35 @@ if [ "${MACHINE}" = "local" ]; then
     exit 0
 elif [ "${MACHINE}" = "lassen" ]; then
     echo "Configuring test for ${MACHINE}"
+    echo "Killing existing unifyfs daemons"
+    echo "${UNIFYFS_ROOT_DIR}/bin/unifyfs terminate"
+    ${UNIFYFS_ROOT_DIR}/bin/unifyfs terminate
+    echo "jsrun -r 1 -a 1 ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1 > /dev/null 2>&1"
+    ps -aef | grep /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/bin/unifyfs
+    jsrun -r 1 -a 1 `ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
+    echo "Cleaning up directories"
+    echo "jsrun -r 1 -a 1 rm -rf /dev/shm/* /tmp/na_sm* /tmp/unifyfsd.margo-shm"
+    jsrun -r 1 -a 1 rm -rf /dev/shm/* ~/unifyfs/logs/* /tmp/unifyfsd.margo-shm
+
     echo "Run UnifyFS daemon"
-    UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_SERVER_CORES=8 ${UNIFYFS_EXEC} start --share-dir=${pfs}/unifyfs/share-dir -d
+    UNIFYFS_LOG_DIR=$UNIFYFS_LOG_DIR UNIFYFS_SERVER_CORES=8 ${UNIFYFS_ROOT_DIR}/bin/unifyfs start --share-dir=${pfs}/unifyfs/share-dir -d
+    sleep ${SLEEP_TIME}	
     echo "Run Test"
     jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS}  -d packed ${TEST_EXEC} ${TEST_ARGS}
     status=$?
+
     echo "Killing UnifyFS daemon"
-    ${UNIFYFS_EXEC} terminate
+    echo "${UNIFYFS_ROOT_DIR}/bin/unifyfs terminate"
+    ${UNIFYFS_ROOT_DIR}/bin/unifyfs terminate
+    # shellcheck disable=SC2046
+    jsrun -r 1 -a 1 `ps -aef | grep unifyfs | grep -v run_single.sh | awk {'print $2'} | xargs kill -9 > /dev/null 2>&1` > /dev/null 2>&1
+    echo "Stopped unifyfs daemon. sleeping for ${SLEEP_TIME} seconds"
+    sleep ${SLEEP_TIME}
+
+    echo "Cleaning up directories"
+    echo "jsrun -r 1 -a 1 rm -rf /dev/shm/* $BBPATH/unifyfs/* /tmp/na_sm* /tmp/kvstore /tmp/unifyfsd.margo-shm"
+    jsrun -r 1 -a 1 rm -rf /dev/shm/* $BBPATH/unifyfs/* /tmp/kvstore /tmp/unifyfsd.margo-shm
+
     if [ $status -gt 0 ]; then
       echo "Test failed with code $status!" >&2
       exit $status

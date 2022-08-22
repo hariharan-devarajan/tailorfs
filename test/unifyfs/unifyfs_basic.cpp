@@ -40,7 +40,7 @@ struct Arguments {
   size_t request_size = 65536;
   size_t iteration = 64;
   int ranks_per_node = 1;
-  bool debug = false;
+  bool debug = true;
   StorageType storage_type = StorageType::LOCAL_SSD;
   AccessPattern access_pattern = AccessPattern::SEQUENTIAL;
   FileSharing file_sharing = FileSharing::PER_PROCESS;
@@ -78,7 +78,7 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl,
   }
   options_ct++;
   char logio_shmem_size[32];
-  strcpy(logio_shmem_size, std::to_string(1024L * 1024L * 1024L).c_str());
+  strcpy(logio_shmem_size, std::to_string(1024L * 1024L * 1024L ).c_str());
   options_ct++;
   char logio_spill_dir[256];
   fs::path splill_dir;
@@ -106,9 +106,6 @@ int buildUnifyFSOptions(UseCase use_case, unifyfs_handle *fshdl,
            std::to_string(args.request_size * args.iteration + 1024L * 1024L)
                .c_str());
   } else {
-    strcpy(logio_spill_size,
-           std::to_string(args.request_size * args.iteration + 1024L * 1024L)
-               .c_str());
     strcpy(
         logio_spill_size,
         std::to_string(1024L * 1024L * args.iteration + 1024L * 1024L).c_str());
@@ -524,59 +521,49 @@ TEST_CASE("Write-Only",
     REQUIRE(gfid != UNIFYFS_INVALID_GFID);
     if (info.rank == 0) INFO("Writing data");
     /* Write data to file */
-    size_t max_buff = 1024;
-    size_t processed = 0;
-    size_t j = 0;
-    while (processed < args.iteration) {
-      auto num_req_to_buf = args.iteration - processed >= max_buff
-                                ? max_buff
-                                : args.iteration - processed;
-      auto write_data =
-          std::vector<char>(args.request_size * num_req_to_buf, 'w');
-      size_t write_req_ct = num_req_to_buf + 1;
-      unifyfs_io_request write_req[num_req_to_buf + 2];
-
-      for (size_t i = 0; i < num_req_to_buf; ++i) {
-        write_req[i].op = UNIFYFS_IOREQ_OP_WRITE;
-        write_req[i].gfid = gfid;
-        write_req[i].nbytes = args.request_size;
-        off_t base_offset = 0;
-        if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-          base_offset = (off_t)info.rank * args.request_size * args.iteration;
-        }
-        off_t relative_offset = j * args.request_size;
-        write_req[i].offset = base_offset + relative_offset;
-        write_req[i].user_buf = write_data.data() + (i * args.request_size);
-        j++;
+    auto write_data =
+        std::vector<char>(args.request_size * args.iteration, 'w');
+    size_t write_req_ct = args.iteration + 1;
+    unifyfs_io_request write_req[write_req_ct];
+    for (size_t i = 0; i < args.iteration; ++i) {
+      write_req[i].op = UNIFYFS_IOREQ_OP_WRITE;
+      write_req[i].gfid = gfid;
+      write_req[i].nbytes = args.request_size;
+      off_t base_offset = 0;
+      if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
+        base_offset = (off_t)info.rank * args.request_size * args.iteration;
       }
-      write_req[num_req_to_buf].op = UNIFYFS_IOREQ_OP_SYNC_META;
-      write_req[num_req_to_buf].gfid = gfid;
-      write_req[num_req_to_buf + 1].op = UNIFYFS_IOREQ_OP_SYNC_DATA;
-      write_req[num_req_to_buf + 1].gfid = gfid;
+      off_t relative_offset = i * args.request_size;
+      write_req[i].offset = base_offset + relative_offset;
+      write_req[i].user_buf = write_data.data() + (i * args.request_size);
+    }
+    write_req[args.iteration].op = UNIFYFS_IOREQ_OP_SYNC_META;
+    write_req[args.iteration].gfid = gfid;
+    write_time.resumeTime();
+    rc = unifyfs_dispatch_io(fshdl, write_req_ct, write_req);
+    write_time.pauseTime();
+    if (rc == UNIFYFS_SUCCESS) {
+      int waitall = 1;
       write_time.resumeTime();
-      rc = unifyfs_dispatch_io(fshdl, write_req_ct, write_req);
+      rc = unifyfs_wait_io(fshdl, write_req_ct, write_req, waitall);
       write_time.pauseTime();
       if (rc == UNIFYFS_SUCCESS) {
-        int waitall = 1;
-        write_time.resumeTime();
-        rc = unifyfs_wait_io(fshdl, write_req_ct, write_req, waitall);
-        write_time.pauseTime();
-        if (rc == UNIFYFS_SUCCESS) {
-          for (size_t i = 0; i < num_req_to_buf; i++) {
-            REQUIRE(write_req[i].result.error == 0);
-            REQUIRE(write_req[i].result.count == args.request_size);
-          }
+        for (size_t i = 0; i < args.iteration; i++) {
+          REQUIRE(write_req[i].result.error == 0);
+          REQUIRE(write_req[i].result.count == args.request_size);
         }
+        REQUIRE(write_req[args.iteration].result.error == 0);
       }
-      processed += num_req_to_buf;
     }
     MPI_Barrier(MPI_COMM_WORLD);
+
+    if (info.rank == 0) PRINT_MSG("Finished Writing", "");
     if (info.rank == 0) INFO("Flushing data");
     if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
       unifyfs_transfer_request mv_req;
       mv_req.src_path = unifyfs_filename.c_str();
       mv_req.dst_path = full_filename_path.c_str();
-      mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
+      mv_req.mode = UNIFYFS_TRANSFER_MODE_COPY;
       mv_req.use_parallel = 1;
       flush_time.resumeTime();
       rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
@@ -615,6 +602,7 @@ TEST_CASE("Write-Only",
             }
           }
         }
+        if (info.rank == 0) PRINT_MSG("Finished Flushing", "");
       }
     }
 
@@ -1094,7 +1082,8 @@ TEST_CASE("Read-After-Write",
       }
     }
     is_run = true;
-  } else if (args.interface == tt::Interface::STDIO) {
+  }
+  else if (args.interface == tt::Interface::STDIO) {
     usecase = "STDIO";
     if (is_writer) {
       open_time.resumeTime();
@@ -1165,7 +1154,7 @@ TEST_CASE("Read-After-Write",
         open_time.pauseTime();
       } else if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
         open_time.resumeTime();
-        status_orig = MPI_File_open(MPI_COMM_WORLD, full_filename_path.c_str(),
+        status_orig = MPI_File_open(writer_comm, full_filename_path.c_str(),
                                     MPI_MODE_RDWR | MPI_MODE_CREATE,
                                     MPI_INFO_NULL, &fh_orig);
 
@@ -1177,7 +1166,7 @@ TEST_CASE("Read-After-Write",
         MPI_Status stat_orig;
         off_t base_offset = 0;
         if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-          base_offset = (off_t)info.rank * args.request_size * args.iteration;
+          base_offset = (off_t)write_rank * args.request_size * args.iteration;
         }
         off_t relative_offset = i * args.request_size;
         write_time.resumeTime();
@@ -1212,7 +1201,7 @@ TEST_CASE("Read-After-Write",
         MPI_Status stat_orig;
         off_t base_offset = 0;
         if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-          base_offset = (off_t)info.rank * args.request_size * args.iteration;
+          base_offset = (off_t)read_rank * args.request_size * args.iteration;
         }
         off_t relative_offset = random_i * args.request_size;
         read_time.resumeTime();
@@ -1973,7 +1962,8 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
       }
     }
     is_run = true;
-  } else if (args.interface == tt::Interface::STDIO) {
+  }
+  else if (args.interface == tt::Interface::STDIO) {
     usecase = "STDIO";
     if (is_writer) {
       open_time.resumeTime();
@@ -2043,7 +2033,7 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
         open_time.pauseTime();
       } else if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
         open_time.resumeTime();
-        status_orig = MPI_File_open(MPI_COMM_WORLD, full_filename_path.c_str(),
+        status_orig = MPI_File_open(writer_comm, full_filename_path.c_str(),
                                     MPI_MODE_RDWR | MPI_MODE_CREATE,
                                     MPI_INFO_NULL, &fh_orig);
 
@@ -2055,7 +2045,7 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
       MPI_Status stat_orig;
       off_t base_offset = 0;
       if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-        base_offset = (off_t)info.rank * args.request_size * args.iteration;
+        base_offset = (off_t)write_rank * args.request_size * args.iteration;
       }
       write_time.resumeTime();
       auto ret_orig = MPI_File_write_at_all(
@@ -2088,7 +2078,7 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
         MPI_Status stat_orig;
         off_t base_offset = 0;
         if (args.file_sharing == tt::FileSharing::SHARED_FILE) {
-          base_offset = (off_t)info.rank * args.request_size * args.iteration;
+          base_offset = (off_t)read_rank * args.request_size * args.iteration;
         }
         off_t relative_offset = random_i * args.request_size;
         read_time.resumeTime();
