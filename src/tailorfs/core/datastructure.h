@@ -37,13 +37,9 @@ struct FSID {
 };
 
 struct RedirectFeature {
-  bool redirection;
+  bool is_enabled;
   mimir::Storage original_storage;
   mimir::Storage new_storage;
-};
-
-struct MPIIOFeature {
-  RedirectFeature redirection;
 };
 
 struct UnifyFSFeature {
@@ -62,7 +58,7 @@ struct FSViewRead {};
 struct FSViewWrite {};
 
 struct MPIIOInit : public FSViewInit {
-  MPIIOFeature feature;
+  RedirectFeature redirection;
 };
 struct MPIIOFinalize : public FSViewFinalize {};
 struct MPIIOOpen : public FSViewOpen {
@@ -88,6 +84,60 @@ struct MPIIOWrite : public FSViewWrite {
   int count;
   void* buf;
   MPI_Datatype type;
+  int written_bytes;
+};
+
+struct STDIOInit : public FSViewInit {
+  RedirectFeature redirection;
+};
+struct STDIOFinalize : public FSViewFinalize {};
+struct STDIOOpen : public FSViewOpen {
+  const char* filename;
+  const char* mode;
+  FILE* fh;
+};
+struct STDIOClose : public FSViewClose {
+  FILE* fh;
+};
+struct STDIORead : public FSViewRead {
+  FILE* fh;
+  off_t offset;
+  int size;
+  void* buf;
+  int read_bytes;
+};
+struct STDIOWrite : public FSViewWrite {
+  FILE* fh;
+  off_t offset;
+  int size;
+  void* buf;
+  int written_bytes;
+};
+struct POSIXInit : public FSViewInit {
+  RedirectFeature redirection;
+};
+struct POSIXFinalize : public FSViewFinalize {};
+struct POSIXOpen : public FSViewOpen {
+  const char* filename;
+  int flags;
+  int mode;
+  int fd;
+};
+struct POSIXClose : public FSViewClose {
+  int fd;
+};
+struct POSIXRead : public FSViewRead {
+  int fd;
+  off_t offset;
+  int size;
+  void* buf;
+  int read_bytes;
+};
+struct POSIXWrite : public FSViewWrite {
+  int fd;
+  off_t offset;
+  int size;
+  void* buf;
   int written_bytes;
 };
 
@@ -178,16 +228,9 @@ namespace std {
 template <>
 struct hash<tailorfs::RedirectFeature> {
   size_t operator()(const tailorfs::RedirectFeature& k) const {
-    size_t hash_val = hash<bool>()(k.redirection);
+    size_t hash_val = hash<bool>()(k.is_enabled);
     hash_val ^= hash<mimir::Storage>()(k.original_storage);
     hash_val ^= hash<mimir::Storage>()(k.new_storage);
-    return hash_val;
-  }
-};
-template <>
-struct hash<tailorfs::MPIIOFeature> {
-  size_t operator()(const tailorfs::MPIIOFeature& k) const {
-    size_t hash_val = hash<tailorfs::RedirectFeature>()(k.redirection);
     return hash_val;
   }
 };

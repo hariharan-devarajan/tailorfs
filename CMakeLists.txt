@@ -61,7 +61,9 @@ set(TAILORFS_SRC
         src/tailorfs/brahma/posix.cpp
         src/tailorfs/brahma/stdio.cpp
         src/tailorfs/core/fsview_manager.cpp
+        src/tailorfs/core/fsview/stdio_fsview.cpp
         src/tailorfs/core/fsview/mpiio_fsview.cpp
+        src/tailorfs/core/fsview/posix_fsview.cpp
         src/tailorfs/core/fsview/unifyfs_fsview.cpp)
 set(TAILORFS_PRIVATE_INCLUDE src/tailorfs/brahma/posix.h src/tailorfs/brahma/stdio.h)
 set(TAILORFS_PUBLIC_INCLUDE include/tailorfs/tailorfs.h include/tailorfs/macro.h)

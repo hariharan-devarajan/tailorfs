@@ -9,30 +9,30 @@
 #include <regex>
 
 #include "tailorfs/error_code.h"
-TailorFSStatus tailorfs::MPIIOFSView::initialize(MPIIOInit& payload) {
-  feature = payload.feature;
+TailorFSStatus tailorfs::MPIIOFSView::Initialize(MPIIOInit& payload) {
+  redirection = payload.redirection;
   return TAILORFS_SUCCESS;
 }
-TailorFSStatus tailorfs::MPIIOFSView::open(MPIIOOpen& payload) {
+TailorFSStatus tailorfs::MPIIOFSView::Open(MPIIOOpen& payload) {
   std::string filename = std::string(payload.filename);
-  if (feature.redirection.redirection) {
+  if (redirection.is_enabled) {
     filename = std::regex_replace(
-        filename, std::regex(feature.redirection.original_storage._mount_point),
-        feature.redirection.new_storage._mount_point);
+        filename, std::regex(redirection.original_storage._mount_point),
+        redirection.new_storage._mount_point);
   }
   int status_orig =
       MPI_File_open(payload.communicator, filename.c_str(), payload.flags,
                     MPI_INFO_NULL, &payload.file_ptr);
-  if (feature.redirection.redirection) {
+  if (redirection.is_enabled) {
     redirect_map.insert_or_assign(
         payload.file_ptr,
         std::pair<std::string, std::string>(payload.filename, filename));
   }
   return status_orig == 0 ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }
-TailorFSStatus tailorfs::MPIIOFSView::close(MPIIOClose& payload) {
+TailorFSStatus tailorfs::MPIIOFSView::Close(MPIIOClose& payload) {
   int status_orig;
-  if (feature.redirection.redirection) {
+  if (redirection.is_enabled) {
     auto iter = redirect_map.find(payload.file_ptr);
     if (iter != redirect_map.end()) {
       status_orig = MPI_File_close(&payload.file_ptr);
@@ -45,7 +45,7 @@ TailorFSStatus tailorfs::MPIIOFSView::close(MPIIOClose& payload) {
   }
   return status_orig == 0 ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }
-TailorFSStatus tailorfs::MPIIOFSView::write(MPIIOWrite& payload) {
+TailorFSStatus tailorfs::MPIIOFSView::Write(MPIIOWrite& payload) {
   MPI_Status stat_orig;
   MPI_File_write_at_all(payload.file_ptr, payload.offset, payload.buf,
                         payload.count, payload.type, &stat_orig);
@@ -53,7 +53,7 @@ TailorFSStatus tailorfs::MPIIOFSView::write(MPIIOWrite& payload) {
   return payload.written_bytes == payload.count ? TAILORFS_SUCCESS
                                                 : TAILORFS_FAILED;
 }
-TailorFSStatus tailorfs::MPIIOFSView::read(MPIIORead& payload) {
+TailorFSStatus tailorfs::MPIIOFSView::Read(MPIIORead& payload) {
   MPI_Status stat_orig;
   MPI_File_read_at_all(payload.file_ptr, payload.offset, payload.buf,
                        payload.count, payload.type, &stat_orig);
@@ -61,10 +61,10 @@ TailorFSStatus tailorfs::MPIIOFSView::read(MPIIORead& payload) {
   return payload.read_bytes == payload.count ? TAILORFS_SUCCESS
                                              : TAILORFS_FAILED;
 }
-TailorFSStatus tailorfs::MPIIOFSView::finalize(MPIIOFinalize& payload) {
-  return 0;
+TailorFSStatus tailorfs::MPIIOFSView::Finalize(MPIIOFinalize& payload) {
+  return TAILORFS_SUCCESS;
 }
-TailorFSStatus tailorfs::MPIIOFSView::convert(int flags, int& mpi_flags) {
+TailorFSStatus tailorfs::MPIIOFSView::Convert(int flags, int& mpi_flags) {
   mpi_flags = 0;
   if (flags & O_RDWR) {
     mpi_flags = mpi_flags | MPI_MODE_RDWR;

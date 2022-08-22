@@ -90,7 +90,7 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
       strcpy(init_args.feature.unifyfs_namespace,
              std::to_string(id._id).c_str());
       id._feature_hash = std::hash<UnifyFSFeature>()(init_args.feature);
-      UNIFYFSVIEW(id)->initialize(init_args);
+      UNIFYFSVIEW(id)->Initialize(init_args);
       fsid_map.insert_or_assign(FSViewType::UNIFYFS, id);
       fsview_map.insert_or_assign(file_hash, id);
     } else {
@@ -121,14 +121,13 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
         auto fastest_storage_index = get_fastest(file_intent._size_mb);
         MPIIOInit init_args;
         if (file_intent._current_device != fastest_storage_index) {
-          init_args.feature.redirection.redirection = true;
-          init_args.feature.redirection.original_storage =
+          init_args.redirection.is_enabled = true;
+          init_args.redirection.original_storage =
               storages[file_intent._current_device];
-          init_args.feature.redirection.new_storage =
-              storages[fastest_storage_index];
+          init_args.redirection.new_storage = storages[fastest_storage_index];
         }
-        id._feature_hash = std::hash<MPIIOFeature>()(init_args.feature);
-        MPIIOFSVIEW(id)->initialize(init_args);
+        id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
+        MPIIOFSVIEW(id)->Initialize(init_args);
         fsid_map.insert_or_assign(FSViewType::MPIIO, id);
         fsview_map.insert_or_assign(file_hash, id);
         auto size = fsview_map.size();
@@ -144,9 +143,9 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
           id._id++;
         }
         MPIIOInit init_args;
-        init_args.feature.redirection.redirection = false;
-        id._feature_hash = std::hash<MPIIOFeature>()(init_args.feature);
-        MPIIOFSVIEW(id)->initialize(init_args);
+        init_args.redirection.is_enabled = false;
+        id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
+        MPIIOFSVIEW(id)->Initialize(init_args);
         fsid_map.insert_or_assign(FSViewType::MPIIO, id);
         fsview_map.insert_or_assign(file_hash, id);
       }
@@ -169,10 +168,10 @@ TailorFSStatus tailorfs::FSViewManager::finalize() {
   for (auto& item : fsview_map) {
     if (item.second._type == tailorfs::FSViewType::MPIIO) {
       MPIIOFinalize arg;
-      MPIIOFSVIEW(item.second)->finalize(arg);
+      MPIIOFSVIEW(item.second)->Finalize(arg);
     } else if (item.second._type == tailorfs::FSViewType::UNIFYFS) {
       UnifyFSFinalize arg;
-      UNIFYFSVIEW(item.second)->finalize(arg);
+      UNIFYFSVIEW(item.second)->Finalize(arg);
     }
   }
   fsview_map.clear();

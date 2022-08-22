@@ -14,7 +14,7 @@ namespace tailorfs {
 class MPIIOFSView : public FSView<MPIIOInit, MPIIOFinalize, MPIIOOpen,
                                   MPIIOClose, MPIIORead, MPIIOWrite> {
  private:
-  MPIIOFeature feature;
+  RedirectFeature redirection;
   std::unordered_map<MPI_File, std::pair<std::string, std::string>>
       redirect_map;
 
@@ -23,13 +23,13 @@ class MPIIOFSView : public FSView<MPIIOInit, MPIIOFinalize, MPIIOOpen,
   MPIIOFSView(MPIIOFSView& other) = default;
   MPIIOFSView(MPIIOFSView&& other) = default;
   MPIIOFSView& operator=(const MPIIOFSView& t) = default;
-  TailorFSStatus initialize(MPIIOInit& payload) override;
-  TailorFSStatus open(MPIIOOpen& payload) override;
-  TailorFSStatus close(MPIIOClose& payload) override;
-  TailorFSStatus write(MPIIOWrite& payload) override;
-  TailorFSStatus read(MPIIORead& payload) override;
-  TailorFSStatus finalize(MPIIOFinalize& payload) override;
-  TailorFSStatus convert(int flags, int& mpi_flags);
+  TailorFSStatus Initialize(MPIIOInit& payload) override;
+  TailorFSStatus Open(MPIIOOpen& payload) override;
+  TailorFSStatus Close(MPIIOClose& payload) override;
+  TailorFSStatus Write(MPIIOWrite& payload) override;
+  TailorFSStatus Read(MPIIORead& payload) override;
+  TailorFSStatus Finalize(MPIIOFinalize& payload) override;
+  TailorFSStatus Convert(int flags, int& mpi_flags);
 };
 }  // namespace tailorfs
 #endif  // TAILORFS_MPIIO_FSVIEW_H
