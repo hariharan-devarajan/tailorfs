@@ -20,39 +20,48 @@ class POSIXTailorFS : public POSIX {
  private:
   typedef int FileDescriptor;
   static std::shared_ptr<POSIXTailorFS> instance;
-  std::unordered_set<std::string> filenames;
-  std::unordered_set<std::string> excluded_filenames;
   std::unordered_set<FileDescriptor> fds;
   std::unordered_map<FileDescriptor, FSID> fsid_map;
   std::unordered_map<FSID, std::pair<MPI_File, off_t>> mpiio_map;
   std::unordered_map<FSID, std::pair<FILE*, off_t>> stdio_map;
   std::unordered_map<FSID, std::pair<FileDescriptor, off_t>> posix_map;
   std::unordered_map<FSID, std::pair<unifyfs_gfid, off_t>> unifyfs_map;
-
-  inline bool is_traced(const char *filename) {
-    auto iter = excluded_filenames.find(filename);
-    if (iter != excluded_filenames.end()) return false;
-    iter = filenames.find(filename);
-    if (iter != filenames.end()) return true;
-    return false;
+  inline bool is_traced(const char* filename) {
+    return utility->is_traced(filename, brahma::InterfaceType::INTERFACE_POSIX);
   }
+  inline void exclude_file(const char *filename) {
+    utility->exclude_file(filename, brahma::InterfaceType::INTERFACE_POSIX);
+  }
+  inline void include_file(const char *filename) {
+    utility->include_file(filename, brahma::InterfaceType::INTERFACE_POSIX);
 
+  }
+  inline void track_file(const char *filename) {
+    utility->track_file(filename, brahma::InterfaceType::INTERFACE_POSIX);
+  }
+  inline void untrack_file(const char *filename) {
+    utility->untrack_file(filename, brahma::InterfaceType::INTERFACE_POSIX);
+  }
   inline bool is_traced(const int fd) {
     auto iter = fds.find(fd);
     if (iter != fds.end()) return true;
     return false;
   }
-
-  inline void track_file(const char *filename) { filenames.emplace(filename); }
-  inline void untrack_file(const char *filename) { filenames.erase(filename); }
   inline void track_fd(const int fd) { fds.emplace(fd); }
   inline void untrack_fd(const int fd) { fds.erase(fd); }
 
  public:
-  POSIXTailorFS() : POSIX(), filenames(), fds() {
+  POSIXTailorFS() : POSIX(),  fds() {
     auto config = MIMIR_CONFIG();
-    for (auto file : config->_file_repo) {
-      track_file(file._name.c_str());
+    if (config->_current_process_index != -1) {
+      auto app_intent = config->_app_repo[config->_current_process_index];
+      for (auto element : app_intent._interfaces_used) {
+        for (const auto& interface: element.second) {
+          if (interface == mimir::InterfaceType::POSIX) {
+            track_file(config->_file_repo[element.first]._name.c_str());
+          }
+        }
+      }
     }
   }
   ~POSIXTailorFS() override = default;

@@ -18,13 +18,23 @@ class STDIOTailorFS : public STDIO {
  private:
   typedef FILE *FilePointer;
   static std::shared_ptr<STDIOTailorFS> instance;
-  std::unordered_set<std::string> filenames;
   std::unordered_set<FilePointer> fps;
 
-  inline bool is_traced(const char *filename) {
-    auto iter = filenames.find(filename);
-    if (iter != filenames.end()) return true;
-    return false;
+  inline bool is_traced(const char* filename) {
+    return utility->is_traced(filename, brahma::InterfaceType::INTERFACE_STDIO);
+  }
+  inline void exclude_file(const char *filename) {
+    utility->exclude_file(filename, brahma::InterfaceType::INTERFACE_STDIO);
+  }
+  inline void include_file(const char *filename) {
+    utility->include_file(filename, brahma::InterfaceType::INTERFACE_STDIO);
+
+  }
+  inline void track_file(const char *filename) {
+    utility->track_file(filename, brahma::InterfaceType::INTERFACE_STDIO);
+  }
+  inline void untrack_file(const char *filename) {
+    utility->untrack_file(filename, brahma::InterfaceType::INTERFACE_STDIO);
   }
 
   inline bool is_traced(const FilePointer fp) {
@@ -32,17 +42,21 @@ class STDIOTailorFS : public STDIO {
     if (iter != fps.end()) return true;
     return false;
   }
-
-  inline void track_file(const char *filename) { filenames.emplace(filename); }
-  inline void untrack_file(const char *filename) { filenames.erase(filename); }
   inline void track_fp(const FilePointer fp) { fps.emplace(fp); }
   inline void untrack_fp(const FilePointer fp) { fps.erase(fp); }
 
  public:
   STDIOTailorFS() : STDIO() {
     auto config = MIMIR_CONFIG();
-    for (auto file : config->_file_repo) {
-      track_file(file._name.c_str());
+    if (config->_current_process_index != -1) {
+      auto app_intent = config->_app_repo[config->_current_process_index];
+      for (auto element : app_intent._interfaces_used) {
+        for (const auto& interface: element.second) {
+          if (interface == mimir::InterfaceType::STDIO) {
+            track_file(config->_file_repo[element.first]._name.c_str());
+          }
+        }
+      }
     }
   }
   ~STDIOTailorFS() = default;

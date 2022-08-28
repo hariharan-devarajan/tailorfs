@@ -12,7 +12,7 @@ int brahma::POSIXTailorFS::open(const char *pathname, int flags, mode_t mode) {
   int ret = -1;
   if (is_traced(pathname)) {
     ret = __real_open(pathname, flags, mode);
-    excluded_filenames.emplace(pathname);
+    exclude_file(pathname);
     FSID id;
     auto status = FSVIEW_MANAGER->get_fsview(pathname, id);
     if (status == TAILORFS_SUCCESS) {
@@ -82,7 +82,7 @@ int brahma::POSIXTailorFS::open(const char *pathname, int flags, mode_t mode) {
       TAILORFS_LOGERROR("get_fsview - failed", "");
       ret = __real_open(pathname, flags, mode);
     }
-    excluded_filenames.erase(pathname);
+    include_file(pathname);
 
   } else {
     ret = __real_open(pathname, flags, mode);

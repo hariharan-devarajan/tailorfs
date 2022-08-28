@@ -394,14 +394,21 @@ int create_config(mimir::Config &config) {
                                                      AccessPattern::STRIDED);
       }
       /* File access type*/
-      bool has_independent = false, has_shared = false;
       if (file_index < num_files_independent) {
         app_advice._independent_files.push_back(file_index);
         workflow_advice._independent_files.push_back(file_index);
         /* Rank file map*/
         app_advice._rank_file_dag.edges.push_back(
             Edge<RankIndex, FileIndex>(rank_in_app, file_index));
-        has_independent = true;
+        auto interface_iter = app_advice._interfaces_used.find(file_index);
+        std::unordered_set<mimir::InterfaceType> app_interfaces;
+        if (interface_iter == app_advice._interfaces_used.end()) {
+          app_interfaces = std::unordered_set<mimir::InterfaceType>();
+        } else {
+          app_interfaces = interface_iter->second;
+        }
+        app_interfaces.emplace(mimir::InterfaceType::POSIX);
+        app_advice._interfaces_used.insert_or_assign(file_index, app_interfaces);
       } else {
         auto shared_file_apps = std::vector<ApplicationIndex>();
         for (int shared_app_index = floor(file_index / args.num_files_per_app);
@@ -415,18 +422,37 @@ int create_config(mimir::Config &config) {
              ++rank_index) {
           app_advice._rank_file_dag.edges.emplace_back(rank_index, file_index);
         }
-        has_shared = true;
+        auto interface_iter = app_advice._interfaces_used.find(file_index);
+        std::unordered_set<mimir::InterfaceType> app_interfaces;
+        if (interface_iter == app_advice._interfaces_used.end()) {
+          app_interfaces = std::unordered_set<mimir::InterfaceType>();
+        } else {
+          app_interfaces = interface_iter->second;
+        }
+        app_interfaces.emplace(mimir::InterfaceType::MPIIO);
+        app_advice._interfaces_used.insert_or_assign(file_index, app_interfaces);
       }
-      if (has_independent)
-        app_advice._interfaces_used.push_back(InterfaceType::POSIX);
-      if (has_shared)
-        app_advice._interfaces_used.push_back(InterfaceType::MPIIO);
       rank_in_app++;
       rank_in_app = rank_in_app % args.num_process_per_app;
     }
     config._app_repo.push_back(app_advice);
   }
 
+  for(const auto&app_advice:config._app_repo) {
+    for(const auto&element:app_advice._interfaces_used) {
+      auto iter = workflow_advice._interfaces_used.find(element.first);
+      std::unordered_set<mimir::InterfaceType> interfaces;
+      if(iter == workflow_advice._interfaces_used.end()) {
+        interfaces = element.second;
+      } else {
+        interfaces = iter->second;
+      }
+      for (const auto&interface: element.second) {
+        interfaces.emplace(interface);
+      }
+      workflow_advice._interfaces_used.insert_or_assign(element.first, interfaces);
+    }
+  }
   workflow_advice._num_cpu_cores_used = config._job_config._node_names.size() *
                                         config._job_config._num_cores_per_node;
   workflow_advice._num_gpus_used = config._job_config._node_names.size() *

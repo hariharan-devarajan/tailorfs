@@ -8,24 +8,11 @@
 TailorFSStatus tailorfs::FSViewManager::initialize() {
   mimir_intent_conf = MIMIR_CONFIG();
   storages = mimir_intent_conf->_job_config._devices;
-  std::string sp;
-  std::ifstream("/proc/self/cmdline") >> sp;
 
-  std::replace( sp.begin(), sp.end() - 1, '\000', ' ');
-  auto hash = mimir::oat_hash(sp.c_str(), sp.size());
-  mimir::ApplicationIndex app_index;
-  bool is_found = false;
-  for(auto element:mimir_intent_conf->_workflow._app_mapping) {
-    if (strcmp(element.first.c_str(),sp.c_str()) == 0) {
-      app_index = element.second;
-      is_found = true;
-      break;
-    }
-  }
-  if(!is_found){
+  if(mimir_intent_conf->_current_process_index == -1){
     TAILORFS_LOGINFO("app hash not matching", "");
   } else {
-    auto app_intent = mimir_intent_conf->_app_repo[app_index];
+    auto app_intent = mimir_intent_conf->_app_repo[mimir_intent_conf->_current_process_index];
     for (const auto& edge : app_intent._application_file_dag.edges) {
       auto file_index = edge.destination;
       auto file_intent = mimir_intent_conf->_file_repo[file_index];
