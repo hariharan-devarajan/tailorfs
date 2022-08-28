@@ -27,6 +27,7 @@ class STDIOFSView : public FSView<STDIOInit, STDIOFinalize, STDIOOpen,
   TailorFSStatus Write(STDIOWrite& payload) override;
   TailorFSStatus Read(STDIORead& payload) override;
   TailorFSStatus Finalize(STDIOFinalize& payload) override;
+  TailorFSStatus Convert(int &flags, char* &mode);
 };
 }  // namespace tailorfs
 

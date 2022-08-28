@@ -6,7 +6,7 @@
 #define TAILORFS_ENUMERATION_H
 #include <cstdint>
 namespace tailorfs {
-enum FSViewType : uint8_t { FS_NONE = 0, MPIIO = 1, UNIFYFS = 2 };
+enum FSViewType : uint8_t { FS_NONE = 0, MPIIO = 1, UNIFYFS = 2, STDIO =3, POSIX=4 };
 enum RedirectionType : uint8_t {
   REDIRECT_NONE = 0,
   PREFETCH = 1,

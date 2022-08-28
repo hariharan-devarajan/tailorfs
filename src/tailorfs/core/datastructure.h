@@ -96,7 +96,7 @@ struct STDIOInit : public FSViewInit {
 struct STDIOFinalize : public FSViewFinalize {};
 struct STDIOOpen : public FSViewOpen {
   const char* filename;
-  const char* mode;
+  char* mode;
   FILE* fh;
 };
 struct STDIOClose : public FSViewClose {

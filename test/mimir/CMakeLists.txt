@@ -3,6 +3,7 @@ set(examples mimir_test)
 function(gcc_base example)
     add_executable(${example} ${example}.cpp ${TEST_SRC})
     target_link_libraries(${example} ${TEST_LIBS} ${MIMIR_LIBRARIES})
+    add_dependencies(${example} mimir)
 endfunction()
 
 foreach (example ${examples})
@@ -47,6 +48,7 @@ function(create_test)
     set(count ${count} PARENT_SCOPE)
     #message(STATUS ${count})
     set(config_file_suffix ${NUM_NODES}_${ranks_per_node}_${num_app}_${rq_kb}_${iter}_${file_sharing}_${access_pattern}_${op}_${process_grouping})
+
     set(config_file ${CMAKE_CURRENT_SOURCE_DIR}/json_files/${machine}/mimir_config_${config_file_suffix}.json)
     set(TEST_ARGS --ranks_per_node ${ranks_per_node}
             --io_size_per_app_mb ${io_size_per_app_mb}
@@ -64,6 +66,7 @@ function(create_test)
             --all_app_ptg ${all_app_ptg}
             --split_app_ptg ${split_app_ptg}
             --alt_app_ptg ${alt_app_ptg}
+            --binary_directory ${CMAKE_BINARY_DIR}/bin
             --reporter compact
             )
     set(test_name test_generate_config_${machine}_${config_file_suffix})

@@ -26,13 +26,13 @@ TailorFSStatus tailorfs::STDIOFSView::Open(tailorfs::STDIOOpen& payload) {
                     fs::copy_options::overwrite_existing);
     }
   }
-  FILE* fh = fopen(filename.c_str(), payload.mode);
+  payload.fh = fopen(filename.c_str(), payload.mode);
   if (redirection.is_enabled) {
     redirect_map.insert_or_assign(
         payload.fh,
         std::pair<std::string, std::string>(payload.filename, filename));
   }
-  return fh == nullptr ? TAILORFS_SUCCESS : TAILORFS_FAILED;
+  return payload.fh != nullptr ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }
 TailorFSStatus tailorfs::STDIOFSView::Close(tailorfs::STDIOClose& payload) {
   int status_orig;
@@ -52,7 +52,7 @@ TailorFSStatus tailorfs::STDIOFSView::Close(tailorfs::STDIOClose& payload) {
 }
 TailorFSStatus tailorfs::STDIOFSView::Write(tailorfs::STDIOWrite& payload) {
   auto status = fseek(payload.fh, payload.offset, SEEK_SET);
-  if (status == payload.offset) {
+  if (status == 0) {
     payload.written_bytes =
         fwrite(payload.buf, sizeof(char), payload.size, payload.fh);
     return payload.written_bytes == payload.size ? TAILORFS_SUCCESS
@@ -72,5 +72,28 @@ TailorFSStatus tailorfs::STDIOFSView::Read(tailorfs::STDIORead& payload) {
 }
 TailorFSStatus tailorfs::STDIOFSView::Finalize(
     tailorfs::STDIOFinalize& payload) {
+  return TAILORFS_SUCCESS;
+}
+TailorFSStatus tailorfs::STDIOFSView::Convert(int& flags, char*& mode) {
+  mode = new char[2];
+  if (flags & O_WRONLY) {
+    mode[0] = 'w';
+    mode[1] = '\0';
+  } else if (flags & O_RDONLY) {
+    mode[0] = 'r';
+    mode[1] = '\0';
+  }else if (flags & O_APPEND) {
+    mode[0] = 'a';
+    mode[1] = '\0';
+  }else if (flags & O_RDWR) {
+    mode[0] = 'r';
+    mode[1] = '+';
+  }
+  if (flags & O_CREAT) {
+    mode[1] = '+';
+  }
+  if (flags & O_EXCL) {
+    mode[1] = '\0';
+  }
   return TAILORFS_SUCCESS;
 }

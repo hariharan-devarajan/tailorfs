@@ -46,16 +46,16 @@ find_package(unifyfs REQUIRED)
 if (NOT ${UNIFYFS_FOUND})
     message(FATAL_ERROR "UnifyFS is needed for TailorFS build")
 else ()
+    message(STATUS "[UnifyFS] found headers at ${UNIFYFS_INCLUDE_DIRS}")
     include_directories(${UNIFYFS_INCLUDE_DIRS})
     set(DEPENDENCY_LIB ${DEPENDENCY_LIB} ${UNIFYFS_API_LIBRARIES})
 endif ()
 find_package(MPI COMPONENTS CXX REQUIRED)
 if (MPI_FOUND)
-    message(STATUS "found mpi.h at ${MPI_CXX_INCLUDE_DIRS}")
+    message(STATUS "[MPI] found mpi.h at ${MPI_CXX_INCLUDE_DIRS}")
     include_directories(${MPI_CXX_INCLUDE_DIRS})
     set(DEPENDENCY_LIB ${DEPENDENCY_LIB} ${MPI_CXX_LIBRARIES})
 endif ()
-
 
 set(TAILORFS_SRC
         src/tailorfs/brahma/posix.cpp

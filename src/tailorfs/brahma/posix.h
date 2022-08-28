@@ -25,6 +25,8 @@ class POSIXTailorFS : public POSIX {
   std::unordered_set<FileDescriptor> fds;
   std::unordered_map<FileDescriptor, FSID> fsid_map;
   std::unordered_map<FSID, std::pair<MPI_File, off_t>> mpiio_map;
+  std::unordered_map<FSID, std::pair<FILE*, off_t>> stdio_map;
+  std::unordered_map<FSID, std::pair<FileDescriptor, off_t>> posix_map;
   std::unordered_map<FSID, std::pair<unifyfs_gfid, off_t>> unifyfs_map;
 
   inline bool is_traced(const char *filename) {

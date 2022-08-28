@@ -23,6 +23,7 @@ struct Arguments {
   /* test args */
   bool debug = false;
   int ranks_per_node = 1;
+  std::string binary_directory = "./";
   /* I/O args */
   int io_size_per_app_mb = 1024;
   /* main args */
@@ -85,7 +86,9 @@ int finalize() {
   return 0;
 }
 cl::Parser define_options() {
-  return cl::Opt(args.debug, "debug")["--debug"]("Enable debugging.") |
+  return cl::Opt(args.debug, "debug")["--debug"]("Enable debugging.")|
+         cl::Opt(args.binary_directory,
+                 "binary_directory")["--binary_directory"]("binary_directory.")  |
          cl::Opt(args.ranks_per_node,
                  "ranks_per_node")["--ranks_per_node"]("# ranks per node.") |
          cl::Opt(args.io_size_per_app_mb,
@@ -282,6 +285,32 @@ int create_config(mimir::Config &config) {
   mimir::WorkflowAdvice workflow_advice;
   for (uint32_t app_index = 0; app_index < args.num_apps; ++app_index) {
     mimir::ApplicationAdvice app_advice;
+    auto file_parts =  split(args.config_file, '/');
+
+    auto values =  split(file_parts[7], '_');
+    char workload[256];
+    char process[1024];
+    if (values[0] == "wo") strcpy(workload, "Write-Only");
+    else if (values[0] == "ro") strcpy(workload, "Read-Only");
+    else if (values[0] == "raw") strcpy(workload, "Read-After-Write");
+    else if (values[0] == "update") strcpy(workload, "Update");
+    else if (values[0] == "worm") strcpy(workload, "WORM");
+    int access_pattern, file_sharing, process_grouping;
+    if (values[1] == "seq") access_pattern = 0;
+    else if (values[1] == "random") access_pattern = 1;
+    if (values[3] == "fpp") file_sharing = 0;
+    else if (values[3] == "shared") file_sharing = 1;
+    if (values[2] == "all.json") process_grouping = 0;
+    else if (values[2] == "split.json") process_grouping = 1;
+    else if (values[2] == "alt.json") process_grouping = 2;
+    sprintf(process, "%s/io_tests --request_size %d --iteration %d "
+        "--ranks_per_node %d --access_pattern %d --file_sharing %d "
+        "--process_grouping %d --reporter compact %s",args.binary_directory.c_str(),
+        atoi(values[4].c_str()) * 1024, atoi(values[6].c_str()), atoi(values[5].c_str()), access_pattern,
+            file_sharing, process_grouping, workload);
+    auto process_full = std::string(process);
+    auto hash = mimir::oat_hash(process_full.c_str(), process_full.size());
+    workflow_advice._app_mapping.emplace(process_full, app_index);
     /* Application info */
     app_advice._name = "app-" + std::to_string(app_index);
     /* app file dag*/
@@ -301,9 +330,7 @@ int create_config(mimir::Config &config) {
         config._job_config._job_time_minutes / args.num_apps;
     app_advice._ts_distribution._0_4kb = 1.0;
     /* Access Pattern */
-    int num_files_seq = floor(1.0 * NUM_FILES * args.sequential_percentage);
-    int num_files_random = NUM_FILES - num_files_seq;
-    int num_files_strided = 0;
+
     /* File access type*/
 
     /* Rank file map*/
@@ -314,6 +341,7 @@ int create_config(mimir::Config &config) {
     int rank_in_app = 0;
     for (uint32_t file_index = app_index * args.num_files_per_app;
          file_index < (app_index + 1) * args.num_files_per_app; ++file_index) {
+
       /* Rank file map*/
       app_advice._rank_file_dag.files.emplace(file_index);
       /* App file dag */
@@ -324,7 +352,30 @@ int create_config(mimir::Config &config) {
       workflow_advice._application_file_dag.files.emplace(file_index);
       workflow_advice._application_file_dag.edges.emplace_back(app_index,
                                                                file_index);
-
+      int num_files_seq = floor(1.0 * NUM_FILES * args.sequential_percentage);
+      int num_files_random = NUM_FILES - num_files_seq;
+      int num_files_strided = 0;
+      int wo_file = floor(NUM_FILES * args.wo_file_ptg);
+      int ro_file = floor(NUM_FILES * args.ro_file_ptg);
+      int raw_file = floor(NUM_FILES * args.raw_file_ptg);
+      int update_file = floor(NUM_FILES * args.update_file_ptg);
+      int worm_file = NUM_FILES - wo_file - ro_file - raw_file - update_file;
+      if (file_index < wo_file) {
+        app_advice._file_workload.emplace(file_index, WorkloadType::WRITE_ONLY_WORKLOAD);
+        workflow_advice._file_workload.emplace(file_index, WorkloadType::WRITE_ONLY_WORKLOAD);
+      } else if (file_index < ro_file) {
+        app_advice._file_workload.emplace(file_index, WorkloadType::READ_ONLY_WORKLOAD);
+        workflow_advice._file_workload.emplace(file_index, WorkloadType::READ_ONLY_WORKLOAD);
+      } else if (file_index < raw_file) {
+        app_advice._file_workload.emplace(file_index, WorkloadType::RAW_WORKLOAD);
+        workflow_advice._file_workload.emplace(file_index, WorkloadType::RAW_WORKLOAD);
+      } else if (file_index < update_file) {
+        app_advice._file_workload.emplace(file_index, WorkloadType::UPDATE_WORKLOAD);
+        workflow_advice._file_workload.emplace(file_index, WorkloadType::UPDATE_WORKLOAD);
+      } else if (file_index < worm_file) {
+        app_advice._file_workload.emplace(file_index, WorkloadType::WORM_WORKLOAD);
+        workflow_advice._file_workload.emplace(file_index, WorkloadType::WORM_WORKLOAD);
+      }
       /* File access pattern */
       if (file_index < num_files_seq) {
         app_advice._file_access_pattern.emplace(file_index,
@@ -386,6 +437,7 @@ int create_config(mimir::Config &config) {
   workflow_advice._per_io_metadata = 0.25;
   workflow_advice._runtime_minutes = config._job_config._job_time_minutes;
   workflow_advice._ts_distribution._0_4kb = 1.0;
+  config._workflow = workflow_advice;
   return 0;
 }
 

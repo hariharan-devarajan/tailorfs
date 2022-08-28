@@ -33,6 +33,21 @@ int brahma::POSIXTailorFS::open(const char *pathname, int flags, mode_t mode) {
         } else {
           TAILORFS_LOGERROR("Opening file using MPIIO - failed", "");
         }
+      } else if (id._type == FSViewType::STDIO) {
+        TAILORFS_LOGINFO("Opening file using STDIO", "");
+        STDIOOpen args{};
+        args.filename = pathname;
+        auto fsview = STDIOFSVIEW(id);
+        fsview->Convert(flags, args.mode);
+        status = fsview->Open(args);
+        if (status == TAILORFS_SUCCESS) {
+          stdio_map.insert_or_assign(
+              id, std::pair<FILE*, off_t>(args.fh, 0));
+          track_fd(ret);
+          TAILORFS_LOGINFO("Opening file using STDIO - success", "");
+        } else {
+          TAILORFS_LOGERROR("Opening file using STDIO - failed", "");
+        }
       } else if (id._type == tailorfs::FSViewType::UNIFYFS) {
         TAILORFS_LOGINFO("Opening file using UnifyFS", "");
         UnifyFSOpen args{};
@@ -94,24 +109,39 @@ int brahma::POSIXTailorFS::close(int fd) {
           } else {
             TAILORFS_LOGERROR("Closing file using MPIIO - failed", "");
           }
-        } else if (iter->second._type == tailorfs::FSViewType::UNIFYFS) {
-          auto unifyfs_iter = unifyfs_map.find(iter->second);
-          if (unifyfs_iter != unifyfs_map.end()) {
-            TAILORFS_LOGINFO("Closing file using UnifyFS", "");
-            UnifyFSClose args{};
-            args.gfid = unifyfs_iter->second.first;
-            auto fsview = UNIFYFSVIEW(iter->second);
-            TailorFSStatus status = fsview->Close(args);
-            if (status == TAILORFS_SUCCESS) {
-              unifyfs_map.erase(iter->second);
-              TAILORFS_LOGINFO("Closing file using UnifyFS - success", "");
-            } else {
-              TAILORFS_LOGERROR("Closing file using UnifyFS - failed", "");
-            }
-          }
-        } else {
-          TAILORFS_LOGERROR("Incorrect fsview type", "");
         }
+      } else if (iter->second._type == FSViewType::STDIO) {
+        auto stdio_iter = stdio_map.find(iter->second);
+        if (stdio_iter != stdio_map.end()) {
+          TAILORFS_LOGINFO("Closing file using STDIO", "");
+          STDIOClose args{};
+          args.fh = stdio_iter->second.first;
+          auto fsview = STDIOFSVIEW(iter->second);
+          TailorFSStatus status = fsview->Close(args);
+          if (status == TAILORFS_SUCCESS) {
+            stdio_map.erase(iter->second);
+            TAILORFS_LOGINFO("Closing file using STDIO - success", "");
+          } else {
+            TAILORFS_LOGERROR("Closing file using STDIO - failed", "");
+          }
+        }
+      } else if (iter->second._type == tailorfs::FSViewType::UNIFYFS) {
+        auto unifyfs_iter = unifyfs_map.find(iter->second);
+        if (unifyfs_iter != unifyfs_map.end()) {
+          TAILORFS_LOGINFO("Closing file using UnifyFS", "");
+          UnifyFSClose args{};
+          args.gfid = unifyfs_iter->second.first;
+          auto fsview = UNIFYFSVIEW(iter->second);
+          TailorFSStatus status = fsview->Close(args);
+          if (status == TAILORFS_SUCCESS) {
+            unifyfs_map.erase(iter->second);
+            TAILORFS_LOGINFO("Closing file using UnifyFS - success", "");
+          } else {
+            TAILORFS_LOGERROR("Closing file using UnifyFS - failed", "");
+          }
+        }
+      } else {
+        TAILORFS_LOGERROR("Incorrect fsview type", "");
       }
     }
     ret = __real_close(fd);
@@ -149,31 +179,53 @@ ssize_t brahma::POSIXTailorFS::write(int fd, const void *buf, size_t count) {
           } else {
             TAILORFS_LOGERROR("Writing file using MPIIO - failed", "");
           }
-        } else if (iter->second._type == tailorfs::FSViewType::UNIFYFS) {
-          auto unifyfs_iter = unifyfs_map.find(iter->second);
-          if (unifyfs_iter != unifyfs_map.end()) {
-            TAILORFS_LOGINFO("Writing file using UnifyFS", "");
-            UnifyFSWrite args{};
-            args.gfid = unifyfs_iter->second.first;
-            args.buf = (void *)buf;
-            args.offset = unifyfs_iter->second.second;
-            args.nbytes = count;
-            auto fsview = UNIFYFSVIEW(iter->second);
-            TailorFSStatus status = fsview->Write(args);
-            if (status == TAILORFS_SUCCESS) {
-              unifyfs_iter->second.second += args.nbytes;
-              unifyfs_map.insert_or_assign(iter->second, unifyfs_iter->second);
-              is_success = true;
-              ret = args.nbytes;
-              TAILORFS_LOGINFO("Writing file using UnifyFS - success", "");
-            } else {
-              TAILORFS_LOGERROR("Writing file using UnifyFS - failed", "");
-            }
-          }
-        } else {
-          TAILORFS_LOGERROR("Incorrect fsview type", "");
         }
+      } else if (iter->second._type == FSViewType::STDIO) {
+        auto stdio_iter = stdio_map.find(iter->second);
+        if (stdio_iter != stdio_map.end()) {
+          TAILORFS_LOGINFO("Writing file using STDIO", "");
+          STDIOWrite args{};
+          args.fh = stdio_iter->second.first;
+          args.offset = stdio_iter->second.second;
+          args.buf = (void *)buf;
+          args.size = count;
+          auto fsview = STDIOFSVIEW(iter->second);
+          TailorFSStatus status = fsview->Write(args);
+          if (status == TAILORFS_SUCCESS) {
+            stdio_iter->second.second += args.written_bytes;
+            stdio_map.insert_or_assign(iter->second, stdio_iter->second);
+            is_success = true;
+            ret = args.written_bytes;
+            TAILORFS_LOGINFO("Writing file using STDIO - success", "");
+          } else {
+            TAILORFS_LOGERROR("Writing file using STDIO - failed", "");
+          }
+        }
+      }  else if (iter->second._type == tailorfs::FSViewType::UNIFYFS) {
+        auto unifyfs_iter = unifyfs_map.find(iter->second);
+        if (unifyfs_iter != unifyfs_map.end()) {
+          TAILORFS_LOGINFO("Writing file using UnifyFS", "");
+          UnifyFSWrite args{};
+          args.gfid = unifyfs_iter->second.first;
+          args.buf = (void *)buf;
+          args.offset = unifyfs_iter->second.second;
+          args.nbytes = count;
+          auto fsview = UNIFYFSVIEW(iter->second);
+          TailorFSStatus status = fsview->Write(args);
+          if (status == TAILORFS_SUCCESS) {
+            unifyfs_iter->second.second += args.nbytes;
+            unifyfs_map.insert_or_assign(iter->second, unifyfs_iter->second);
+            is_success = true;
+            ret = args.nbytes;
+            TAILORFS_LOGINFO("Writing file using UnifyFS - success", "");
+          } else {
+            TAILORFS_LOGERROR("Writing file using UnifyFS - failed", "");
+          }
+        }
+      } else {
+        TAILORFS_LOGERROR("Incorrect fsview type", "");
       }
+
     }
     if (!is_success) {
       ret = __real_write(fd, buf, count);
@@ -211,31 +263,53 @@ ssize_t brahma::POSIXTailorFS::read(int fd, void *buf, size_t count) {
           } else {
             TAILORFS_LOGERROR("Reading file using MPIIO - failed", "");
           }
-        } else if (iter->second._type == tailorfs::FSViewType::UNIFYFS) {
-          auto unifyfs_iter = unifyfs_map.find(iter->second);
-          if (unifyfs_iter != unifyfs_map.end()) {
-            TAILORFS_LOGINFO("Reading file using UnifyFS", "");
-            UnifyFSRead args{};
-            args.gfid = unifyfs_iter->second.first;
-            args.buf = (void *)buf;
-            args.offset = unifyfs_iter->second.second;
-            args.nbytes = count;
-            auto fsview = UNIFYFSVIEW(iter->second);
-            TailorFSStatus status = fsview->Read(args);
-            if (status == TAILORFS_SUCCESS) {
-              unifyfs_iter->second.second += args.nbytes;
-              unifyfs_map.insert_or_assign(iter->second, unifyfs_iter->second);
-              is_success = true;
-              ret = args.nbytes;
-              TAILORFS_LOGINFO("Reading file using UnifyFS - success", "");
-            } else {
-              TAILORFS_LOGERROR("Reading file using UnifyFS - failed", "");
-            }
-          }
-        } else {
-          TAILORFS_LOGERROR("Incorrect fsview type", "");
         }
+      } else if (iter->second._type == FSViewType::STDIO) {
+        auto stdio_iter = stdio_map.find(iter->second);
+        if (stdio_iter != stdio_map.end()) {
+          TAILORFS_LOGINFO("Reading file using STDIO", "");
+          STDIORead args{};
+          args.fh = stdio_iter->second.first;
+          args.offset = stdio_iter->second.second;
+          args.buf = (void *)buf;
+          args.size = count;
+          auto fsview = STDIOFSVIEW(iter->second);
+          TailorFSStatus status = fsview->Read(args);
+          if (status == TAILORFS_SUCCESS) {
+            stdio_iter->second.second += args.read_bytes;
+            stdio_map.insert_or_assign(iter->second, stdio_iter->second);
+            is_success = true;
+            ret = args.read_bytes;
+            TAILORFS_LOGINFO("Reading file using STDIO - success", "");
+          } else {
+            TAILORFS_LOGERROR("Reading file using STDIO - failed", "");
+          }
+        }
+      } else if (iter->second._type == tailorfs::FSViewType::UNIFYFS) {
+        auto unifyfs_iter = unifyfs_map.find(iter->second);
+        if (unifyfs_iter != unifyfs_map.end()) {
+          TAILORFS_LOGINFO("Reading file using UnifyFS", "");
+          UnifyFSRead args{};
+          args.gfid = unifyfs_iter->second.first;
+          args.buf = (void *)buf;
+          args.offset = unifyfs_iter->second.second;
+          args.nbytes = count;
+          auto fsview = UNIFYFSVIEW(iter->second);
+          TailorFSStatus status = fsview->Read(args);
+          if (status == TAILORFS_SUCCESS) {
+            unifyfs_iter->second.second += args.nbytes;
+            unifyfs_map.insert_or_assign(iter->second, unifyfs_iter->second);
+            is_success = true;
+            ret = args.nbytes;
+            TAILORFS_LOGINFO("Reading file using UnifyFS - success", "");
+          } else {
+            TAILORFS_LOGERROR("Reading file using UnifyFS - failed", "");
+          }
+        }
+      } else {
+        TAILORFS_LOGERROR("Incorrect fsview type", "");
       }
+
     }
     if (!is_success) {
       ret = __real_read(fd, buf, count);
@@ -277,6 +351,31 @@ off_t brahma::POSIXTailorFS::lseek(int fd, off_t offset, int whence) {
         } else {
           TAILORFS_LOGERROR("lseek file using MPIIO - failed", "");
         }
+      }  else if (iter->second._type == FSViewType::STDIO) {
+        auto stdio_iter = stdio_map.find(iter->second);
+        if (stdio_iter != stdio_map.end()) {
+          TAILORFS_LOGINFO("lseek file using STDIO", "");
+          switch (whence) {
+            case SEEK_SET: {
+              stdio_iter->second.second = offset;
+              ret = stdio_iter->second.second;
+              break;
+            }
+            case SEEK_CUR: {
+              stdio_iter->second.second += offset;
+              ret = stdio_iter->second.second;
+              break;
+            }
+            default: {
+              TAILORFS_LOGERROR("Unsupported Seek End", "");
+              break;
+            }
+          }
+          stdio_map.insert_or_assign(iter->second, stdio_iter->second);
+          is_success = true;
+        } else {
+          TAILORFS_LOGERROR("lseek file using STDIO - failed", "");
+        }
       } else if (iter->second._type == FSViewType::UNIFYFS) {
         auto unifyfs_iter = unifyfs_map.find(iter->second);
         if (unifyfs_iter != unifyfs_map.end()) {
@@ -300,7 +399,7 @@ off_t brahma::POSIXTailorFS::lseek(int fd, off_t offset, int whence) {
           unifyfs_map.insert_or_assign(iter->second, unifyfs_iter->second);
           is_success = true;
         } else {
-          TAILORFS_LOGERROR("lseek file using MPIIO - failed", "");
+          TAILORFS_LOGERROR("lseek file using UnifyFS - failed", "");
         }
       } else {
         TAILORFS_LOGERROR("Incorrect fsview type", "");
