@@ -65,27 +65,17 @@ set(TAILORFS_SRC
         src/tailorfs/core/fsview/stdio_fsview.cpp
         src/tailorfs/core/fsview/mpiio_fsview.cpp
         src/tailorfs/core/fsview/posix_fsview.cpp
-        src/tailorfs/core/fsview/unifyfs_fsview.cpp)
+        src/tailorfs/core/fsview/unifyfs_fsview.cpp
+        main.cpp
+        src/tailorfs/util/unifyfs-stage-transfer.cpp
+        src/tailorfs/tailorfs.cpp)
 set(TAILORFS_PRIVATE_INCLUDE src/tailorfs/brahma/posix.h src/tailorfs/brahma/stdio.h)
 set(TAILORFS_PUBLIC_INCLUDE include/tailorfs/tailorfs.h include/tailorfs/macro.h)
 
-add_library(${PROJECT_NAME} SHARED)
-target_sources(${PROJECT_NAME}
-        PRIVATE
-        ${TAILORFS_SRC}
-        )
-target_include_directories(${PROJECT_NAME}
-        PRIVATE
-        # where the library itself will look for its internal headers
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        PUBLIC
-        # where top-level project will look for the library's public headers
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        # where external projects will look for the library's public headers
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-        )
+add_library(${PROJECT_NAME} SHARED ${TAILORFS_SRC} ${TAILORFS_PRIVATE_INCLUDE} ${TAILORFS_PUBLIC_INCLUDE})
 target_link_libraries(${PROJECT_NAME} ${DEPENDENCY_LIB})
 add_dependencies(${PROJECT_NAME} brahma)
+add_dependencies(${PROJECT_NAME} mimir)
 add_dependencies(${PROJECT_NAME} cpp-logger)
 
 add_executable(tailorfs_exe main.cpp)

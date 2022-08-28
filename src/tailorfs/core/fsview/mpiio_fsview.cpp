@@ -44,9 +44,9 @@ TailorFSStatus tailorfs::MPIIOFSView::Close(MPIIOClose& payload) {
       if (iter != redirect_map.end()) {
         fs::copy_file(iter->second.second, fs::absolute(iter->second.first),
                       fs::copy_options::overwrite_existing);
+        fs::remove(iter->second.second);
       }
     }
-    fs::remove(iter->second.second);
   }
   return status_orig == 0 ? TAILORFS_SUCCESS : TAILORFS_FAILED;
 }

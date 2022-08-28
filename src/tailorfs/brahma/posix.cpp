@@ -6,6 +6,7 @@
 
 #include "tailorfs/core/fsview_manager.h"
 
+std::shared_ptr<brahma::POSIXTailorFS> brahma::POSIXTailorFS::instance = nullptr;
 int brahma::POSIXTailorFS::open(const char *pathname, int flags, mode_t mode) {
   BRAHMA_MAP_OR_FAIL(open);
   int ret = -1;

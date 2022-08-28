@@ -68,6 +68,5 @@ class POSIXTailorFS : public POSIX {
   off_t lseek(int fd, off_t offset, int whence) override;
 };
 
-std::shared_ptr<POSIXTailorFS> POSIXTailorFS::instance = nullptr;
 }  // namespace brahma
 #endif  // TAILORFS_POSIX_H

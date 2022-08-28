@@ -240,8 +240,12 @@ int create_config(mimir::Config &config) {
   config._job_config._priority = 100;
 
   const int NUM_FILES = args.num_apps * args.num_files_per_app;
+  int num_files_independent = floor(NUM_FILES * args.fpp_percentage);
+  int num_file_shared = NUM_FILES - num_files_independent;
   for (int file_index = 0; file_index < NUM_FILES; ++file_index) {
     mimir::FileAdvice file_advice;
+    if (file_index < num_files_independent) file_advice._file_sharing = mimir::FileSharing::FILE_PER_PROCESS;
+    else file_advice._file_sharing = mimir::FileSharing::FILE_SHARED;
     file_advice._name = (info.pfs / (args.file_prefix + ".dat" + "_" +
                                      std::to_string(file_index)))
                             .string();
@@ -301,8 +305,7 @@ int create_config(mimir::Config &config) {
     int num_files_random = NUM_FILES - num_files_seq;
     int num_files_strided = 0;
     /* File access type*/
-    int num_files_independent = floor(NUM_FILES * args.fpp_percentage);
-    int num_file_shared = NUM_FILES - num_files_independent;
+
     /* Rank file map*/
     for (int rank_index = 0; rank_index < args.num_process_per_app;
          ++rank_index) {

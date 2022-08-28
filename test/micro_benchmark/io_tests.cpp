@@ -40,6 +40,7 @@ struct Arguments {
   AccessPattern access_pattern = AccessPattern::SEQUENTIAL;
   FileSharing file_sharing = FileSharing::PER_PROCESS;
   ProcessGrouping process_grouping = ProcessGrouping::ALL_PROCESS;
+  bool tailorfs = false;
 };
 struct Info {
   fs::path pfs;
@@ -101,6 +102,7 @@ cl::Parser define_options() {
                  "process_grouping")["-c"]["--process_grouping"](
              "How the process are grouped: 0-> ALL, 1-> SPLIT_PROCESS_HALF, "
              "2-> SPLIT_PROCESS_ALTERNATE") |
+         cl::Opt(args.tailorfs, "tailorfs")["--tailorfs"]("tailorfs")|
          cl::Opt(args.debug, "debug")["-d"]["--debug"]("Enable Debug");
 }
 

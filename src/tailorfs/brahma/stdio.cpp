@@ -4,6 +4,7 @@
 #include <cpp-logger/logger.h>
 #include <tailorfs/brahma/stdio.h>
 
+std::shared_ptr<brahma::STDIOTailorFS> brahma::STDIOTailorFS::instance = nullptr;
 FILE *brahma::STDIOTailorFS::fopen64(const char *path, const char *mode) {
   BRAHMA_MAP_OR_FAIL(fopen64);
   FILE *ret = nullptr;

@@ -13,26 +13,12 @@
 
 #include "tailorfs/core/fsview_manager.h"
 #include "tailorfs/core/singleton.h"
+bool is_init();
+void set_init(bool _init);
 
-inline void tfs_init() {
-  init_mimir();
-  mimir_init_config();
-  insert_loaded_intents();
-  brahma_gotcha_wrap("tailorfs", 1);
-  brahma::POSIXTailorFS::get_instance();
-  brahma::STDIOTailorFS::get_instance();
-  FSVIEW_MANAGER->initialize();
-}
-inline void tfs_finalize() {
-  FSVIEW_MANAGER->finalize();
-  FSVIEW_MANAGER.reset();
-  free_bindings();
-  remove_loaded_intents();
-  mimir_finalize_config();
-  finalize_mimir();
-}
 
-void __attribute__((constructor)) tailorfs_init() { tfs_init(); }
-void __attribute__((destructor)) tailorfs_finalize() { tfs_finalize(); }
+extern void __attribute__ ((constructor)) tailorfs_init(void);
+extern void __attribute__ ((destructor)) tailorfs_fini(void);
+
 
 #endif  // TAILORFS_TAILORFS_H

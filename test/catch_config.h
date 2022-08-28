@@ -53,6 +53,7 @@ int finalize();
   cpplogger::Logger::Instance("TAILORFS") \
       ->log(cpplogger::LOG_PRINT, format, __VA_ARGS__);
 
+
 int main(int argc, char *argv[]) {
   // tfs_init();
   Catch::Session session;

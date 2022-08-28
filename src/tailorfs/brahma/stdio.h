@@ -62,6 +62,5 @@ class STDIOTailorFS : public STDIO {
   int fseek(FILE *fp, long offset, int whence) override;
 };
 
-std::shared_ptr<STDIOTailorFS> STDIOTailorFS::instance = nullptr;
 }  // namespace brahma
 #endif  // TAILORFS_STDIO_H
