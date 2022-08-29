@@ -16,8 +16,6 @@ inline void tfs_init() {
     mimir_init_config();
     insert_loaded_intents();
     brahma_gotcha_wrap("tailorfs", 1);
-    brahma::POSIXTailorFS::get_instance();
-    brahma::STDIOTailorFS::get_instance();
     FSVIEW_MANAGER->initialize();
     set_init(true);
   }

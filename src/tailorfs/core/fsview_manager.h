@@ -23,7 +23,12 @@ class FSViewManager {
   inline size_t get_fastest(size_t file_size_mb) {
     size_t fastest_index = 0;
     for (auto& storage : storages) {
-      if (storage._capacity_mb - storage._used_capacity_mb > file_size_mb) {
+      auto aggregated_capacity = storage._capacity_mb;
+      if (!storage._is_shared) {
+        aggregated_capacity = mimir_intent_conf->_job_config._num_nodes *
+                              storage._capacity_mb;
+      }
+      if (aggregated_capacity - storage._used_capacity_mb > file_size_mb) {
         storage._used_capacity_mb += file_size_mb;
         return fastest_index;
       }

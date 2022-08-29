@@ -8,7 +8,6 @@
 TailorFSStatus tailorfs::FSViewManager::initialize() {
   mimir_intent_conf = MIMIR_CONFIG();
   storages = mimir_intent_conf->_job_config._devices;
-
   if(mimir_intent_conf->_current_process_index == -1){
     TAILORFS_LOGINFO("app hash not matching", "");
   } else {
@@ -20,7 +19,6 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
       auto workload_type = app_intent._file_workload.find(file_index)->second;
       auto access_pattern =
           app_intent._file_access_pattern.find(file_index)->second;
-
       if (file_intent._file_sharing == mimir::FileSharing::FILE_SHARED) {
         if (workload_type == mimir::WorkloadType::READ_ONLY_WORKLOAD) {
           /*STDIO-SHM -> STDIO-BB->STDIO-PFS*/

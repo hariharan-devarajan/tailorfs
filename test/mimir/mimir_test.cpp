@@ -202,20 +202,18 @@ int clean_directories() {
 }
 std::vector<std::string> split(std::string x, char delim = ' ') {
   x += delim;  // includes a delimiter at the end so last word is also read
-  auto set_splitted = std::unordered_set<std::string>();
+  auto splitted = std::vector<std::string>();
   std::string temp = "";
   int count = 0;
   for (int i = 0; i < x.length(); i++) {
     if (x[i] == delim) {
-      if (count > 0) set_splitted.emplace(temp);
+      if (count > 0) splitted.push_back(temp);
       temp = "";
       i++;
       count++;
     }
     temp += x[i];
   }
-  auto splitted =
-      std::vector<std::string>(set_splitted.begin(), set_splitted.end());
   return splitted;
 }
 int create_config(mimir::Config &config) {
@@ -229,10 +227,10 @@ int create_config(mimir::Config &config) {
   config._job_config._job_id = 0;
   config._job_config._devices.clear();
   int num_devices = 3;  // shm, bb, and pfs
-  config._job_config._devices.emplace_back(info.shm.c_str(), 64 * 1024);  // shm
-  config._job_config._devices.emplace_back(info.bb.c_str(), 512 * 1024);  // bb
+  config._job_config._devices.emplace_back(info.shm.c_str(), 64 * 1024, false);  // shm
+  config._job_config._devices.emplace_back(info.bb.c_str(), 512 * 1024, false);  // bb
   config._job_config._devices.emplace_back(info.pfs.c_str(),
-                                           2 * 1024 * 1024);  // pfs
+                                           2 * 1024 * 1024, true);  // pfs
   config._job_config._job_time_minutes = 30;
   config._job_config._num_cores_per_node = args.ranks_per_node;
   config._job_config._num_gpus_per_node = 4;
@@ -285,28 +283,34 @@ int create_config(mimir::Config &config) {
   mimir::WorkflowAdvice workflow_advice;
   for (uint32_t app_index = 0; app_index < args.num_apps; ++app_index) {
     mimir::ApplicationAdvice app_advice;
+    if (config._job_config._num_nodes == 1 &&
+        args.ranks_per_node == 1) {
+      app_advice._is_mpi = false;
+    } else {
+      app_advice._is_mpi = true;
+    }
     auto file_parts =  split(args.config_file, '/');
 
-    auto values =  split(file_parts[7], '_');
+    auto values =  split(file_parts[file_parts.size() - 1], '_');
     char workload[256];
     char process[1024];
-    if (values[0] == "wo") strcpy(workload, "Write-Only");
-    else if (values[0] == "ro") strcpy(workload, "Read-Only");
-    else if (values[0] == "raw") strcpy(workload, "Read-After-Write");
-    else if (values[0] == "update") strcpy(workload, "Update");
-    else if (values[0] == "worm") strcpy(workload, "WORM");
+    if (values[8] == "wo") strcpy(workload, "Write-Only");
+    else if (values[8] == "ro") strcpy(workload, "Read-Only");
+    else if (values[8] == "raw") strcpy(workload, "Read-After-Write");
+    else if (values[8] == "update") strcpy(workload, "Update");
+    else if (values[8] == "worm") strcpy(workload, "WORM");
     int access_pattern, file_sharing, process_grouping;
-    if (values[1] == "seq") access_pattern = 0;
-    else if (values[1] == "random") access_pattern = 1;
-    if (values[3] == "fpp") file_sharing = 0;
-    else if (values[3] == "shared") file_sharing = 1;
-    if (values[2] == "all.json") process_grouping = 0;
-    else if (values[2] == "split.json") process_grouping = 1;
-    else if (values[2] == "alt.json") process_grouping = 2;
+    if (values[7] == "seq") access_pattern = 0;
+    else if (values[7] == "random") access_pattern = 1;
+    if (values[6] == "fpp") file_sharing = 0;
+    else if (values[6] == "shared") file_sharing = 1;
+    if (values[9] == "all.json") process_grouping = 0;
+    else if (values[9] == "split.json") process_grouping = 1;
+    else if (values[9] == "alt.json") process_grouping = 2;
     sprintf(process, "%s/io_tests --request_size %d --iteration %d "
         "--ranks_per_node %d --access_pattern %d --file_sharing %d "
         "--process_grouping %d --reporter compact %s",args.binary_directory.c_str(),
-        atoi(values[4].c_str()) * 1024, atoi(values[6].c_str()), atoi(values[5].c_str()), access_pattern,
+        atoi(values[4].c_str()) * 1024, atoi(values[5].c_str()), atoi(values[2].c_str()), access_pattern,
             file_sharing, process_grouping, workload);
     auto process_full = std::string(process);
     auto hash = mimir::oat_hash(process_full.c_str(), process_full.size());
