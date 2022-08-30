@@ -43,8 +43,12 @@ TailorFSStatus tailorfs::STDIOFSView::Close(tailorfs::STDIOClose& payload) {
     if (redirection.type == RedirectionType::FLUSH ||
         redirection.type == RedirectionType::BOTH) {
       if (iter != redirect_map.end()) {
+        utility->exclude_file(fs::absolute(iter->second.first).c_str(),
+                              brahma::InterfaceType::INTERFACE_POSIX);
         fs::copy_file(iter->second.second, fs::absolute(iter->second.first),
                       fs::copy_options::overwrite_existing);
+        utility->include_file(fs::absolute(iter->second.first).c_str(),
+                              brahma::InterfaceType::INTERFACE_POSIX);
       }
     }
     fs::remove(iter->second.second);

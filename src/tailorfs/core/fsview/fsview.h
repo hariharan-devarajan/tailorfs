@@ -4,10 +4,13 @@
 
 #ifndef TAILORFS_FSVIEW_H
 #define TAILORFS_FSVIEW_H
+#include <brahma/interface/interface_utility.h>
 #include <tailorfs/core/datastructure.h>
 #include <tailorfs/core/typedef.h>
 
 #include <type_traits>
+
+#include <brahma/singleton.h>
 
 namespace tailorfs {
 template <
@@ -26,6 +29,10 @@ template <
         nullptr>
 class FSView {
  public:
+  std::shared_ptr<brahma::InterfaceUtility> utility;
+  FSView(){
+    utility = brahma::Singleton<brahma::InterfaceUtility>::get_instance();
+  }
   virtual TailorFSStatus Initialize(I& payload) = 0;
   virtual TailorFSStatus Open(O& payload) = 0;
   virtual TailorFSStatus Close(C& payload) = 0;
