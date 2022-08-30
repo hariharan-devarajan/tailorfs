@@ -20,6 +20,7 @@ TailorFSStatus tailorfs::STDIOFSView::Open(tailorfs::STDIOOpen& payload) {
     filename = std::regex_replace(
         filename, std::regex(redirection.original_storage._mount_point),
         redirection.new_storage._mount_point);
+    fs::create_directory(fs::path(filename).parent_path());
     if (redirection.type == RedirectionType::PREFETCH ||
         redirection.type == RedirectionType::BOTH) {
       fs::copy_file(fs::absolute(payload.filename), fs::absolute(filename),
@@ -62,7 +63,7 @@ TailorFSStatus tailorfs::STDIOFSView::Write(tailorfs::STDIOWrite& payload) {
 }
 TailorFSStatus tailorfs::STDIOFSView::Read(tailorfs::STDIORead& payload) {
   auto status = fseek(payload.fh, payload.offset, SEEK_SET);
-  if (status == payload.offset) {
+  if (status == 0) {
     payload.read_bytes =
         fread(payload.buf, sizeof(char), payload.size, payload.fh);
     return payload.read_bytes == payload.size ? TAILORFS_SUCCESS
@@ -75,7 +76,7 @@ TailorFSStatus tailorfs::STDIOFSView::Finalize(
   return TAILORFS_SUCCESS;
 }
 TailorFSStatus tailorfs::STDIOFSView::Convert(int& flags, char*& mode) {
-  mode = new char[2];
+  mode = new char[3];
   if (flags & O_WRONLY) {
     mode[0] = 'w';
     mode[1] = '\0';
@@ -86,7 +87,7 @@ TailorFSStatus tailorfs::STDIOFSView::Convert(int& flags, char*& mode) {
     mode[0] = 'a';
     mode[1] = '\0';
   }else if (flags & O_RDWR) {
-    mode[0] = 'r';
+    mode[0] = 'w';
     mode[1] = '+';
   }
   if (flags & O_CREAT) {
@@ -95,5 +96,10 @@ TailorFSStatus tailorfs::STDIOFSView::Convert(int& flags, char*& mode) {
   if (flags & O_EXCL) {
     mode[1] = '\0';
   }
+  if (flags == 0) {
+    mode[0] = 'r';
+    mode[1] = '\0';
+  }
+  mode[2]='\0';
   return TAILORFS_SUCCESS;
 }

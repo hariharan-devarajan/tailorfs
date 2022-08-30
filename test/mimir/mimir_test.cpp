@@ -17,7 +17,103 @@ using namespace mimir;
  * Test data structures
  */
 namespace tailorfs::test {
+void trim_utf8(std::string& hairy) {
+  std::vector<bool> results;
+  std::string smooth;
+  size_t len = hairy.size();
+  results.reserve(len);
+  smooth.reserve(len);
+  const unsigned char *bytes = (const unsigned char *) hairy.c_str();
 
+  auto read_utf8 = [](const unsigned char *bytes, size_t len, size_t *pos) -> unsigned {
+    int code_unit1 = 0;
+    int code_unit2, code_unit3, code_unit4;
+
+    if (*pos >= len) goto ERROR1;
+    code_unit1 = bytes[(*pos)++];
+
+    if (code_unit1 < 0x80) return code_unit1;
+    else if (code_unit1 < 0xC2) goto ERROR1; // continuation or overlong 2-byte sequence
+    else if (code_unit1 < 0xE0) {
+      if (*pos >= len) goto ERROR1;
+      code_unit2 = bytes[(*pos)++]; //2-byte sequence
+      if ((code_unit2 & 0xC0) != 0x80) goto ERROR2;
+      return (code_unit1 << 6) + code_unit2 - 0x3080;
+    }
+    else if (code_unit1 < 0xF0) {
+      if (*pos >= len) goto ERROR1;
+      code_unit2 = bytes[(*pos)++]; // 3-byte sequence
+      if ((code_unit2 & 0xC0) != 0x80) goto ERROR2;
+      if (code_unit1 == 0xE0 && code_unit2 < 0xA0) goto ERROR2; // overlong
+      if (*pos >= len) goto ERROR2;
+      code_unit3 = bytes[(*pos)++];
+      if ((code_unit3 & 0xC0) != 0x80) goto ERROR3;
+      return (code_unit1 << 12) + (code_unit2 << 6) + code_unit3 - 0xE2080;
+    }
+    else if (code_unit1 < 0xF5) {
+      if (*pos >= len) goto ERROR1;
+      code_unit2 = bytes[(*pos)++]; // 4-byte sequence
+      if ((code_unit2 & 0xC0) != 0x80) goto ERROR2;
+      if (code_unit1 == 0xF0 && code_unit2 <  0x90) goto ERROR2; // overlong
+      if (code_unit1 == 0xF4 && code_unit2 >= 0x90) goto ERROR2; // > U+10FFFF
+      if (*pos >= len) goto ERROR2;
+      code_unit3 = bytes[(*pos)++];
+      if ((code_unit3 & 0xC0) != 0x80) goto ERROR3;
+      if (*pos >= len) goto ERROR3;
+      code_unit4 = bytes[(*pos)++];
+      if ((code_unit4 & 0xC0) != 0x80) goto ERROR4;
+      return (code_unit1 << 18) + (code_unit2 << 12) + (code_unit3 << 6) + code_unit4 - 0x3C82080;
+    }
+    else goto ERROR1; // > U+10FFFF
+
+  ERROR4:
+    (*pos)--;
+  ERROR3:
+    (*pos)--;
+  ERROR2:
+    (*pos)--;
+  ERROR1:
+    return code_unit1 + 0xDC00;
+  };
+
+  unsigned c;
+  size_t pos = 0;
+  size_t pos_before;
+  size_t inc = 0;
+  bool valid;
+
+  for (;;) {
+    pos_before = pos;
+    c = read_utf8(bytes, len, &pos);
+    inc = pos - pos_before;
+    if (!inc) break; // End of string reached.
+
+    valid = false;
+
+    if ( (                 c <= 0x00007F)
+        ||   (c >= 0x000080 && c <= 0x0007FF)
+        ||   (c >= 0x000800 && c <= 0x000FFF)
+        ||   (c >= 0x001000 && c <= 0x00CFFF)
+        ||   (c >= 0x00D000 && c <= 0x00D7FF)
+        ||   (c >= 0x00E000 && c <= 0x00FFFF)
+        ||   (c >= 0x010000 && c <= 0x03FFFF)
+        ||   (c >= 0x040000 && c <= 0x0FFFFF)
+        ||   (c >= 0x100000 && c <= 0x10FFFF) ) valid = true;
+
+    if (c >= 0xDC00 && c <= 0xDCFF) {
+      valid = false;
+    }
+
+    do results.push_back(valid); while (--inc);
+  }
+
+  size_t sz = results.size();
+  for (size_t i = 0; i < sz; ++i) {
+    if (results[i]) smooth.append(1, hairy.at(i));
+  }
+
+  hairy.swap(smooth);
+}
 enum StorageType : int { SHM = 0, LOCAL_SSD = 1, PFS = 2 };
 struct Arguments {
   /* test args */
@@ -201,29 +297,27 @@ int clean_directories() {
   return 0;
 }
 std::vector<std::string> split(std::string x, char delim = ' ') {
-  x += delim;  // includes a delimiter at the end so last word is also read
-  auto splitted = std::vector<std::string>();
-  std::string temp = "";
-  int count = 0;
-  for (int i = 0; i < x.length(); i++) {
-    if (x[i] == delim) {
-      if (count > 0) splitted.push_back(temp);
-      temp = "";
-      i++;
-      count++;
-    }
-    temp += x[i];
+  std::vector<std::string> tokens;
+  std::string token;
+  std::stringstream ss(x);
+  while (getline(ss, token, delim)){
+    tailorfs::test::trim_utf8(token);
+    tokens.push_back(token);
   }
-  return splitted;
+  return tokens;
 }
 int create_config(mimir::Config &config) {
   std::string LSB_HOSTS;
+  std::vector<std::string> node_names;
   if (std::getenv("LSB_HOSTS") == nullptr) {
+    node_names = std::vector<std::string>();
     LSB_HOSTS = "localhost";
+    tailorfs::test::trim_utf8(LSB_HOSTS);
+    node_names.emplace_back(LSB_HOSTS);
   } else {
     LSB_HOSTS = std::getenv("LSB_HOSTS");
+    node_names = split(LSB_HOSTS);
   }
-  auto node_names = split(LSB_HOSTS);
   config._job_config._job_id = 0;
   config._job_config._devices.clear();
   int num_devices = 3;  // shm, bb, and pfs
@@ -239,7 +333,7 @@ int create_config(mimir::Config &config) {
   config._job_config._rpc_port = 8888;
   config._job_config._rpc_threads = 4;
   config._job_config._priority = 100;
-
+  config._current_process_index = -1;
   const int NUM_FILES = args.num_apps * args.num_files_per_app;
   int num_files_independent = floor(NUM_FILES * args.fpp_percentage);
   int num_file_shared = NUM_FILES - num_files_independent;
@@ -250,6 +344,7 @@ int create_config(mimir::Config &config) {
     file_advice._name = (info.pfs / (args.file_prefix + ".dat" + "_" +
                                      std::to_string(file_index)))
                             .string();
+    tailorfs::test::trim_utf8(file_advice._name);
     file_advice._format = Format::FORMAT_BINARY;
     file_advice._size_mb = args.io_size_per_app_mb / args.num_files_per_app;
     file_advice._io_amount_mb =
@@ -289,34 +384,37 @@ int create_config(mimir::Config &config) {
     } else {
       app_advice._is_mpi = true;
     }
+    tailorfs::test::trim_utf8(args.config_file);
     auto file_parts =  split(args.config_file, '/');
 
     auto values =  split(file_parts[file_parts.size() - 1], '_');
     char workload[256];
     char process[1024];
-    if (values[8] == "wo") strcpy(workload, "Write-Only");
-    else if (values[8] == "ro") strcpy(workload, "Read-Only");
-    else if (values[8] == "raw") strcpy(workload, "Read-After-Write");
-    else if (values[8] == "update") strcpy(workload, "Update");
-    else if (values[8] == "worm") strcpy(workload, "WORM");
+    if (values[9] == "wo") strcpy(workload, "Write-Only");
+    else if (values[9] == "ro") strcpy(workload, "Read-Only");
+    else if (values[9] == "raw") strcpy(workload, "Read-After-Write");
+    else if (values[9] == "update") strcpy(workload, "Update");
+    else if (values[9] == "worm") strcpy(workload, "WORM");
     int access_pattern, file_sharing, process_grouping;
-    if (values[7] == "seq") access_pattern = 0;
-    else if (values[7] == "random") access_pattern = 1;
-    if (values[6] == "fpp") file_sharing = 0;
-    else if (values[6] == "shared") file_sharing = 1;
-    if (values[9] == "all.json") process_grouping = 0;
-    else if (values[9] == "split.json") process_grouping = 1;
-    else if (values[9] == "alt.json") process_grouping = 2;
+    if (values[8] == "seq") access_pattern = 0;
+    else if (values[8] == "random") access_pattern = 1;
+    if (values[7] == "fpp") file_sharing = 0;
+    else if (values[7] == "shared") file_sharing = 1;
+    if (values[10] == "all.json") process_grouping = 0;
+    else if (values[10] == "split.json") process_grouping = 1;
+    else if (values[10] == "alt.json") process_grouping = 2;
     sprintf(process, "%s/io_tests --request_size %d --iteration %d "
         "--ranks_per_node %d --access_pattern %d --file_sharing %d "
         "--process_grouping %d --reporter compact %s",args.binary_directory.c_str(),
-        atoi(values[4].c_str()) * 1024, atoi(values[5].c_str()), atoi(values[2].c_str()), access_pattern,
+        atoi(values[5].c_str()) * 1024, atoi(values[6].c_str()), atoi(values[3].c_str()), access_pattern,
             file_sharing, process_grouping, workload);
     auto process_full = std::string(process);
+    tailorfs::test::trim_utf8(process_full);
     auto hash = mimir::oat_hash(process_full.c_str(), process_full.size());
     workflow_advice._app_mapping.emplace(process_full, app_index);
     /* Application info */
     app_advice._name = "app-" + std::to_string(app_index);
+    tailorfs::test::trim_utf8(app_advice._name);
     /* app file dag*/
     app_advice._application_file_dag.applications.emplace(app_index);
     workflow_advice._application_file_dag.applications.emplace(app_index);
@@ -513,10 +611,10 @@ TEST_CASE("GenerateConfig",
                {"split_app_ptg", args.split_app_ptg},
                {"alt_app_ptg", args.alt_app_ptg}};
   j["conf"] = conf;
+  std::cout << j.dump() << std::endl;
   std::ofstream out(config_file.c_str());
   out << j;
   out.close();
-  std::cout << j.dump() << std::endl;
 
   /**
    * Verification

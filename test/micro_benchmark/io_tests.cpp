@@ -69,12 +69,21 @@ int init(int *argc, char ***argv) {
   int rank, comm_size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
+  char* debug_str = getenv("IOTEST_DEBUG");
+  args.debug = false;
+  if(debug_str != nullptr) {
+    if(strcmp(debug_str, "1") == 0) {
+      args.debug = true;
+    }
+  }
   if (args.debug && rank == 0) {
     fprintf(stderr, "Connect to processes\n");
     fflush(stderr);
     getchar();
   }
   MPI_Barrier(MPI_COMM_WORLD);
+
+
   return 0;
 }
 int finalize() {

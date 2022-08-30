@@ -192,6 +192,15 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
             init_args.redirection.original_storage =
                 storages[file_intent._current_device];
             init_args.redirection.new_storage = storages[fastest_storage_index];
+            if (workload_type == mimir::WorkloadType::UPDATE_WORKLOAD ||
+                workload_type == mimir::WorkloadType::WRITE_ONLY_WORKLOAD ) {
+              init_args.redirection.type = RedirectionType::FLUSH;
+             }else if (workload_type == mimir::WorkloadType::READ_ONLY_WORKLOAD) {
+               init_args.redirection.type = RedirectionType::PREFETCH;
+             } else if (workload_type == mimir::WorkloadType::RAW_WORKLOAD||
+                       workload_type == mimir::WorkloadType::WORM_WORKLOAD) {
+               init_args.redirection.type = RedirectionType::BOTH;
+             }
           }
           id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
           STDIOFSVIEW(id)->Initialize(init_args);
