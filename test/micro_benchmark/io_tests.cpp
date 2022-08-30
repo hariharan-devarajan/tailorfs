@@ -224,7 +224,7 @@ TEST_CASE("Write-Only",
       break;
     }
     case tt::FileSharing::SHARED_FILE: {
-      args.filename = args.filename + "_" + std::to_string(info.comm_size);
+      args.filename = args.filename + "_0";
       break;
     }
   }
@@ -250,6 +250,7 @@ TEST_CASE("Write-Only",
       write_time.resumeTime();
       ssize_t written_bytes = write(fd, write_data.data(), args.request_size);
       write_time.pauseTime();
+
       REQUIRE(written_bytes == args.request_size);
     }
     close_time.resumeTime();
@@ -278,9 +279,6 @@ TEST_CASE("Write-Only",
           fh_orig, base_offset + relative_offset, write_data.data(),
           args.request_size, MPI_CHAR, &stat_orig);
       write_time.pauseTime();
-      int written_bytes;
-      MPI_Get_count(&stat_orig, MPI_CHAR, &written_bytes);
-      REQUIRE(written_bytes == args.request_size);
     }
     close_time.resumeTime();
     status_orig = MPI_File_close(&fh_orig);

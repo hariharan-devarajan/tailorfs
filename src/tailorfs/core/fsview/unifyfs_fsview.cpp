@@ -8,6 +8,7 @@
 
 #include <regex>
 
+#include "tailorfs/core/constant.h"
 #include "tailorfs/core/process_state.h"
 #include "tailorfs/error_code.h"
 #include "tailorfs/macro.h"
@@ -24,12 +25,12 @@ TailorFSStatus tailorfs::UnifyFSFSView::Initialize(UnifyFSInit& payload) {
          std::to_string(payload.feature.transfer_size).c_str());
   char logio_shmem_size[32];
   strcpy(logio_shmem_size,
-         std::to_string(payload.feature.shm._capacity_mb).c_str());
+         std::to_string(payload.feature.shm._capacity_mb*MB).c_str());
   char logio_spill_dir[256];
   strcpy(logio_spill_dir, payload.feature.splill._mount_point.c_str());
   char logio_spill_size[32];
   strcpy(logio_spill_size,
-         std::to_string(payload.feature.splill._capacity_mb).c_str());
+         std::to_string(payload.feature.splill._capacity_mb*MB).c_str());
   char client_local_extents[32];
   char client_node_local_extents[32];
   if (payload.feature.enable_read_optimization) {
@@ -60,6 +61,7 @@ TailorFSStatus tailorfs::UnifyFSFSView::Initialize(UnifyFSInit& payload) {
                       strerror(rc));
   }
   return (rc == UNIFYFS_SUCCESS) ? TAILORFS_SUCCESS : TAILORFS_FAILED;
+
 }
 TailorFSStatus tailorfs::UnifyFSFSView::Open(UnifyFSOpen& payload) {
   int rc = UNIFYFS_SUCCESS;
@@ -128,16 +130,17 @@ TailorFSStatus tailorfs::UnifyFSFSView::Close(UnifyFSClose& payload) {
       reqs[index].op = item.op;
       reqs[index].result = item.result;
       reqs[index].state = item.state;
+      index++;
     }
     int waitall = 1;
     rc = unifyfs_wait_io(fshdl, iter->second.size(), reqs, waitall);
     if (rc == UNIFYFS_SUCCESS) {
-      for (size_t i = iter->second.size(); i > 0; i++) {
+      for (int64_t i = iter->second.size() - 1; i >= 0; --i) {
         if (reqs[i].result.error == 0) {
           iter->second.pop_back();
         } else {
           TAILORFS_LOGERROR("Error while waiting for op %d. rc %d, message %s",
-                            reqs[i].op, rc, strerror(rc));
+                            reqs[i].op, reqs[i].result.error, strerror(reqs[i].result.error));
         }
       }
     }

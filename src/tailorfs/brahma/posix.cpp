@@ -48,6 +48,21 @@ int brahma::POSIXTailorFS::open(const char *pathname, int flags, mode_t mode) {
         } else {
           TAILORFS_LOGERROR("Opening file using STDIO - failed", "");
         }
+      } else if (id._type == FSViewType::POSIX) {
+        TAILORFS_LOGINFO("Opening file using POSIX", "");
+        POSIXOpen args{};
+        args.filename = pathname;
+        auto fsview = POSIXFSVIEW(id);
+        args.mode = flags;
+        status = fsview->Open(args);
+        if (status == TAILORFS_SUCCESS) {
+          posix_map.insert_or_assign(
+              id, std::pair<int, off_t>(args.fd, 0));
+          track_fd(ret);
+          TAILORFS_LOGINFO("Opening file using POSIX - success", "");
+        } else {
+          TAILORFS_LOGERROR("Opening file using POSIX - failed", "");
+        }
       } else if (id._type == tailorfs::FSViewType::UNIFYFS) {
         TAILORFS_LOGINFO("Opening file using UnifyFS", "");
         UnifyFSOpen args{};
@@ -123,6 +138,21 @@ int brahma::POSIXTailorFS::close(int fd) {
             TAILORFS_LOGINFO("Closing file using STDIO - success", "");
           } else {
             TAILORFS_LOGERROR("Closing file using STDIO - failed", "");
+          }
+        }
+      } else if (iter->second._type == FSViewType::POSIX) {
+        auto posix_iter = posix_map.find(iter->second);
+        if (posix_iter != posix_map.end()) {
+          TAILORFS_LOGINFO("Closing file using POSIX", "");
+          POSIXClose args{};
+          args.fd = posix_iter->second.first;
+          auto fsview = POSIXFSVIEW(iter->second);
+          TailorFSStatus status = fsview->Close(args);
+          if (status == TAILORFS_SUCCESS) {
+            stdio_map.erase(iter->second);
+            TAILORFS_LOGINFO("Closing file using POSIX - success", "");
+          } else {
+            TAILORFS_LOGERROR("Closing file using POSIX - failed", "");
           }
         }
       } else if (iter->second._type == tailorfs::FSViewType::UNIFYFS) {
@@ -201,7 +231,28 @@ ssize_t brahma::POSIXTailorFS::write(int fd, const void *buf, size_t count) {
             TAILORFS_LOGERROR("Writing file using STDIO - failed", "");
           }
         }
-      }  else if (iter->second._type == tailorfs::FSViewType::UNIFYFS) {
+      } else if (iter->second._type == FSViewType::POSIX) {
+        auto posix_iter = posix_map.find(iter->second);
+        if (posix_iter != posix_map.end()) {
+          TAILORFS_LOGINFO("Writing file using POSIX", "");
+          POSIXWrite args{};
+          args.fd = posix_iter->second.first;
+          args.offset = posix_iter->second.second;
+          args.buf = (void *)buf;
+          args.size = count;
+          auto fsview = POSIXFSVIEW(iter->second);
+          TailorFSStatus status = fsview->Write(args);
+          if (status == TAILORFS_SUCCESS) {
+            posix_iter->second.second += args.written_bytes;
+            posix_map.insert_or_assign(iter->second, posix_iter->second);
+            is_success = true;
+            ret = args.written_bytes;
+            TAILORFS_LOGINFO("Writing file using POSIX - success", "");
+          } else {
+            TAILORFS_LOGERROR("Writing file using POSIX - failed", "");
+          }
+        }
+      } else if (iter->second._type == tailorfs::FSViewType::UNIFYFS) {
         auto unifyfs_iter = unifyfs_map.find(iter->second);
         if (unifyfs_iter != unifyfs_map.end()) {
           TAILORFS_LOGINFO("Writing file using UnifyFS", "");
@@ -262,6 +313,27 @@ ssize_t brahma::POSIXTailorFS::read(int fd, void *buf, size_t count) {
             TAILORFS_LOGINFO("Reading file using MPIIO - success", "");
           } else {
             TAILORFS_LOGERROR("Reading file using MPIIO - failed", "");
+          }
+        }
+      } else if (iter->second._type == FSViewType::POSIX) {
+        auto posix_iter = posix_map.find(iter->second);
+        if (posix_iter != posix_map.end()) {
+          TAILORFS_LOGINFO("Reading file using POSIX", "");
+          POSIXRead args{};
+          args.fd = posix_iter->second.first;
+          args.offset = posix_iter->second.second;
+          args.buf = (void *)buf;
+          args.size = count;
+          auto fsview = POSIXFSVIEW(iter->second);
+          TailorFSStatus status = fsview->Read(args);
+          if (status == TAILORFS_SUCCESS) {
+            posix_iter->second.second += args.read_bytes;
+            posix_map.insert_or_assign(iter->second, posix_iter->second);
+            is_success = true;
+            ret = args.read_bytes;
+            TAILORFS_LOGINFO("Reading file using POSIX - success", "");
+          } else {
+            TAILORFS_LOGERROR("Reading file using POSIX - failed", "");
           }
         }
       } else if (iter->second._type == FSViewType::STDIO) {
@@ -372,6 +444,31 @@ off_t brahma::POSIXTailorFS::lseek(int fd, off_t offset, int whence) {
             }
           }
           stdio_map.insert_or_assign(iter->second, stdio_iter->second);
+          is_success = true;
+        } else {
+          TAILORFS_LOGERROR("lseek file using STDIO - failed", "");
+        }
+      }  else if (iter->second._type == FSViewType::POSIX) {
+        auto posix_iter = posix_map.find(iter->second);
+        if (posix_iter != posix_map.end()) {
+          TAILORFS_LOGINFO("lseek file using POSIX", "");
+          switch (whence) {
+            case SEEK_SET: {
+              posix_iter->second.second = offset;
+              ret = posix_iter->second.second;
+              break;
+            }
+            case SEEK_CUR: {
+              posix_iter->second.second += offset;
+              ret = posix_iter->second.second;
+              break;
+            }
+            default: {
+              TAILORFS_LOGERROR("Unsupported Seek End", "");
+              break;
+            }
+          }
+          posix_map.insert_or_assign(iter->second, posix_iter->second);
           is_success = true;
         } else {
           TAILORFS_LOGERROR("lseek file using STDIO - failed", "");

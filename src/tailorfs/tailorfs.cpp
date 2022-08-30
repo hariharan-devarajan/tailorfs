@@ -12,6 +12,27 @@ void set_init(bool _init) { tailorfs::init = _init;}
 
 inline void tfs_init() {
   if (!is_init()) {
+    char* tailorfs_log_level = getenv("TAILORFS_LOG_LEVEL");
+    if (tailorfs_log_level == nullptr) {
+      TAILORFS_LOGGER->level = cpplogger::LoggerType::LOG_ERROR;
+      TAILORFS_LOGPRINT("Enabling ERROR loggin", "");
+    } else {
+      if (strcmp(tailorfs_log_level , "INFO") == 0) {
+        TAILORFS_LOGGER->level = cpplogger::LoggerType::LOG_INFO;
+        TAILORFS_LOGPRINT("Enabling INFO loggin", "");
+      } else if (strcmp(tailorfs_log_level , "DEBUG") == 0) {
+        TAILORFS_LOGPRINT("Enabling DEBUG loggin", "");
+        TAILORFS_LOGGER->level = cpplogger::LoggerType::LOG_WARN;
+      }
+    }
+    char* tailorfs_debug = getenv("TAILORFS_DEBUG");
+    if (tailorfs_debug != nullptr) {
+      if (strcmp(tailorfs_debug , "1") == 0) {
+        fprintf(stderr, "Connect to processes\n");
+        fflush(stderr);
+        getchar();
+      }
+    }
     init_mimir();
     mimir_init_config();
     insert_loaded_intents();

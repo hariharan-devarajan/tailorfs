@@ -47,6 +47,7 @@ class STDIOTailorFS : public STDIO {
 
  public:
   STDIOTailorFS() : STDIO() {
+    TAILORFS_LOGPRINT("STDIO class intercepted", "");
     auto config = MIMIR_CONFIG();
     if (config->_current_process_index != -1) {
       auto app_intent = config->_app_repo[config->_current_process_index];

@@ -4,14 +4,35 @@
 
 #include "fsview_manager.h"
 #include <regex>
+#include <tailorfs/brahma/stdio.h>
+#include <tailorfs/brahma/posix.h>
+#include <tailorfs/brahma/mpiio.h>
 
 TailorFSStatus tailorfs::FSViewManager::initialize() {
   mimir_intent_conf = MIMIR_CONFIG();
   storages = mimir_intent_conf->_job_config._devices;
+
+
   if(mimir_intent_conf->_current_process_index == -1){
     TAILORFS_LOGINFO("app hash not matching", "");
   } else {
+    bool is_posix = false, is_stdio = false, is_mpiio = false;
     auto app_intent = mimir_intent_conf->_app_repo[mimir_intent_conf->_current_process_index];
+    for (auto element : app_intent._interfaces_used) {
+      for (const auto& interface: element.second) {
+        if (interface == mimir::InterfaceType::POSIX && !is_posix) {
+          brahma::POSIXTailorFS::get_instance();
+          is_posix = true;
+        } else if (interface == mimir::InterfaceType::STDIO && !is_stdio) {
+          brahma::STDIOTailorFS::get_instance();
+          is_stdio = true;
+        }else if (interface == mimir::InterfaceType::MPIIO && !is_mpiio) {
+          brahma::MPIIOTailorFS::get_instance();
+          is_mpiio = true;
+        }
+      }
+    }
+
     for (const auto& edge : app_intent._application_file_dag.edges) {
       auto file_index = edge.destination;
       auto file_intent = mimir_intent_conf->_file_repo[file_index];
@@ -41,7 +62,7 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
             init_args.redirection.new_storage = storages[fastest_storage_index];
           }
           id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
-          STDIOFSVIEW(id)->Initialize(init_args);
+          brahma::STDIOTailorFS::get_instance();
           fsid_map.insert_or_assign(FSViewType::STDIO, id);
           fsview_map.insert_or_assign(file_hash, id);
         } else {
@@ -116,7 +137,12 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
             id._id++;
           }
           strcpy(init_args.feature.unifyfs_namespace,
-                 std::to_string(id._id).c_str());
+                 (std::string("/unifyfs_") + std::to_string(id._id)).c_str());
+          init_args.feature.redirection.is_enabled = true;
+          init_args.feature.redirection.original_storage =
+              storages[file_intent._current_device];
+          init_args.feature.redirection.new_storage = storages[storages.size()-1];
+          init_args.feature.redirection.new_storage._mount_point = init_args.feature.unifyfs_namespace;
           id._feature_hash = std::hash<UnifyFSFeature>()(init_args.feature);
           UNIFYFSVIEW(id)->Initialize(init_args);
           fsid_map.insert_or_assign(FSViewType::UNIFYFS, id);

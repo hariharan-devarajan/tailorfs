@@ -17,6 +17,7 @@ else ()
 endif ()
 
 
+find_program(BASH_PROGRAM bash)
 set(MAX_CPUS ${LSB_MAX_NUM_PROCESSORS})
 math(EXPR NUM_NODES "(${MAX_CPUS} - 1 ) / 40")
 message(STATUS "Number of nodes: ${NUM_NODES}")
@@ -72,12 +73,19 @@ function(create_test)
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/lib:${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
 
     set(test_name test_tailor_mb_${machine}_${config_file_suffix})
-    add_test(${test_name} ${mpi_exec} ${CMAKE_BINARY_DIR}/bin/io_tests ${TEST_ARGS})
+    add_test(${test_name} ${BASH_PROGRAM}
+            ${CMAKE_SOURCE_DIR}/test/scripts/main_unifyfs_wrapper.sh
+            ${machine}
+            ${ranks_per_node}
+            ${CMAKE_SOURCE_DIR}
+            ${CMAKE_BINARY_DIR}/bin/io_tests
+            $ENV{HOME}/unifyfs/logs
+            ${UNIFYFS_ROOT_DIR}
+            ${TEST_ARGS})
+    #add_test(${test_name} ${mpi_exec} ${CMAKE_BINARY_DIR}/bin/io_tests ${TEST_ARGS})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT pfs=$ENV{pfs})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT BBPATH=$ENV{BBPATH})
-    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=$ENV{pfs})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT MIMIR_CONFIG_PATH=${config_file})
-    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT LD_PRELOAD=${CMAKE_BINARY_DIR}/lib/libtailorfs.so)
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/lib:${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
 
 endfunction()

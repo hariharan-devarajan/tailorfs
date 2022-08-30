@@ -60,6 +60,7 @@ endif ()
 set(TAILORFS_SRC
         src/tailorfs/brahma/posix.cpp
         src/tailorfs/brahma/stdio.cpp
+        src/tailorfs/brahma/mpiio.cpp
         src/tailorfs/core/fsview_manager.cpp
         src/tailorfs/core/process_state.cpp
         src/tailorfs/core/fsview/stdio_fsview.cpp
