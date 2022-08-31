@@ -9,11 +9,13 @@
 #include <regex>
 
 #include "tailorfs/error_code.h"
+#include "tailorfs/macro.h"
 TailorFSStatus tailorfs::MPIIOFSView::Initialize(MPIIOInit& payload) {
   redirection = payload.redirection;
   return TAILORFS_SUCCESS;
 }
 TailorFSStatus tailorfs::MPIIOFSView::Open(MPIIOOpen& payload) {
+  TAILORFS_LOGPRINT("tailorfs::MPIIOFSView::Open for file %s", payload.filename);
   std::string filename = std::string(payload.filename);
   if (redirection.is_enabled) {
     filename = std::regex_replace(

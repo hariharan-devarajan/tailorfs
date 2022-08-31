@@ -64,6 +64,7 @@ TailorFSStatus tailorfs::UnifyFSFSView::Initialize(UnifyFSInit& payload) {
 
 }
 TailorFSStatus tailorfs::UnifyFSFSView::Open(UnifyFSOpen& payload) {
+  TAILORFS_LOGPRINT("tailorfs::UnifyFSFSView::Open for file %s", payload.filename);
   int rc = UNIFYFS_SUCCESS;
   std::string unify_filename = std::string(payload.filename);
   if (payload.is_create) {

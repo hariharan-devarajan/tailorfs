@@ -10,11 +10,14 @@
 #include <regex>
 
 #include "tailorfs/error_code.h"
+#include "tailorfs/macro.h"
 TailorFSStatus tailorfs::POSIXFSView::Initialize(tailorfs::POSIXInit& payload) {
   redirection = payload.redirection;
   return TAILORFS_SUCCESS;
 }
 TailorFSStatus tailorfs::POSIXFSView::Open(tailorfs::POSIXOpen& payload) {
+
+  TAILORFS_LOGPRINT("tailorfs::POSIXFSView::Open for file %s", payload.filename);
   std::string filename = std::string(payload.filename);
   if (redirection.is_enabled) {
     filename = std::regex_replace(
