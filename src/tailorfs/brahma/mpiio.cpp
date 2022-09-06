@@ -284,9 +284,9 @@ int brahma::MPIIOTailorFS::MPI_File_read_at_all(MPI_File fh, MPI_Offset offset,
             unifyfs_map.insert_or_assign(iter->second, unifyfs_iter->second);
             is_success = true;
             ret = 0;
-            if (status != NULL){
+            //if (status != NULL){
               //FIXME(hari): status->_ucount = args.nbytes;
-            }
+            //}
             TAILORFS_LOGINFO("Reading file using UnifyFS - success", "");
           } else {
             TAILORFS_LOGERROR("Reading file using UnifyFS - failed", "");
@@ -399,9 +399,9 @@ int brahma::MPIIOTailorFS::MPI_File_write_at_all(MPI_File fh,
             unifyfs_map.insert_or_assign(iter->second, unifyfs_iter->second);
             is_success = true;
             ret = 0;
-            if (status != NULL){
-              //FIXME(hari): status->_ucount = args.nbytes;
-            }
+
+            //FIXME(hari): status->_ucount = args.nbytes;
+
             TAILORFS_LOGINFO("Writing file using UnifyFS - success", "");
           } else {
             TAILORFS_LOGERROR("Writing file using UnifyFS - failed", "");
