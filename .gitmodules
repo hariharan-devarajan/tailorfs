@@ -5,9 +5,12 @@
 [submodule "external/brahma"]
 	path = external/brahma
 	url = git@github.com:hariharan-devarajan/brahma.git
+	branch = dev
 [submodule "external/mimir"]
 	path = external/mimir
 	url = git@github.com:hariharan-devarajan/mimir.git
+	branch = dev
 [submodule "external/cpp-logger"]
 	path = external/cpp-logger
 	url = git@github.com:hariharan-devarajan/cpp-logger.git
+	branch = dev
