@@ -11,6 +11,7 @@
 source /usr/workspace/iopp/install_scripts/bin/iopp-init
 
 NUM_NODES=$1
+RS_KB=$2
 TAILORFS_DIR=/usr/workspace/iopp/software/tailorfs
 pushd $TAILORFS_DIR
 spack env activate -p ./dependency
@@ -19,19 +20,20 @@ export CXX=/usr/tce/packages/gcc/gcc-8.3.1/bin/g++
 mkdir build_${NUM_NODES}
 pushd build_${NUM_NODES}
 rm -rf *
-cmake ../
-cmake --build /usr/WS2/iopp/software/tailorfs/build_${NUM_NODES} --target all -- -j
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/usr/tce/packages/gcc/gcc-8.3.1/bin/gcc -DCMAKE_CXX_COMPILER=/usr/tce/packages/gcc/gcc-8.3.1/bin/g++ -G "CodeBlocks - Unix Makefiles" ${TAILORFS_DIR}
+cmake --build ${TAILORFS_DIR}/build_${NUM_NODES} --target all -- -j
 
-ctest -R test_generate_config_lassen_${NUM_NODES}_32_1_4_1024_fpp
-echo "Timing, DirectIO"
-export TAILORFS_DIRECT=1
-ctest -V -R test_baseline_mb_lassen_${NUM_NODES}_32_1_4_1024_fpp
+ctest -R test_generate_config_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
+#echo "Timing, DirectIO"
+#export TAILORFS_DIRECT=1
+#ctest -V -R test_baseline_mb_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
+
+echo "Timing, TailorFS"
+ctest -V -R test_tailor_mb_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
 
 echo "Timing, Baseline"
 export TAILORFS_DIRECT=0
-ctest -V -R test_baseline_mb_lassen_${NUM_NODES}_32_1_4_1024_fpp
+ctest -V -R test_baseline_mb_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
 
-echo "Timing, TailorFS"
-ctest -V -R test_baseline_mb_lassen_${NUM_NODES}_32_1_4_1024_fpp
 
 sleep 10

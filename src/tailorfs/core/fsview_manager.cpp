@@ -32,183 +32,189 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
         }
       }
     }
-
-    for (const auto& edge : app_intent._application_file_dag.edges) {
-      auto file_index = edge.destination;
-      auto file_intent = mimir_intent_conf->_file_repo[file_index];
-      FileHash file_hash = std::hash<std::string>()(file_intent._name);
-      auto workload_type = app_intent._file_workload.find(file_index)->second;
-      auto access_pattern =
-          app_intent._file_access_pattern.find(file_index)->second;
-      if (file_intent._file_sharing == mimir::FileSharing::FILE_SHARED) {
-        if (workload_type == mimir::WorkloadType::READ_ONLY_WORKLOAD) {
-          /*STDIO-SHM -> STDIO-BB->STDIO-PFS*/
-          TAILORFS_LOGINFO("file %s is Shared and uses STDIO", file_intent._name.c_str());
-          auto iter = fsid_map.find(FSViewType::STDIO);
-          FSID id;
-          if (iter == fsid_map.end()) {
-            id._type = FSViewType::STDIO;
-            id._id = 0;
+    int rank = 0;
+    if (app_intent._is_mpi) {
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+      TAILORFS_LOGINFO("app rank is %d", rank);
+    }
+    for (const auto& edge : app_intent._rank_file_dag.edges) {
+      if (rank == edge.source) {
+        auto file_index = edge.destination;
+        auto file_intent = mimir_intent_conf->_file_repo[file_index];
+        FileHash file_hash = std::hash<std::string>()(file_intent._name);
+        auto workload_type = app_intent._file_workload.find(file_index)->second;
+        auto access_pattern =
+            app_intent._file_access_pattern.find(file_index)->second;
+        if (file_intent._file_sharing == mimir::FileSharing::FILE_SHARED) {
+          if (workload_type == mimir::WorkloadType::READ_ONLY_WORKLOAD) {
+            /*STDIO-SHM -> STDIO-BB->STDIO-PFS*/
+            TAILORFS_LOGINFO("file %s is Shared and uses STDIO", file_intent._name.c_str());
+            auto iter = fsid_map.find(FSViewType::STDIO);
+            FSID id;
+            if (iter == fsid_map.end()) {
+              id._type = FSViewType::STDIO;
+              id._id = 0;
+            } else {
+              id = iter->second;
+              id._id++;
+            }
+            auto fastest_storage_index = get_fastest(file_intent._size_mb);
+            STDIOInit init_args;
+            if (file_intent._current_device != fastest_storage_index) {
+              init_args.redirection.is_enabled = true;
+              init_args.redirection.original_storage =
+                  storages[file_intent._current_device];
+              init_args.redirection.new_storage = storages[fastest_storage_index];
+            }
+            id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
+            brahma::STDIOTailorFS::get_instance();
+            fsid_map.insert_or_assign(FSViewType::STDIO, id);
+            fsview_map.insert_or_assign(file_hash, id);
           } else {
-            id = iter->second;
-            id._id++;
-          }
-          auto fastest_storage_index = get_fastest(file_intent._size_mb);
-          STDIOInit init_args;
-          if (file_intent._current_device != fastest_storage_index) {
-            init_args.redirection.is_enabled = true;
-            init_args.redirection.original_storage =
-                storages[file_intent._current_device];
-            init_args.redirection.new_storage = storages[fastest_storage_index];
-          }
-          id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
-          brahma::STDIOTailorFS::get_instance();
-          fsid_map.insert_or_assign(FSViewType::STDIO, id);
-          fsview_map.insert_or_assign(file_hash, id);
-        } else {
-          /*UNIFYFS-O-BB*/
-          TAILORFS_LOGINFO("file %s uses UNIFYFS-O-BB", file_intent._name.c_str());
-          off_t mean_write_transfer_size =
-              (file_intent._write_distribution._0_4kb * 2 * KB) +
-              (file_intent._write_distribution._4_64kb * (4 + 64) / 2 * KB) +
-              (file_intent._write_distribution._64kb_1mb * (64 + 1024) / 2 * KB) +
-              (file_intent._write_distribution._1mb_16mb * (1 + 16) / 2 * MB) +
-              (file_intent._write_distribution._16mb * 16 * MB);
-          off_t mean_read_transfer_size =
-              (file_intent._read_distribution._0_4kb * 2 * KB) +
-              (file_intent._read_distribution._4_64kb * (4 + 64) / 2 * KB) +
-              (file_intent._read_distribution._64kb_1mb * (64 + 1024) / 2 * KB) +
-              (file_intent._read_distribution._1mb_16mb * (1 + 16) / 2 * MB) +
-              (file_intent._read_distribution._16mb * 16 * MB);
-          off_t mean_transfer_size = 0;
-          int count = 0;
-          if (mean_write_transfer_size > 0) {
-            mean_transfer_size += mean_write_transfer_size;
-            count++;
-          }
-          if (mean_read_transfer_size > 0) {
-            mean_transfer_size += mean_read_transfer_size;
-            count++;
-          }
-          if (count > 1) mean_transfer_size = mean_transfer_size / count;
-          UnifyFSInit init_args;
-          init_args.feature.transfer_size = mean_transfer_size;
-          init_args.feature.enable_read_optimization = mean_read_transfer_size > 0;
-          auto left_shm_size =
-              storages[0]._capacity_mb - storages[0]._used_capacity_mb;
-          if (left_shm_size > 0) {
-            left_shm_size = left_shm_size > file_intent._size_mb
-                                ? file_intent._size_mb
-                                : left_shm_size;
-          } else {
-            left_shm_size = 0;
-          }
-          init_args.feature.shm._capacity_mb = left_shm_size;
-          auto spill_storage = storages[1];
-          auto left_spill_size =
-              spill_storage._capacity_mb - spill_storage._used_capacity_mb;
-          if (left_spill_size > 0) {
-            left_spill_size = left_spill_size > file_intent._size_mb
+            /*UNIFYFS-O-BB*/
+            TAILORFS_LOGINFO("file %s uses UNIFYFS-O-BB", file_intent._name.c_str());
+            off_t mean_write_transfer_size =
+                (file_intent._write_distribution._0_4kb * 2 * KB) +
+                (file_intent._write_distribution._4_64kb * (4 + 64) / 2 * KB) +
+                (file_intent._write_distribution._64kb_1mb * (64 + 1024) / 2 * KB) +
+                (file_intent._write_distribution._1mb_16mb * (1 + 16) / 2 * MB) +
+                (file_intent._write_distribution._16mb * 16 * MB);
+            off_t mean_read_transfer_size =
+                (file_intent._read_distribution._0_4kb * 2 * KB) +
+                (file_intent._read_distribution._4_64kb * (4 + 64) / 2 * KB) +
+                (file_intent._read_distribution._64kb_1mb * (64 + 1024) / 2 * KB) +
+                (file_intent._read_distribution._1mb_16mb * (1 + 16) / 2 * MB) +
+                (file_intent._read_distribution._16mb * 16 * MB);
+            off_t mean_transfer_size = 0;
+            int count = 0;
+            if (mean_write_transfer_size > 0) {
+              mean_transfer_size += mean_write_transfer_size;
+              count++;
+            }
+            if (mean_read_transfer_size > 0) {
+              mean_transfer_size += mean_read_transfer_size;
+              count++;
+            }
+            if (count > 1) mean_transfer_size = mean_transfer_size / count;
+            UnifyFSInit init_args;
+            init_args.feature.transfer_size = mean_transfer_size;
+            init_args.feature.enable_read_optimization = mean_read_transfer_size > 0;
+            auto left_shm_size =
+                storages[0]._capacity_mb - storages[0]._used_capacity_mb;
+            if (left_shm_size > 0) {
+              left_shm_size = left_shm_size > file_intent._size_mb
                                   ? file_intent._size_mb
-                                  : left_spill_size;
-            init_args.feature.splill._capacity_mb = left_spill_size;
-            init_args.feature.splill._mount_point = spill_storage._mount_point;
-          } else {
-            if (storages.size() > 2) {
-              spill_storage = storages[2];
-              auto left_spill_size =
-                  spill_storage._capacity_mb - spill_storage._used_capacity_mb;
-              if (left_spill_size > 0) {
-                left_spill_size = left_spill_size > file_intent._size_mb
-                                      ? file_intent._size_mb
-                                      : left_spill_size;
-              }
+                                  : left_shm_size;
+            } else {
+              left_shm_size = 0;
+            }
+            init_args.feature.shm._capacity_mb = left_shm_size;
+            auto spill_storage = storages[1];
+            auto left_spill_size =
+                spill_storage._capacity_mb - spill_storage._used_capacity_mb;
+            if (left_spill_size > 0) {
+              left_spill_size = left_spill_size > file_intent._size_mb
+                                    ? file_intent._size_mb
+                                    : left_spill_size;
               init_args.feature.splill._capacity_mb = left_spill_size;
               init_args.feature.splill._mount_point = spill_storage._mount_point;
+            } else {
+              if (storages.size() > 2) {
+                spill_storage = storages[2];
+                auto left_spill_size =
+                    spill_storage._capacity_mb - spill_storage._used_capacity_mb;
+                if (left_spill_size > 0) {
+                  left_spill_size = left_spill_size > file_intent._size_mb
+                                        ? file_intent._size_mb
+                                        : left_spill_size;
+                }
+                init_args.feature.splill._capacity_mb = left_spill_size;
+                init_args.feature.splill._mount_point = spill_storage._mount_point;
+              }
             }
-          }
-          auto iter = fsid_map.find(FSViewType::UNIFYFS);
-          FSID id;
-          if (iter == fsid_map.end()) {
-            id._type = FSViewType::UNIFYFS;
-            id._id = 0;
-          } else {
-            id = iter->second;
-            id._id++;
-          }
-          strcpy(init_args.feature.unifyfs_namespace,
-                 (std::string("/unifyfs_") + std::to_string(id._id)).c_str());
-          init_args.feature.redirection.is_enabled = true;
-          init_args.feature.redirection.original_storage =
-              storages[file_intent._current_device];
-          init_args.feature.redirection.new_storage = storages[storages.size()-1];
-          init_args.feature.redirection.new_storage._mount_point = init_args.feature.unifyfs_namespace;
-          id._feature_hash = std::hash<UnifyFSFeature>()(init_args.feature);
-          UNIFYFSVIEW(id)->Initialize(init_args);
-          fsid_map.insert_or_assign(FSViewType::UNIFYFS, id);
-          fsview_map.insert_or_assign(file_hash, id);
-        }
-      } else {
-        if (workload_type == mimir::WorkloadType::UPDATE_WORKLOAD) {
-          /*POSIX-PFS*/
-          TAILORFS_LOGINFO("file %s is FPP and Update and uses POSIX", file_intent._name.c_str());
-          auto iter = fsid_map.find(FSViewType::POSIX);
-          FSID id;
-          if (iter == fsid_map.end()) {
-            id._type = FSViewType::POSIX;
-            id._id = 0;
-          } else {
-            id = iter->second;
-            id._id++;
-          }
-          auto fastest_storage_index = get_fastest(file_intent._size_mb);
-          POSIXInit init_args;
-          if (file_intent._current_device != fastest_storage_index) {
-            init_args.redirection.is_enabled = true;
-            init_args.redirection.original_storage =
+            auto iter = fsid_map.find(FSViewType::UNIFYFS);
+            FSID id;
+            if (iter == fsid_map.end()) {
+              id._type = FSViewType::UNIFYFS;
+              id._id = 0;
+            } else {
+              id = iter->second;
+              id._id++;
+            }
+            strcpy(init_args.feature.unifyfs_namespace,
+                   (std::string("/unifyfs_") + std::to_string(id._id)).c_str());
+            init_args.feature.redirection.is_enabled = true;
+            init_args.feature.redirection.original_storage =
                 storages[file_intent._current_device];
-            init_args.redirection.new_storage = storages[fastest_storage_index];
+            init_args.feature.redirection.new_storage = storages[storages.size()-1];
+            init_args.feature.redirection.new_storage._mount_point = init_args.feature.unifyfs_namespace;
+            id._feature_hash = std::hash<UnifyFSFeature>()(init_args.feature);
+            UNIFYFSVIEW(id)->Initialize(init_args);
+            fsid_map.insert_or_assign(FSViewType::UNIFYFS, id);
+            fsview_map.insert_or_assign(file_hash, id);
           }
-          id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
-          POSIXFSVIEW(id)->Initialize(init_args);
-          fsid_map.insert_or_assign(FSViewType::POSIX, id);
-          fsview_map.insert_or_assign(file_hash, id);
         } else {
-          /*STDIO-SHM*/
-          TAILORFS_LOGINFO("file %s is FPP and uses POSIX", file_intent._name.c_str());
-          auto iter = fsid_map.find(FSViewType::STDIO);
-          FSID id;
-          if (iter == fsid_map.end()) {
-            id._type = FSViewType::STDIO;
-            id._id = 0;
+          if (workload_type == mimir::WorkloadType::UPDATE_WORKLOAD) {
+            /*POSIX-PFS*/
+            TAILORFS_LOGINFO("file %s is FPP and Update and uses POSIX", file_intent._name.c_str());
+            auto iter = fsid_map.find(FSViewType::POSIX);
+            FSID id;
+            if (iter == fsid_map.end()) {
+              id._type = FSViewType::POSIX;
+              id._id = 0;
+            } else {
+              id = iter->second;
+              id._id++;
+            }
+            auto fastest_storage_index = get_fastest(file_intent._size_mb);
+            POSIXInit init_args;
+            if (file_intent._current_device != fastest_storage_index) {
+              init_args.redirection.is_enabled = true;
+              init_args.redirection.original_storage =
+                  storages[file_intent._current_device];
+              init_args.redirection.new_storage = storages[fastest_storage_index];
+            }
+            id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
+            POSIXFSVIEW(id)->Initialize(init_args);
+            fsid_map.insert_or_assign(FSViewType::POSIX, id);
+            fsview_map.insert_or_assign(file_hash, id);
           } else {
-            id = iter->second;
-            id._id++;
+            /*STDIO-SHM*/
+            TAILORFS_LOGINFO("file %s is FPP and uses POSIX", file_intent._name.c_str());
+            auto iter = fsid_map.find(FSViewType::STDIO);
+            FSID id;
+            if (iter == fsid_map.end()) {
+              id._type = FSViewType::STDIO;
+              id._id = 0;
+            } else {
+              id = iter->second;
+              id._id++;
+            }
+            auto fastest_storage_index = get_fastest(file_intent._size_mb);
+            STDIOInit init_args;
+            if (file_intent._current_device != fastest_storage_index) {
+              init_args.redirection.is_enabled = true;
+              init_args.redirection.original_storage =
+                  storages[file_intent._current_device];
+              init_args.redirection.new_storage = storages[fastest_storage_index];
+              if (workload_type == mimir::WorkloadType::UPDATE_WORKLOAD ||
+                  workload_type == mimir::WorkloadType::WRITE_ONLY_WORKLOAD ) {
+                init_args.redirection.type = RedirectionType::FLUSH;
+               }else if (workload_type == mimir::WorkloadType::READ_ONLY_WORKLOAD) {
+                 init_args.redirection.type = RedirectionType::PREFETCH;
+               } else if (workload_type == mimir::WorkloadType::RAW_WORKLOAD||
+                         workload_type == mimir::WorkloadType::WORM_WORKLOAD) {
+                 init_args.redirection.type = RedirectionType::BOTH;
+               }
+            }
+            id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
+            STDIOFSVIEW(id)->Initialize(init_args);
+            fsid_map.insert_or_assign(FSViewType::STDIO, id);
+            fsview_map.insert_or_assign(file_hash, id);
           }
-          auto fastest_storage_index = get_fastest(file_intent._size_mb);
-          STDIOInit init_args;
-          if (file_intent._current_device != fastest_storage_index) {
-            init_args.redirection.is_enabled = true;
-            init_args.redirection.original_storage =
-                storages[file_intent._current_device];
-            init_args.redirection.new_storage = storages[fastest_storage_index];
-            if (workload_type == mimir::WorkloadType::UPDATE_WORKLOAD ||
-                workload_type == mimir::WorkloadType::WRITE_ONLY_WORKLOAD ) {
-              init_args.redirection.type = RedirectionType::FLUSH;
-             }else if (workload_type == mimir::WorkloadType::READ_ONLY_WORKLOAD) {
-               init_args.redirection.type = RedirectionType::PREFETCH;
-             } else if (workload_type == mimir::WorkloadType::RAW_WORKLOAD||
-                       workload_type == mimir::WorkloadType::WORM_WORKLOAD) {
-               init_args.redirection.type = RedirectionType::BOTH;
-             }
-          }
-          id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
-          STDIOFSVIEW(id)->Initialize(init_args);
-          fsid_map.insert_or_assign(FSViewType::STDIO, id);
-          fsview_map.insert_or_assign(file_hash, id);
         }
       }
-    }
+      }
   }
   return TAILORFS_SUCCESS;
 }

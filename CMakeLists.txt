@@ -14,6 +14,7 @@ add_subdirectory(external/cpp-logger)
 add_subdirectory(external/brahma)
 add_dependencies(brahma cpp-logger)
 add_subdirectory(external/mimir)
+add_dependencies(mimir cpp-logger)
 
 find_package(mimir REQUIRED)
 if (${MIMIR_FOUND})

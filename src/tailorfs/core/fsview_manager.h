@@ -23,18 +23,21 @@ class FSViewManager {
   inline size_t get_fastest(size_t file_size_mb) {
     size_t fastest_index = 0;
     for (auto& storage : storages) {
-      auto aggregated_capacity = storage._capacity_mb;
+      uint64_t capacity_per_process = storage._capacity_mb;
       if (!storage._is_shared) {
-        aggregated_capacity = mimir_intent_conf->_job_config._num_nodes *
-                              storage._capacity_mb;
+        capacity_per_process = storage._capacity_mb / mimir_intent_conf->_job_config._num_cores_per_node / mimir_intent_conf->_job_config._num_nodes;
+      } else {
+        capacity_per_process = storage._capacity_mb / mimir_intent_conf->_job_config._num_cores_per_node;
       }
-      if (aggregated_capacity - storage._used_capacity_mb > file_size_mb) {
+      TAILORFS_LOGINFO("Capacity in %s is %ld file size %d used capacity", storage._mount_point.c_str(),capacity_per_process, file_size_mb, storage._used_capacity_mb);
+      if (capacity_per_process - storage._used_capacity_mb >= file_size_mb) {
         storage._used_capacity_mb += file_size_mb;
         return fastest_index;
       }
       fastest_index++;
     }
-    return TAILORFS_SUCCESS;
+    TAILORFS_LOGINFO("Returning index %d", fastest_index%storages.size());
+    return fastest_index%storages.size();
   }
 
  public:

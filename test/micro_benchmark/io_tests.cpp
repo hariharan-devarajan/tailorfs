@@ -156,16 +156,21 @@ int pretest() {
 }
 int posttest() {
   MPI_Barrier(MPI_COMM_WORLD);
-  fs::remove_all(info.pfs);
-  fs::remove_all(info.bb);
-  fs::remove_all(info.shm);
+  if (info.rank == 0) {
+    fs::remove_all(info.pfs);
+  }
+  if (info.rank % args.ranks_per_node == 0) {
+    fs::remove_all(info.bb);
+    fs::remove_all(info.shm);
+  }
+  MPI_Barrier(MPI_COMM_WORLD);
   return 0;
 }
 int clean_directories() {
   if (info.rank == 0) {
     fs::remove_all(info.pfs);
+    fs::create_directories(info.pfs);
   }
-  fs::create_directories(info.pfs);
   if (info.rank % args.ranks_per_node == 0) {
     INFO("rank " << info.rank << " on node " << info.hostname << " with BB "
                  << info.bb.string().c_str());
