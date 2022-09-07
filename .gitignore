@@ -4,7 +4,14 @@
 /build/
 /external/UnifyFS/t/
 /dependency/loads
-/build_4/
+/build_*/
+/cmake-build-debug
+/dependency/Testing
+/Testing
+nohup.out
+unifyfsd.err.*
+unifyfsd.out.*
+.clion.source.upload.marker
 *.dirstamp*
 *.t
 
