@@ -52,16 +52,33 @@ class POSIXTailorFS : public POSIX {
 
  public:
   POSIXTailorFS() : POSIX(),  fds() {
-    TAILORFS_LOGPRINT("POSIX class intercepted", "");
+    TAILORFS_LOGINFO("POSIX class intercepted", "");
     auto config = MIMIR_CONFIG();
     if (config->_current_process_index != -1) {
       auto app_intent = config->_app_repo[config->_current_process_index];
+      auto selected_interface = mimir::InterfaceType::POSIX;
+      int rank = 0;
+      if(app_intent._is_mpi) {
+        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+      }
+      bool is_used = true;
+      auto interface_file_indices = std::unordered_set<mimir::FileIndex>();
       for (auto element : app_intent._interfaces_used) {
         for (const auto& interface: element.second) {
-          if (interface == mimir::InterfaceType::POSIX) {
-            track_file(config->_file_repo[element.first]._name.c_str());
+          if (interface == selected_interface) {
+            interface_file_indices.emplace(element.first);
           }
         }
+      }
+
+      auto rank_file_indices = std::unordered_set<mimir::FileIndex>();
+      for (auto element : app_intent._rank_file_dag.edges) {
+        if (element.source == rank) rank_file_indices.emplace(element.destination);
+      }
+      for ( auto iter:rank_file_indices) {
+        auto iterface_iter = interface_file_indices.find(iter);
+        if (iterface_iter != interface_file_indices.end())
+          track_file(config->_file_repo[iter]._name.c_str());
       }
     }
   }

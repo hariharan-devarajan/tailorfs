@@ -19,6 +19,8 @@ void set_init(bool _init);
 
 extern void __attribute__ ((constructor)) tailorfs_init(void);
 extern void __attribute__ ((destructor)) tailorfs_fini(void);
+void tfs_finalize(bool is_mpi = false);
+void tfs_init(bool is_mpi = false);
 
 
 #endif  // TAILORFS_TAILORFS_H

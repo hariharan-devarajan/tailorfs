@@ -30,16 +30,16 @@ if [ $error_ct -gt 0 ]; then
 fi
 pushd $SCRIPT_DIR
 echo "[TailorFS] Configuring test for lassen"
-./finish.sh $UNIFYFS_ROOT_DIR
-./cleanup.sh
-./setup.sh $pfs $UNIFYFS_LOG_DIR $UNIFYFS_ROOT_DIR
+#./finish.sh $UNIFYFS_ROOT_DIR
+#./cleanup.sh
+#./setup.sh $pfs $UNIFYFS_LOG_DIR $UNIFYFS_ROOT_DIR
 
 echo "[TailorFS] Run Test"
-LD_PRELOAD=${SOURCE_DIR}/build/lib/libtailorfs.so jsrun -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS}  -d packed ${TEST_EXEC} ${TEST_ARGS}
+jsrun --env LD_PRELOAD=${SOURCE_DIR}/build/lib/libtailorfs.so -r 1 -a ${MPI_PROCS} -c ${MPI_PROCS}  -d packed ${TEST_EXEC} ${TEST_ARGS}
 status=$?
 
-./finish.sh $UNIFYFS_ROOT_DIR
-./cleanup.sh
+#./finish.sh $UNIFYFS_ROOT_DIR
+#./cleanup.sh
 popd
 if [ $status -gt 0 ]; then
     echo "Test failed with code $status!" >&2

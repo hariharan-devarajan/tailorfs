@@ -47,6 +47,7 @@ struct Info {
   fs::path bb;
   fs::path shm;
   int rank;
+  int direct = 0;
   int comm_size;
   char hostname[256];
   fs::path unifyfs_path = "/unifyfs1";
@@ -61,10 +62,29 @@ DEFINE_CLARA_OPS(tailorfs::test::AccessPattern)
 DEFINE_CLARA_OPS(tailorfs::test::FileSharing)
 DEFINE_CLARA_OPS(tailorfs::test::ProcessGrouping)
 
+#include <fstream>
+
 /**
  * Overridden methods for catch
  */
 int init(int *argc, char ***argv) {
+  char* tailorfs_debug = getenv("TAILORFS_DEBUG");
+  if (tailorfs_debug != nullptr) {
+    if (strcmp(tailorfs_debug , "1") == 0) {
+      std::string sp;
+      std::ifstream("/proc/self/cmdline") >> sp;
+      std::replace( sp.begin(), sp.end() - 1, '\000', ' ');
+      fprintf(stderr, "Connect to pid %d %s\n", getpid(), sp.c_str());
+      fflush(stderr);
+      getchar();
+    }
+  }
+  char* tailorfs_direct = getenv("TAILORFS_DIRECT");
+  if (tailorfs_direct != nullptr) {
+    if (strcmp(tailorfs_direct , "1") == 0) {
+      info.direct = O_DIRECT;
+    }
+  }
   MPI_Init(argc, argv);
   int rank, comm_size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -215,7 +235,6 @@ int create_file(fs::path filename, uint64_t blocksize) {
   MPI_Barrier(MPI_COMM_WORLD);
   return 0;
 }
-
 /**
  * Test cases
  */
@@ -251,7 +270,7 @@ TEST_CASE("Write-Only",
   if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
     strcpy(interface, "POSIX");
     open_time.resumeTime();
-    int fd = open(filename.c_str(), O_CREAT | O_WRONLY, 0666);
+    int fd = open(filename.c_str(), O_CREAT | O_WRONLY | info.direct, 0666);
     open_time.pauseTime();
     REQUIRE(fd != -1);
     for (int i = 0; i < args.iteration; ++i) {
@@ -348,7 +367,7 @@ TEST_CASE("Read-Only",
   if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
     strcpy(interface, "POSIX");
     open_time.resumeTime();
-    int fd = open(pfs_filename.c_str(), O_RDONLY);
+    int fd = open(pfs_filename.c_str(), O_RDONLY | info.direct);
     open_time.pauseTime();
     REQUIRE(fd != -1);
     for (int i = 0; i < args.iteration; ++i) {
@@ -419,7 +438,7 @@ TEST_CASE("Read-Only",
         "Timing", args.iteration, args.request_size,
         total_init / info.comm_size, total_finalize / info.comm_size,
         total_open / info.comm_size, total_close / info.comm_size,
-        total_read / info.comm_size, interface, "ro", args.storage_type,
+        0, total_read / info.comm_size, interface, "ro", args.storage_type,
         args.access_pattern, args.file_sharing, args.process_grouping);
   }
   REQUIRE(posttest() == 0);
@@ -494,7 +513,7 @@ TEST_CASE("Read-After-Write",
     strcpy(interface, "POSIX");
     if (is_writer) {
       open_time.resumeTime();
-      int fd = open(pfs_filename.c_str(), O_CREAT | O_WRONLY, 0666);
+      int fd = open(pfs_filename.c_str(), O_CREAT | O_WRONLY  | info.direct, 0666);
       open_time.pauseTime();
       REQUIRE(fd != -1);
       for (int i = 0; i < args.iteration; ++i) {
@@ -512,7 +531,7 @@ TEST_CASE("Read-After-Write",
     MPI_Barrier(MPI_COMM_WORLD);
     if (is_reader) {
       open_time.resumeTime();
-      int fd = open(pfs_filename.c_str(), O_RDONLY);
+      int fd = open(pfs_filename.c_str(), O_RDONLY | info.direct);
       open_time.pauseTime();
       REQUIRE(fd != -1);
       for (int i = 0; i < args.iteration; ++i) {
@@ -669,7 +688,7 @@ TEST_CASE("Update", std::string("[type=update]") +
   if (args.file_sharing == tt::FileSharing::PER_PROCESS) {
     strcpy(interface, "POSIX");
     open_time.resumeTime();
-    int fd = open(filename.c_str(), O_CREAT | O_WRONLY, 0666);
+    int fd = open(filename.c_str(), O_CREAT | O_WRONLY  | info.direct, 0666);
     open_time.pauseTime();
     REQUIRE(fd != -1);
     for (int i = 0; i < args.iteration; ++i) {
@@ -818,7 +837,7 @@ TEST_CASE("WORM",
     strcpy(interface, "POSIX");
     if (is_writer) {
       open_time.resumeTime();
-      int fd = open(pfs_filename.c_str(), O_CREAT | O_WRONLY, 0666);
+      int fd = open(pfs_filename.c_str(), O_CREAT | O_WRONLY  | info.direct, 0666);
       open_time.pauseTime();
       REQUIRE(fd != -1);
       auto write_data =
@@ -836,7 +855,7 @@ TEST_CASE("WORM",
     MPI_Barrier(MPI_COMM_WORLD);
     if (is_reader) {
       open_time.resumeTime();
-      int fd = open(pfs_filename.c_str(), O_RDONLY);
+      int fd = open(pfs_filename.c_str(), O_RDONLY | info.direct);
       open_time.pauseTime();
       REQUIRE(fd != -1);
       for (int i = 0; i < args.iteration; ++i) {

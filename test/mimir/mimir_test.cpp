@@ -378,12 +378,7 @@ int create_config(mimir::Config &config) {
   mimir::WorkflowAdvice workflow_advice;
   for (uint32_t app_index = 0; app_index < args.num_apps; ++app_index) {
     mimir::ApplicationAdvice app_advice;
-    if (config._job_config._num_nodes == 1 &&
-        args.ranks_per_node == 1) {
-      app_advice._is_mpi = false;
-    } else {
-      app_advice._is_mpi = true;
-    }
+    app_advice._is_mpi = true;
     tailorfs::test::trim_utf8(args.config_file);
     auto file_parts =  split(args.config_file, '/');
 
@@ -403,11 +398,24 @@ int create_config(mimir::Config &config) {
     if (values[10] == "all.json") process_grouping = 0;
     else if (values[10] == "split.json") process_grouping = 1;
     else if (values[10] == "alt.json") process_grouping = 2;
-    sprintf(process, "%s/io_tests --request_size %d --iteration %d "
-        "--ranks_per_node %d --access_pattern %d --file_sharing %d "
-        "--process_grouping %d --reporter compact %s",args.binary_directory.c_str(),
-        atoi(values[5].c_str()) * 1024, atoi(values[6].c_str()), atoi(values[3].c_str()), access_pattern,
-            file_sharing, process_grouping, workload);
+    app_advice._num_cpu_cores_used = args.num_process_per_app;
+    if (process_grouping != 0) app_advice._num_cpu_cores_used = app_advice._num_cpu_cores_used / 2;
+
+
+    if (app_advice._is_mpi) {
+      sprintf(process, "%d %s/io_tests --request_size %d --iteration %d "
+                       "--ranks_per_node %d --access_pattern %d --file_sharing %d "
+                       "--process_grouping %d --reporter compact %s", app_advice._num_cpu_cores_used,
+                       args.binary_directory.c_str(),atoi(values[5].c_str()) * 1024, atoi(values[6].c_str()),
+                       atoi(values[3].c_str()), access_pattern, file_sharing, process_grouping, workload);
+    }else {
+      sprintf(process, "%s/io_tests --request_size %d --iteration %d "
+                       "--ranks_per_node %d --access_pattern %d --file_sharing %d "
+                       "--process_grouping %d --reporter compact %s",args.binary_directory.c_str(),
+              atoi(values[5].c_str()) * 1024, atoi(values[6].c_str()), atoi(values[3].c_str()), access_pattern,
+              file_sharing, process_grouping, workload);
+    }
+
     auto process_full = std::string(process);
     tailorfs::test::trim_utf8(process_full);
     auto hash = mimir::oat_hash(process_full.c_str(), process_full.size());
@@ -419,9 +427,7 @@ int create_config(mimir::Config &config) {
     app_advice._application_file_dag.applications.emplace(app_index);
     workflow_advice._application_file_dag.applications.emplace(app_index);
 
-    app_advice._num_cpu_cores_used =
-        floor(config._job_config._node_names.size() *
-              config._job_config._num_cores_per_node * 1.0 / args.num_apps);
+
     app_advice._num_gpus_used =
         floor(config._job_config._node_names.size() *
               config._job_config._num_gpus_per_node * 1.0 / args.num_apps);
@@ -653,7 +659,7 @@ TEST_CASE("LoadConfig",
 
   const char *MIMIR_CONFIG_PATH = std::getenv(mimir::MIMIR_CONFIG_PATH);
   REQUIRE(MIMIR_CONFIG_PATH != nullptr);
-  REQUIRE(mimir_init_config() == 0);
+  REQUIRE(mimir_init_config(false) == 0);
   mimir::Config gen_config;
   create_config(gen_config);
   auto loaded_config = MIMIR_CONFIG();

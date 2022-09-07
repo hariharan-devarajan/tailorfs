@@ -41,7 +41,7 @@ if [ "${MACHINE}" = "local" ]; then
   echo "[TailorFS] Finishing test."
   exit 0
 elif [ "${MACHINE}" = "lassen" ]; then
-  $SCRIPT_DIR/lassen/wrap_unifyfs.sh $MACHINE $MPI_PROCS $SOURCE_DIR $TEST_EXEC $UNIFYFS_LOG_DIR $UNIFYFS_ROOT_DIR $SCRIPT_DIR/local $TEST_ARGS
+  $SCRIPT_DIR/lassen/wrap_unifyfs.sh $MACHINE $MPI_PROCS $SOURCE_DIR $TEST_EXEC $UNIFYFS_LOG_DIR $UNIFYFS_ROOT_DIR $SCRIPT_DIR/lassen $TEST_ARGS
   status=$?
   if [ $status -gt 0 ]; then
       echo "[TailorFS] Test failed with code $status!" >&2
