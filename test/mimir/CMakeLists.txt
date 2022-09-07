@@ -70,14 +70,14 @@ function(create_test)
             --reporter compact
             )
     set(test_name test_generate_config_${machine}_${config_file_suffix})
-    add_test(${test_name} ${CMAKE_BINARY_DIR}/bin/mimir_test ${TEST_ARGS} GenerateConfig)
+    add_test(${test_name} jsrun -p 1 ${CMAKE_BINARY_DIR}/bin/mimir_test ${TEST_ARGS} GenerateConfig)
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT pfs=$ENV{pfs})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT BBPATH=$ENV{BBPATH})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/lib:${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
 
 
     set(test_name test_load_config_${machine}_${config_file_suffix})
-    add_test(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/mimir_test ${TEST_ARGS} LoadConfig)
+    add_test(${test_name} jsrun -p 1 ${CMAKE_CURRENT_BINARY_DIR}/mimir_test ${TEST_ARGS} LoadConfig)
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT pfs=$ENV{pfs})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=$ENV{pfs})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT BBPATH=$ENV{BBPATH})

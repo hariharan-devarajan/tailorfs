@@ -594,49 +594,51 @@ TEST_CASE("GenerateConfig",
               CONVERT_VAL(all_app_ptg, args.all_app_ptg) +
               CONVERT_VAL(split_app_ptg, args.split_app_ptg) +
               CONVERT_VAL(alt_app_ptg, args.alt_app_ptg)) {
-  REQUIRE(pretest() == 0);
+  if (info.rank == 0) {
+    REQUIRE(pretest() == 0);
+    fs::path config_file = args.config_file;
+    if (fs::exists(config_file)) fs::remove(config_file);
+    mimir::Config config;
+    create_config(config);
+    using json = nlohmann::json;
+    json j = config;
+    json conf = {{"ranks_per_node", args.ranks_per_node},
+                 {"storage_type", args.storage_type},
+                 {"num_apps", args.num_apps},
+                 {"num_process_per_app", args.num_process_per_app},
+                 {"fpp_percentage", args.fpp_percentage},
+                 {"sequential_percentage", args.sequential_percentage},
+                 {"wo_file_ptg", args.wo_file_ptg},
+                 {"ro_file_ptg", args.ro_file_ptg},
+                 {"raw_file_ptg", args.raw_file_ptg},
+                 {"update_file_ptg", args.update_file_ptg},
+                 {"worm_file_ptg", args.worm_file_ptg},
+                 {"all_app_ptg", args.all_app_ptg},
+                 {"split_app_ptg", args.split_app_ptg},
+                 {"alt_app_ptg", args.alt_app_ptg}};
+    j["conf"] = conf;
+    std::cout << j.dump() << std::endl;
+    std::ofstream out(config_file.c_str());
+    out << j;
+    out.close();
 
-  fs::path config_file = args.config_file;
-  if (fs::exists(config_file)) fs::remove(config_file);
-  mimir::Config config;
-  create_config(config);
-  using json = nlohmann::json;
-  json j = config;
-  json conf = {{"ranks_per_node", args.ranks_per_node},
-               {"storage_type", args.storage_type},
-               {"num_apps", args.num_apps},
-               {"num_process_per_app", args.num_process_per_app},
-               {"fpp_percentage", args.fpp_percentage},
-               {"sequential_percentage", args.sequential_percentage},
-               {"wo_file_ptg", args.wo_file_ptg},
-               {"ro_file_ptg", args.ro_file_ptg},
-               {"raw_file_ptg", args.raw_file_ptg},
-               {"update_file_ptg", args.update_file_ptg},
-               {"worm_file_ptg", args.worm_file_ptg},
-               {"all_app_ptg", args.all_app_ptg},
-               {"split_app_ptg", args.split_app_ptg},
-               {"alt_app_ptg", args.alt_app_ptg}};
-  j["conf"] = conf;
-  std::cout << j.dump() << std::endl;
-  std::ofstream out(config_file.c_str());
-  out << j;
-  out.close();
-
-  /**
-   * Verification
-   */
-  std::ifstream t(config_file.c_str());
-  t.seekg(0, std::ios::end);
-  size_t size = t.tellg();
-  std::string buffer(size, ' ');
-  t.seekg(0);
-  t.read(&buffer[0], size);
-  t.close();
-  json read_json = json::parse(buffer);
-  mimir::Config config_r;
-  read_json.get_to(config_r);
-  REQUIRE(config_r.is_same(config));
-  REQUIRE(posttest() == 0);
+    /**
+     * Verification
+     */
+    std::ifstream t(config_file.c_str());
+    t.seekg(0, std::ios::end);
+    size_t size = t.tellg();
+    std::string buffer(size, ' ');
+    t.seekg(0);
+    t.read(&buffer[0], size);
+    t.close();
+    json read_json = json::parse(buffer);
+    mimir::Config config_r;
+    read_json.get_to(config_r);
+    REQUIRE(config_r.is_same(config));
+    REQUIRE(posttest() == 0);
+  }
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 
 TEST_CASE("LoadConfig",
