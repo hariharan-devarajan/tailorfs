@@ -16,7 +16,7 @@ TailorFSStatus tailorfs::STDIOFSView::Initialize(tailorfs::STDIOInit& payload) {
   return TAILORFS_SUCCESS;
 }
 TailorFSStatus tailorfs::STDIOFSView::Open(tailorfs::STDIOOpen& payload) {
-  TAILORFS_LOGPRINT("tailorfs::STDIOFSView::Open for file %s with redirection to %s", payload.filename,
+  TAILORFS_LOGINFO("tailorfs::STDIOFSView::Open for file %s with redirection to %s", payload.filename,
                     redirection.new_storage._mount_point.c_str());
   std::string filename = std::string(payload.filename);
   if (redirection.is_enabled) {

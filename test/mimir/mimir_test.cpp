@@ -425,8 +425,7 @@ int create_config(mimir::Config &config) {
       mimir::FileAdvice file_advice;
       file_advice._file_sharing = mimir::FileSharing::FILE_PER_PROCESS;
       file_advice._name = (info.pfs / (args.filename + ".dat" + "_" +
-                                       std::to_string(file_index)+ "_" +
-                                       std::to_string(write_comm_size)))
+                                       std::to_string(file_index)))
                               .string();
       tailorfs::test::trim_utf8(file_advice._name);
       file_advice._format = Format::FORMAT_BINARY;
@@ -479,8 +478,7 @@ int create_config(mimir::Config &config) {
     } else {
       file_advice._file_sharing = mimir::FileSharing::FILE_SHARED_NODE_LOCAL;
     }
-    file_advice._name = (info.pfs / (args.filename + ".dat" + "_" +
-                                     std::to_string(write_comm_size)))
+    file_advice._name = (info.pfs / (args.filename + ".dat" + "_0"))
                             .string();
     tailorfs::test::trim_utf8(file_advice._name);
     file_advice._format = Format::FORMAT_BINARY;
