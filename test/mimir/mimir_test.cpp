@@ -438,7 +438,13 @@ int create_config(mimir::Config &config) {
     }
     for (int file_index = 0; file_index < NUM_FILES; ++file_index) {
       mimir::FileAdvice file_advice;
-      file_advice._file_sharing = mimir::FileSharing::FILE_PER_PROCESS;
+      if (args.num_nodes > 1 && args.process_grouping == tailorfs::test::ProcessGrouping::SPLIT_PROCESS_HALF) {
+        file_advice._file_sharing = mimir::FileSharing::FILE_SHARED_INTER_NODE;
+      } else if (args.num_nodes > 1 && args.process_grouping == tailorfs::test::ProcessGrouping::SPLIT_PROCESS_ALTERNATE) {
+        file_advice._file_sharing = mimir::FileSharing::FILE_SHARED_NODE_LOCAL;
+      } else {
+        file_advice._file_sharing = mimir::FileSharing::FILE_PER_PROCESS;
+      }
       file_advice._name = (info.pfs / (args.filename + ".dat" + "_" +
                                        std::to_string(file_index)))
                               .string();
@@ -488,11 +494,7 @@ int create_config(mimir::Config &config) {
   }
   else {
     mimir::FileAdvice file_advice;
-    if (args.num_nodes > 1 && args.process_grouping == tailorfs::test::ProcessGrouping::SPLIT_PROCESS_HALF) {
-      file_advice._file_sharing = mimir::FileSharing::FILE_SHARED_INTER_NODE;
-    } else {
-      file_advice._file_sharing = mimir::FileSharing::FILE_SHARED_NODE_LOCAL;
-    }
+    file_advice._file_sharing = mimir::FileSharing::FILE_SHARED_COLLECTIVE;
     file_advice._name = (info.pfs / (args.filename + ".dat" + "_0"))
                             .string();
     tailorfs::test::trim_utf8(file_advice._name);

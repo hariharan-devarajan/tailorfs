@@ -45,7 +45,7 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
         auto workload_type = app_intent._file_workload.find(file_index)->second;
         auto access_pattern =
             app_intent._file_access_pattern.find(file_index)->second;
-        if (file_intent._file_sharing == mimir::FileSharing::FILE_SHARED_INTER_NODE) {
+        if (file_intent._file_sharing == mimir::FileSharing::FILE_SHARED_COLLECTIVE) {
           if (workload_type == mimir::WorkloadType::READ_ONLY_WORKLOAD) {
             /*STDIO-SHM -> STDIO-BB->STDIO-PFS*/
             TAILORFS_LOGINFO("file %s is Shared and uses STDIO", file_intent._name.c_str());
@@ -154,6 +154,39 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
             fsid_map.insert_or_assign(FSViewType::UNIFYFS, id);
             fsview_map.insert_or_assign(file_hash, id);
           }
+        } else if (file_intent._file_sharing == mimir::FileSharing::FILE_SHARED_INTER_NODE) {
+          /*POSIX-PFS*/
+          TAILORFS_LOGINFO("file %s is Inter node and uses POSIX", file_intent._name.c_str());
+          auto iter = fsid_map.find(FSViewType::POSIX);
+          FSID id;
+          if (iter == fsid_map.end()) {
+            id._type = FSViewType::POSIX;
+            id._id = 0;
+          } else {
+            id = iter->second;
+            id._id++;
+          }
+          auto fastest_storage_index = get_fastest(file_intent._size_mb);
+          POSIXInit init_args;
+          if (file_intent._current_device != fastest_storage_index) {
+            init_args.redirection.is_enabled = true;
+            init_args.redirection.original_storage =
+                storages[file_intent._current_device];
+            init_args.redirection.new_storage = storages[fastest_storage_index];
+            if (workload_type == mimir::WorkloadType::UPDATE_WORKLOAD ||
+                workload_type == mimir::WorkloadType::WRITE_ONLY_WORKLOAD ) {
+              init_args.redirection.type = RedirectionType::FLUSH;
+            }else if (workload_type == mimir::WorkloadType::READ_ONLY_WORKLOAD) {
+              init_args.redirection.type = RedirectionType::PREFETCH;
+            } else if (workload_type == mimir::WorkloadType::RAW_WORKLOAD||
+                       workload_type == mimir::WorkloadType::WORM_WORKLOAD) {
+              init_args.redirection.type = RedirectionType::BOTH;
+            }
+          }
+          id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
+          POSIXFSVIEW(id)->Initialize(init_args);
+          fsid_map.insert_or_assign(FSViewType::POSIX, id);
+          fsview_map.insert_or_assign(file_hash, id);
         } else {
           if (workload_type == mimir::WorkloadType::UPDATE_WORKLOAD) {
             /*POSIX-PFS*/
@@ -174,6 +207,15 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
               init_args.redirection.original_storage =
                   storages[file_intent._current_device];
               init_args.redirection.new_storage = storages[fastest_storage_index];
+              if (workload_type == mimir::WorkloadType::UPDATE_WORKLOAD ||
+                  workload_type == mimir::WorkloadType::WRITE_ONLY_WORKLOAD ) {
+                init_args.redirection.type = RedirectionType::FLUSH;
+              }else if (workload_type == mimir::WorkloadType::READ_ONLY_WORKLOAD) {
+                init_args.redirection.type = RedirectionType::PREFETCH;
+              } else if (workload_type == mimir::WorkloadType::RAW_WORKLOAD||
+                         workload_type == mimir::WorkloadType::WORM_WORKLOAD) {
+                init_args.redirection.type = RedirectionType::BOTH;
+              }
             }
             id._feature_hash = std::hash<RedirectFeature>()(init_args.redirection);
             POSIXFSVIEW(id)->Initialize(init_args);
