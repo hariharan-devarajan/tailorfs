@@ -26,7 +26,7 @@ function(create_test)
     #            " file_sharing:" ${file_sharing} " access_pattern:" ${access_pattern}
     #            " op:" ${op} " process_grouping:" ${process_grouping} " interface:" ${interface}
     #            " unifyc_index:" ${unifyc_index})
-    set(test_suffix ${machine}_${NUM_NODES}_${ranks_per_node}_${rq_kb}_${iter}_${interface}_${storage}_${file_sharing}_${access_pattern}_${op}_${process_grouping})
+    set(test_suffix ${machine}_${NUM_NODES}_${ranks_per_node}_${rq_kb}_${iter}_${file_sharing}_${interface}_${storage}_${access_pattern}_${op}_${process_grouping})
     #message(STATUS ${test_suffix})
     if (${machine} STREQUAL "local" AND ${ranks_per_node} STREQUAL "1")
         set(mpi_exec)

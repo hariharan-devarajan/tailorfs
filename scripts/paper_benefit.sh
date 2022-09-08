@@ -6,13 +6,16 @@
 #BSUB -G asccasc           #account
 #BSUB -J paper_benefit   #name of job
 #BSUB -q pbatch            #queue to use
-#BSUB -stage storage=64            #add BB
+##BSUB -stage storage=64            #add BB
 
 source /usr/workspace/iopp/install_scripts/bin/iopp-init
 
 NUM_NODES=$1
 RS_KB=$2
 TAILORFS_DIR=/usr/workspace/iopp/software/tailorfs
+export BBPATH=$pfs/bb/
+mkdir -p $BBPATH
+
 pushd $TAILORFS_DIR
 spack env activate -p ./dependency
 export CC=/usr/tce/packages/gcc/gcc-8.3.1/bin/gcc

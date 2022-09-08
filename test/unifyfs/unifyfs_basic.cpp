@@ -40,7 +40,7 @@ struct Arguments {
   size_t request_size = 65536;
   size_t iteration = 64;
   int ranks_per_node = 1;
-  bool debug = true;
+  bool debug = false;
   StorageType storage_type = StorageType::LOCAL_SSD;
   AccessPattern access_pattern = AccessPattern::SEQUENTIAL;
   FileSharing file_sharing = FileSharing::PER_PROCESS;
