@@ -51,33 +51,33 @@ function(create_test)
 
     set(config_file ${CMAKE_CURRENT_SOURCE_DIR}/json_files/${machine}/mimir_config_${config_file_suffix}.json)
     set(TEST_ARGS --ranks_per_node ${ranks_per_node}
-            --io_size_per_app_mb ${io_size_per_app_mb}
             --config_file ${config_file}
-            --num_apps ${num_apps}
-            --num_process_per_app ${num_process_per_app}
-            --num_files_per_app ${num_files_per_app}
-            --fpp_percentage ${fpp_percentage}
-            --sequential_percentage ${sequential_percentage}
-            --wo_file_ptg ${wo_file_ptg}
-            --ro_file_ptg ${ro_file_ptg}
-            --raw_file_ptg ${raw_file_ptg}
-            --update_file_ptg ${update_file_ptg}
-            --worm_file_ptg ${worm_file_ptg}
-            --all_app_ptg ${all_app_ptg}
-            --split_app_ptg ${split_app_ptg}
-            --alt_app_ptg ${alt_app_ptg}
             --binary_directory ${CMAKE_BINARY_DIR}/bin
+            --num_nodes ${NUM_NODES}
+            --request_size ${rq_bytes}
+            --iteration ${iter}
+            --access_pattern ${access_pattern_index}
+            --file_sharing ${file_sharing_index}
+            --process_grouping ${process_grouping_index}
+            --usecase ${op_index}
             --reporter compact
             )
+    if (${machine} STREQUAL "local" AND ${ranks_per_node} STREQUAL "1")
+        set(mpi_exec)
+    elseif (${machine} STREQUAL "local")
+        set(mpi_exec mpirun -n 1)
+    elseif (${machine} STREQUAL "lassen")
+        set(mpi_exec jsrun -p 1)
+    endif ()
     set(test_name test_generate_config_${machine}_${config_file_suffix})
-    add_test(${test_name} jsrun -p 1 ${CMAKE_BINARY_DIR}/bin/mimir_test ${TEST_ARGS} GenerateConfig)
+    add_test(${test_name} ${mpi_exec} ${CMAKE_BINARY_DIR}/bin/mimir_test ${TEST_ARGS} GenerateConfig)
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT pfs=$ENV{pfs})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT BBPATH=$ENV{BBPATH})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/lib:${CMAKE_SOURCE_DIR}/dependency/.spack-env/view/lib)
 
 
     set(test_name test_load_config_${machine}_${config_file_suffix})
-    add_test(${test_name} jsrun -p 1 ${CMAKE_CURRENT_BINARY_DIR}/mimir_test ${TEST_ARGS} LoadConfig)
+    add_test(${test_name} ${mpi_exec} ${CMAKE_CURRENT_BINARY_DIR}/mimir_test ${TEST_ARGS} LoadConfig)
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT pfs=$ENV{pfs})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT PFS_PATH=$ENV{pfs})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT BBPATH=$ENV{BBPATH})
@@ -93,11 +93,75 @@ foreach (machine ${machines})
     foreach (ranks_per_node ${ranks_per_nodes})
         foreach (num_app ${num_apps})
             foreach (rq_kb ${rqs_kb})
+                math(EXPR rq_bytes "${rq_kb} * 1024")
                 foreach (iter ${iters})
-                    math(EXPR io_size_per_app_mb "${rq_kb} * ${iter} * ${ranks_per_node} * ${NUM_NODES}  / 1024 / ${num_app}")
+                    foreach (file_sharing ${file_sharings})
+                        if (file_sharing STREQUAL "fpp")
+                            set(file_sharing_index 0)
+                        elseif (file_sharing STREQUAL "shared")
+                            set(file_sharing_index 1)
+                        endif ()
+                        foreach (access_pattern ${access_patterns})
+                            if (access_pattern STREQUAL "seq")
+                                set(access_pattern_index 0)
+                            elseif (access_pattern STREQUAL "random")
+                                set(access_pattern_index 1)
+                            endif ()
+                            foreach (op ${ops})
+                                if (op STREQUAL "wo")
+                                    set(op_index 0)
+                                elseif (op STREQUAL "ro")
+                                    set(op_index 1)
+                                elseif (op STREQUAL "raw")
+                                    set(op_index 2)
+                                elseif (op STREQUAL "update")
+                                    set(op_index 3)
+                                elseif (op STREQUAL "worm")
+                                    set(op_index 4)
+                                endif ()
+                                if (access_pattern STREQUAL "seq" AND op STREQUAL "wo")
+                                    set(process_grouping "all")
+                                    set(process_grouping_index 0)
+                                    create_test()
+                                endif ()
+                                if (op STREQUAL "update" OR op STREQUAL "ro")
+                                    set(process_grouping "all")
+                                    set(process_grouping_index 0)
+                                    create_test()
+                                elseif (op STREQUAL "raw" OR op STREQUAL "worm")
+                                    foreach (process_grouping ${process_groupings})
+                                        if (process_grouping STREQUAL "all")
+                                            set(process_grouping_index 0)
+                                        elseif (process_grouping STREQUAL "split")
+                                            set(process_grouping_index 1)
+                                        elseif (process_grouping STREQUAL "alt")
+                                            set(process_grouping_index 2)
+                                        endif ()
+                                        if (ranks_per_node GREATER 1 OR process_grouping STREQUAL "all")
+                                            create_test()
+                                        endif ()
+                                    endforeach ()
+                                endif ()
+                            endforeach ()
+                        endforeach ()
+                    endforeach ()
+                endforeach ()
+            endforeach ()
+        endforeach ()
+    endforeach ()
+endforeach ()
+#[[foreach (machine ${machines})
+    if (${machine} STREQUAL "local")
+        set(ranks_per_nodes ${ranks_per_nodes_local})
+    elseif (${machine} STREQUAL "lassen")
+        set(ranks_per_nodes ${ranks_per_nodes_lassen})
+    endif ()
+    foreach (ranks_per_node ${ranks_per_nodes})
+        foreach (num_app ${num_apps})
+            foreach (rq_kb ${rqs_kb})
+                foreach (iter ${iters})
                     foreach (file_sharing ${file_sharings})
                         foreach (access_pattern ${access_patterns})
-                            math(EXPR num_process_per_app "${ranks_per_node} * ${NUM_NODES} / ${num_app}")
                             if (file_sharing STREQUAL "fpp")
                                 set(num_files_per_app ${num_process_per_app})
                                 set(fpp_percentage "1.0")
@@ -161,7 +225,7 @@ foreach (machine ${machines})
             endforeach ()
         endforeach ()
     endforeach ()
-endforeach ()
+endforeach ()]]
 
 
 

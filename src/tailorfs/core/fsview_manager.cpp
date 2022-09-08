@@ -45,7 +45,7 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
         auto workload_type = app_intent._file_workload.find(file_index)->second;
         auto access_pattern =
             app_intent._file_access_pattern.find(file_index)->second;
-        if (file_intent._file_sharing == mimir::FileSharing::FILE_SHARED) {
+        if (file_intent._file_sharing == mimir::FileSharing::FILE_SHARED_INTER_NODE) {
           if (workload_type == mimir::WorkloadType::READ_ONLY_WORKLOAD) {
             /*STDIO-SHM -> STDIO-BB->STDIO-PFS*/
             TAILORFS_LOGINFO("file %s is Shared and uses STDIO", file_intent._name.c_str());
@@ -70,7 +70,8 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
             brahma::STDIOTailorFS::get_instance();
             fsid_map.insert_or_assign(FSViewType::STDIO, id);
             fsview_map.insert_or_assign(file_hash, id);
-          } else {
+          }
+          else {
             /*UNIFYFS-O-BB*/
             TAILORFS_LOGINFO("file %s uses UNIFYFS-O-BB", file_intent._name.c_str());
             off_t mean_write_transfer_size =
@@ -178,7 +179,8 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
             POSIXFSVIEW(id)->Initialize(init_args);
             fsid_map.insert_or_assign(FSViewType::POSIX, id);
             fsview_map.insert_or_assign(file_hash, id);
-          } else {
+          }
+          else {
             /*STDIO-SHM*/
             TAILORFS_LOGINFO("file %s is FPP and uses POSIX", file_intent._name.c_str());
             auto iter = fsid_map.find(FSViewType::STDIO);

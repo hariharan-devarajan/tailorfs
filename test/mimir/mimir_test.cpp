@@ -11,7 +11,8 @@
 namespace tailorfs::test {}
 namespace tt = tailorfs::test;
 namespace fs = std::experimental::filesystem;
-
+const uint64_t KB =1024;
+const uint64_t MB = 1024 * 1024;
 using namespace mimir;
 /**
  * Test data structures
@@ -115,34 +116,63 @@ void trim_utf8(std::string& hairy) {
   hairy.swap(smooth);
 }
 enum StorageType : int { SHM = 0, LOCAL_SSD = 1, PFS = 2 };
-struct Arguments {
-  /* test args */
-  bool debug = false;
-  int ranks_per_node = 1;
-  std::string binary_directory = "./";
-  /* I/O args */
-  int io_size_per_app_mb = 1024;
-  /* main args */
-  std::string config_file = "mimir_config.json";
-  std::string file_prefix = "test";
-  StorageType storage_type = StorageType::PFS;
-  /* Job info */
-  uint16_t num_apps = 1;
-  uint32_t num_process_per_app = 1;
-  uint32_t num_files_per_app = 1;
-  float fpp_percentage = 1.0;
-  float sequential_percentage = 1.0;
-  /* Needs to add up to 1 */
-  float wo_file_ptg = 1.0;
-  float ro_file_ptg = 0.0;
-  float raw_file_ptg = 0.0;
-  float update_file_ptg = 0.0;
-  float worm_file_ptg = 0.0;
-  /* Needs to add up to 1 */
-  float all_app_ptg = 1.0;
-  float split_app_ptg = 0.0;
-  float alt_app_ptg = 0.0;
+enum UseCase : int {
+  WRITE_ONLY = 0,
+  READ_ONLY = 1,
+  READ_AFTER_WRITE = 2,
+  UPDATE = 3,
+  WORM = 4
 };
+enum AccessPattern : int { SEQUENTIAL = 0, RANDOM = 1 };
+enum FileSharing : int { PER_PROCESS = 0, SHARED_FILE = 1 };
+enum ProcessGrouping : int {
+  ALL_PROCESS = 0,
+  SPLIT_PROCESS_HALF = 1,
+  SPLIT_PROCESS_ALTERNATE = 2
+};
+struct Arguments {
+  std::string binary_directory = "./";
+  std::string config_file = "mimir_config.json";
+  std::string filename = "test";
+  size_t request_size = 65536;
+  size_t iteration = 64;
+  int ranks_per_node = 1;
+  int num_nodes = 1;
+  bool debug = false;
+  StorageType storage_type = StorageType::LOCAL_SSD;
+  AccessPattern access_pattern = AccessPattern::SEQUENTIAL;
+  FileSharing file_sharing = FileSharing::PER_PROCESS;
+  ProcessGrouping process_grouping = ProcessGrouping::ALL_PROCESS;
+  UseCase usecase = UseCase::WRITE_ONLY;
+};
+//struct Arguments {
+//  /* test args */
+//  bool debug = false;
+//  int ranks_per_node = 1;
+//  std::string binary_directory = "./";
+//  /* I/O args */
+//  int io_size_per_app_mb = 1024;
+//  /* main args */
+//  std::string config_file = "mimir_config.json";
+//  std::string file_prefix = "test";
+//  StorageType storage_type = StorageType::PFS;
+//  /* Job info */
+//  uint16_t num_apps = 1;
+//  uint32_t num_process_per_app = 1;
+//  uint32_t num_files_per_app = 1;
+//  float fpp_percentage = 1.0;
+//  float sequential_percentage = 1.0;
+//  /* Needs to add up to 1 */
+//  float wo_file_ptg = 1.0;
+//  float ro_file_ptg = 0.0;
+//  float raw_file_ptg = 0.0;
+//  float update_file_ptg = 0.0;
+//  float worm_file_ptg = 0.0;
+//  /* Needs to add up to 1 */
+//  float all_app_ptg = 1.0;
+//  float split_app_ptg = 0.0;
+//  float alt_app_ptg = 0.0;
+//};
 struct Info {
   fs::path pfs;
   fs::path bb;
@@ -156,7 +186,12 @@ struct Info {
 tt::Arguments args;
 tt::Info info;
 
-DEFINE_CLARA_OPS(tt::StorageType)
+
+DEFINE_CLARA_OPS(tailorfs::test::StorageType)
+DEFINE_CLARA_OPS(tailorfs::test::AccessPattern)
+DEFINE_CLARA_OPS(tailorfs::test::FileSharing)
+DEFINE_CLARA_OPS(tailorfs::test::ProcessGrouping)
+DEFINE_CLARA_OPS(tailorfs::test::UseCase)
 
 /**
  * Overridden methods for catch
@@ -185,47 +220,33 @@ cl::Parser define_options() {
   return cl::Opt(args.debug, "debug")["--debug"]("Enable debugging.")|
          cl::Opt(args.binary_directory,
                  "binary_directory")["--binary_directory"]("binary_directory.")  |
+         cl::Opt(args.config_file,
+                 "config_file")["--config_file"]("config_file.")  |
          cl::Opt(args.ranks_per_node,
                  "ranks_per_node")["--ranks_per_node"]("# ranks per node.") |
-         cl::Opt(args.io_size_per_app_mb,
-                 "io_size_per_app_mb")["--io_size_per_app_mb"](
-             "io size per app MB.") |
-         cl::Opt(args.config_file, "config_file")["--config_file"](
-             "Name of the config file (JSON).") |
-         cl::Opt(args.file_prefix,
-                 "file_prefix")["--file_prefix"]("Prefix used by filenames") |
-         cl::Opt(args.storage_type, "storage_type")["--storage_type"](
-             "Where to store the data 0-> SHM, 1->NODE_LOCAL_SSD, 2->PFS") |
-         cl::Opt(args.num_apps,
-                 "num_apps")["--num_apps"]("# of apps in the workflow") |
-         cl::Opt(args.num_process_per_app,
-                 "num_process_per_app")["--num_process_per_app"](
-             "# of processes per app") |
-         cl::Opt(
-             args.num_files_per_app,
-             "num_files_per_app")["--num_files_per_app"]("# of files per app") |
-         cl::Opt(args.fpp_percentage, "fpp_percentage")["--fpp_percentage"](
-             "% of total files accessed FPP") |
-         cl::Opt(args.sequential_percentage,
-                 "sequential_percentage")["--sequential_percentage"](
-             "% of total files accessed sequentially.") |
-         cl::Opt(args.wo_file_ptg, "wo_file_ptg")["--wo_file_ptg"](
-             "% of total files with wo access pattern") |
-         cl::Opt(args.ro_file_ptg, "ro_file_ptg")["--ro_file_ptg"](
-             "% of total files with ro access pattern") |
-         cl::Opt(args.raw_file_ptg, "raw_file_ptg")["--raw_file_ptg"](
-             "% of total files with raw access pattern") |
-         cl::Opt(args.update_file_ptg, "update_file_ptg")["--update_file_ptg"](
-             "% of total files with update access pattern") |
-         cl::Opt(args.worm_file_ptg, "worm_file_ptg")["--worm_file_ptg"](
-             "% of total files with worm access pattern") |
-         cl::Opt(args.all_app_ptg, "all_app_ptg")["--all_app_ptg"](
-             "% of apps where all processes do the same pattern") |
-         cl::Opt(args.split_app_ptg, "split_app_ptg")["--split_app_ptg"](
-             "% of apps where first half does one op and other half does "
-             "another ") |
-         cl::Opt(args.alt_app_ptg, "alt_app_ptg")["--alt_app_ptg"](
-             "% of apps where alternate processes do different ops.");
+         cl::Opt(args.num_nodes,
+                 "num_nodes")["--num_nodes"]("# num nodes.") |
+         cl::Opt(args.filename, "filename")["-f"]["--filename"](
+             "Filename to be use for I/O.") |
+         cl::Opt(args.request_size, "request_size")["-r"]["--request_size"](
+             "Transfer size used for performing I/O") |
+         cl::Opt(args.iteration,
+                 "iteration")["-i"]["--iteration"]("Number of Iterations") |
+         cl::Opt(args.storage_type, "storage_type")["-s"]["--storage_type"](
+             "Where to store the data 0-> SHM, 1->NODE_LOCAL_SSD, 2-> "
+             "SHARED_SSD, 3->PFS") |
+         cl::Opt(args.access_pattern,
+                 "access_pattern")["-a"]["--access_pattern"](
+             "Select Access Pattern: 0-> sequential, 1-> random") |
+         cl::Opt(args.file_sharing, "file_sharing")["-b"]["--file_sharing"](
+             "How the file is accessed 0-> FPP, 1->SHARED") |
+         cl::Opt(args.process_grouping,
+                 "process_grouping")["-c"]["--process_grouping"](
+             "How the process are grouped: 0-> ALL, 1-> SPLIT_PROCESS_HALF, "
+             "2-> SPLIT_PROCESS_ALTERNATE")|
+         cl::Opt(args.usecase,
+                 "usecase")["--usecase"](
+             "usecase: 0-> WO, 1-> RO, 2-> RAW 3-> Update 4-> WORM");
 }
 
 /**
@@ -233,7 +254,7 @@ cl::Parser define_options() {
  */
 int pretest() {
   /* Other pretest operations*/
-  info.original_filename = args.file_prefix;
+  info.original_filename = args.filename;
   const char *PFS_VAR = std::getenv("pfs");
   const char *BB_VAR = std::getenv("BBPATH");
   const char *SHM_VAR = "/dev/shm";
@@ -252,16 +273,12 @@ int pretest() {
   TEST_LOGGER_INFO_ARGS("pfs %s bb %s shm %s", info.pfs.c_str(),
                         info.bb.c_str(), info.shm.c_str());
   /* Validate args */
-  REQUIRE(args.wo_file_ptg + args.ro_file_ptg + args.raw_file_ptg +
-              args.worm_file_ptg + args.update_file_ptg ==
-          1.0);
-  REQUIRE(args.all_app_ptg + args.split_app_ptg + args.alt_app_ptg == 1.0);
-  if (args.wo_file_ptg == 1.0 || args.ro_file_ptg == 1.0) {
-    REQUIRE(args.all_app_ptg == 1.0);
-  }
-  if (args.split_app_ptg > 0.0 || args.alt_app_ptg > 0.0) {
+  if (args.usecase == tailorfs::test::UseCase::WRITE_ONLY ||
+       args.usecase == tailorfs::test::UseCase::READ_ONLY)
+    REQUIRE(args.process_grouping == tailorfs::test::ProcessGrouping::ALL_PROCESS);
+  if (args.process_grouping == tailorfs::test::ProcessGrouping::SPLIT_PROCESS_ALTERNATE ||
+       args.process_grouping == tailorfs::test::ProcessGrouping::SPLIT_PROCESS_HALF)
     REQUIRE(args.ranks_per_node > 1);
-  }
   TEST_LOGGER_INFO("Validated args");
   INFO("rank " << info.rank);
   INFO("hostname " << info.hostname);
@@ -334,217 +351,272 @@ int create_config(mimir::Config &config) {
   config._job_config._rpc_threads = 4;
   config._job_config._priority = 100;
   config._current_process_index = -1;
-  const int NUM_FILES = args.num_apps * args.num_files_per_app;
-  int num_files_independent = floor(NUM_FILES * args.fpp_percentage);
-  int num_file_shared = NUM_FILES - num_files_independent;
-  for (int file_index = 0; file_index < NUM_FILES; ++file_index) {
+
+  int metadata_ops = 2;
+  int io_ops = args.iteration;
+  if (args.access_pattern == tailorfs::test::AccessPattern::RANDOM) {
+    metadata_ops += args.iteration;
+  }
+
+  int NUM_FILES = 1;
+  int comm_size = args.num_nodes * args.ranks_per_node;
+  int write_comm_size = comm_size;
+  int read_comm_size = comm_size;
+  if (args.process_grouping != tailorfs::test::ProcessGrouping::ALL_PROCESS) {
+    write_comm_size /= 2;
+    read_comm_size /= 2;
+  }
+
+  mimir::WorkflowAdvice workflow_advice;
+  mimir::ApplicationAdvice app_advice;
+  app_advice._is_mpi = true;
+  tailorfs::test::trim_utf8(args.config_file);
+  auto file_parts =  split(args.config_file, '/');
+  auto values =  split(file_parts[file_parts.size() - 1], '_');
+  char workload[256];
+  char process[1024];
+  if (values[9] == "wo") strcpy(workload, "Write-Only");
+  else if (values[9] == "ro") strcpy(workload, "Read-Only");
+  else if (values[9] == "raw") strcpy(workload, "Read-After-Write");
+  else if (values[9] == "update") strcpy(workload, "Update");
+  else if (values[9] == "worm") strcpy(workload, "WORM");
+  int access_pattern, file_sharing, process_grouping;
+  if (values[8] == "seq") access_pattern = 0;
+  else if (values[8] == "random") access_pattern = 1;
+  if (values[7] == "fpp") file_sharing = 0;
+  else if (values[7] == "shared") file_sharing = 1;
+  if (values[10] == "all.json") process_grouping = 0;
+  else if (values[10] == "split.json") process_grouping = 1;
+  else if (values[10] == "alt.json") process_grouping = 2;
+  app_advice._num_cpu_cores_used = comm_size;
+  if (app_advice._is_mpi) {
+    sprintf(process, "%d %s/io_tests --request_size %d --iteration %d "
+            "--ranks_per_node %d --access_pattern %d --file_sharing %d "
+            "--process_grouping %d --reporter compact %s", app_advice._num_cpu_cores_used,
+            args.binary_directory.c_str(),atoi(values[5].c_str()) * 1024, atoi(values[6].c_str()),
+            atoi(values[3].c_str()), access_pattern, file_sharing, process_grouping, workload);
+  }else {
+    sprintf(process, "%s/io_tests --request_size %d --iteration %d "
+            "--ranks_per_node %d --access_pattern %d --file_sharing %d "
+            "--process_grouping %d --reporter compact %s",args.binary_directory.c_str(),
+            atoi(values[5].c_str()) * 1024, atoi(values[6].c_str()), atoi(values[3].c_str()), access_pattern,
+            file_sharing, process_grouping, workload);
+  }
+  auto process_full = std::string(process);
+  tailorfs::test::trim_utf8(process_full);
+  uint32_t app_index = 0;
+  workflow_advice._app_mapping.emplace(process_full, app_index);
+  /* Application info */
+  app_advice._name = "app-" + std::to_string(app_index);
+  tailorfs::test::trim_utf8(app_advice._name);
+  app_advice._num_gpus_used = 0;
+  /* app file dag*/
+  app_advice._application_file_dag.applications.emplace(app_index);
+  workflow_advice._application_file_dag.applications.emplace(app_index);
+
+  /** File Advice */
+  if (args.file_sharing == tailorfs::test::FileSharing::PER_PROCESS) {
+    if (args.process_grouping == tailorfs::test::ProcessGrouping::ALL_PROCESS) {
+      NUM_FILES = args.num_nodes * args.ranks_per_node;
+    } else {
+      NUM_FILES = args.num_nodes * args.ranks_per_node / 2;
+    }
+    for (int file_index = 0; file_index < NUM_FILES; ++file_index) {
+      mimir::FileAdvice file_advice;
+      file_advice._file_sharing = mimir::FileSharing::FILE_PER_PROCESS;
+      file_advice._name = (info.pfs / (args.filename + ".dat" + "_" +
+                                       std::to_string(file_index)+ "_" +
+                                       std::to_string(write_comm_size)))
+                              .string();
+      tailorfs::test::trim_utf8(file_advice._name);
+      file_advice._format = Format::FORMAT_BINARY;
+      file_advice._size_mb = args.iteration * args.request_size * 1.0  / MB;
+      file_advice._io_amount_mb =
+          args.iteration * args.request_size * 1.0 / MB;
+      /* File access type*/
+      if (args.usecase == tailorfs::test::UseCase::WRITE_ONLY ||
+          args.usecase == tailorfs::test::UseCase::READ_AFTER_WRITE ||
+          args.usecase == tailorfs::test::UseCase::UPDATE ||
+          args.usecase == tailorfs::test::UseCase::WORM) {
+        if (args.request_size < 4 * KB) {
+          file_advice._write_distribution._0_4kb = 1.0;
+        } else if (args.request_size >= 4 * KB && args.request_size < 64 * KB ) {
+          file_advice._write_distribution._4_64kb = 1.0;
+        } else if (args.request_size >= 64 * KB && args.request_size < 1 * MB ) {
+          file_advice._write_distribution._64kb_1mb = 1.0;
+        } else if (args.request_size >= 1 * MB && args.request_size < 16 * MB ) {
+          file_advice._write_distribution._1mb_16mb = 1.0;
+        } else if (args.request_size >= 16 * MB ){
+          file_advice._write_distribution._16mb = 1.0;
+        }
+      }
+      if (args.usecase == tailorfs::test::UseCase::READ_ONLY ||
+          args.usecase == tailorfs::test::UseCase::READ_AFTER_WRITE ||
+          args.usecase == tailorfs::test::UseCase::WORM) {
+        if (args.request_size < 4 * KB) {
+          file_advice._read_distribution._0_4kb = 1.0;
+        } else if (args.request_size >= 4 * KB && args.request_size < 64 * KB ) {
+          file_advice._read_distribution._4_64kb = 1.0;
+        } else if (args.request_size >= 64 * KB && args.request_size < 1 * MB ) {
+          file_advice._read_distribution._64kb_1mb = 1.0;
+        } else if (args.request_size >= 1 * MB && args.request_size < 16 * MB ) {
+          file_advice._read_distribution._1mb_16mb = 1.0;
+        } else if (args.request_size >= 16 * MB ){
+          file_advice._read_distribution._16mb = 1.0;
+        }
+      }
+      file_advice._current_device = 2;
+      file_advice._placement_device = 0;
+      file_advice._per_io_data = io_ops * 1.0 / (metadata_ops + io_ops);
+      file_advice._per_io_metadata = metadata_ops * 1.0 / (metadata_ops + io_ops);
+      config._file_repo.push_back(file_advice);
+    }
+  }
+  else {
     mimir::FileAdvice file_advice;
-    if (file_index < num_files_independent) file_advice._file_sharing = mimir::FileSharing::FILE_PER_PROCESS;
-    else file_advice._file_sharing = mimir::FileSharing::FILE_SHARED;
-    file_advice._name = (info.pfs / (args.file_prefix + ".dat" + "_" +
-                                     std::to_string(file_index)))
+    if (args.num_nodes > 1 && args.process_grouping == tailorfs::test::ProcessGrouping::SPLIT_PROCESS_HALF) {
+      file_advice._file_sharing = mimir::FileSharing::FILE_SHARED_INTER_NODE;
+    } else {
+      file_advice._file_sharing = mimir::FileSharing::FILE_SHARED_NODE_LOCAL;
+    }
+    file_advice._name = (info.pfs / (args.filename + ".dat" + "_" +
+                                     std::to_string(write_comm_size)))
                             .string();
     tailorfs::test::trim_utf8(file_advice._name);
     file_advice._format = Format::FORMAT_BINARY;
-    file_advice._size_mb = args.io_size_per_app_mb / args.num_files_per_app;
-    file_advice._io_amount_mb =
-        args.io_size_per_app_mb / args.num_files_per_app;
+    file_advice._size_mb = args.iteration * args.request_size * write_comm_size * 1.0  / MB;
+    file_advice._io_amount_mb = file_advice._size_mb;
     /* File access type*/
-    int wo_file = floor(NUM_FILES * args.wo_file_ptg);
-    int ro_file = floor(NUM_FILES * args.ro_file_ptg);
-    int raw_file = floor(NUM_FILES * args.raw_file_ptg);
-    int update_file = floor(NUM_FILES * args.update_file_ptg);
-    int worm_file = NUM_FILES - wo_file - ro_file - raw_file - update_file;
-    if (file_index < wo_file) {
-      file_advice._write_distribution._0_4kb = 1.0;
-    } else if (file_index < ro_file) {
-      file_advice._read_distribution._0_4kb = 1.0;
-      file_advice._prefetch = true;
-    } else if (file_index < raw_file) {
-      file_advice._read_distribution._0_4kb = 1.0;
-      file_advice._write_distribution._0_4kb = 1.0;
-    } else if (file_index < update_file) {
-      file_advice._write_distribution._0_4kb = 1.0;
-    } else if (file_index < worm_file) {
-      file_advice._write_distribution._0_4kb = 1.0;
-      file_advice._read_distribution._0_4kb = 1.0;
+    if (args.usecase == tailorfs::test::UseCase::WRITE_ONLY ||
+        args.usecase == tailorfs::test::UseCase::READ_AFTER_WRITE ||
+        args.usecase == tailorfs::test::UseCase::UPDATE ||
+        args.usecase == tailorfs::test::UseCase::WORM) {
+      if (args.request_size < 4 * KB) {
+        file_advice._write_distribution._0_4kb = 1.0;
+      } else if (args.request_size >= 4 * KB && args.request_size < 64 * KB ) {
+        file_advice._write_distribution._4_64kb = 1.0;
+      } else if (args.request_size >= 64 * KB && args.request_size < 1 * MB ) {
+        file_advice._write_distribution._64kb_1mb = 1.0;
+      } else if (args.request_size >= 1 * MB && args.request_size < 16 * MB ) {
+        file_advice._write_distribution._1mb_16mb = 1.0;
+      } else if (args.request_size >= 16 * MB ){
+        file_advice._write_distribution._16mb = 1.0;
+      }
+    }
+    if (args.usecase == tailorfs::test::UseCase::READ_ONLY ||
+        args.usecase == tailorfs::test::UseCase::READ_AFTER_WRITE ||
+        args.usecase == tailorfs::test::UseCase::WORM) {
+      if (args.request_size < 4 * KB) {
+        file_advice._read_distribution._0_4kb = 1.0;
+      } else if (args.request_size >= 4 * KB && args.request_size < 64 * KB ) {
+        file_advice._read_distribution._4_64kb = 1.0;
+      } else if (args.request_size >= 64 * KB && args.request_size < 1 * MB ) {
+        file_advice._read_distribution._64kb_1mb = 1.0;
+      } else if (args.request_size >= 1 * MB && args.request_size < 16 * MB ) {
+        file_advice._read_distribution._1mb_16mb = 1.0;
+      } else if (args.request_size >= 16 * MB ){
+        file_advice._read_distribution._16mb = 1.0;
+      }
     }
     file_advice._current_device = 2;
     file_advice._placement_device = 0;
-    file_advice._per_io_data = 0.75;
-    file_advice._per_io_metadata = 0.25;
+    file_advice._per_io_data = io_ops * 1.0 / (metadata_ops + io_ops);
+    file_advice._per_io_metadata = metadata_ops * 1.0 / (metadata_ops + io_ops);
     config._file_repo.push_back(file_advice);
   }
-  mimir::WorkflowAdvice workflow_advice;
-  for (uint32_t app_index = 0; app_index < args.num_apps; ++app_index) {
-    mimir::ApplicationAdvice app_advice;
-    app_advice._is_mpi = true;
-    tailorfs::test::trim_utf8(args.config_file);
-    auto file_parts =  split(args.config_file, '/');
-
-    auto values =  split(file_parts[file_parts.size() - 1], '_');
-    char workload[256];
-    char process[1024];
-    if (values[9] == "wo") strcpy(workload, "Write-Only");
-    else if (values[9] == "ro") strcpy(workload, "Read-Only");
-    else if (values[9] == "raw") strcpy(workload, "Read-After-Write");
-    else if (values[9] == "update") strcpy(workload, "Update");
-    else if (values[9] == "worm") strcpy(workload, "WORM");
-    int access_pattern, file_sharing, process_grouping;
-    if (values[8] == "seq") access_pattern = 0;
-    else if (values[8] == "random") access_pattern = 1;
-    if (values[7] == "fpp") file_sharing = 0;
-    else if (values[7] == "shared") file_sharing = 1;
-    if (values[10] == "all.json") process_grouping = 0;
-    else if (values[10] == "split.json") process_grouping = 1;
-    else if (values[10] == "alt.json") process_grouping = 2;
-    app_advice._num_cpu_cores_used = args.num_process_per_app;
-    if (process_grouping != 0) app_advice._num_cpu_cores_used = app_advice._num_cpu_cores_used / 2;
 
 
-    if (app_advice._is_mpi) {
-      sprintf(process, "%d %s/io_tests --request_size %d --iteration %d "
-                       "--ranks_per_node %d --access_pattern %d --file_sharing %d "
-                       "--process_grouping %d --reporter compact %s", app_advice._num_cpu_cores_used,
-                       args.binary_directory.c_str(),atoi(values[5].c_str()) * 1024, atoi(values[6].c_str()),
-                       atoi(values[3].c_str()), access_pattern, file_sharing, process_grouping, workload);
-    }else {
-      sprintf(process, "%s/io_tests --request_size %d --iteration %d "
-                       "--ranks_per_node %d --access_pattern %d --file_sharing %d "
-                       "--process_grouping %d --reporter compact %s",args.binary_directory.c_str(),
-              atoi(values[5].c_str()) * 1024, atoi(values[6].c_str()), atoi(values[3].c_str()), access_pattern,
-              file_sharing, process_grouping, workload);
-    }
 
-    auto process_full = std::string(process);
-    tailorfs::test::trim_utf8(process_full);
-    auto hash = mimir::oat_hash(process_full.c_str(), process_full.size());
-    workflow_advice._app_mapping.emplace(process_full, app_index);
-    /* Application info */
-    app_advice._name = "app-" + std::to_string(app_index);
-    tailorfs::test::trim_utf8(app_advice._name);
-    /* app file dag*/
-    app_advice._application_file_dag.applications.emplace(app_index);
-    workflow_advice._application_file_dag.applications.emplace(app_index);
-
-
-    app_advice._num_gpus_used =
-        floor(config._job_config._node_names.size() *
-              config._job_config._num_gpus_per_node * 1.0 / args.num_apps);
-    app_advice._io_size_mb = args.io_size_per_app_mb;
-    app_advice._per_io_data = 0.75;
-    app_advice._per_io_metadata = 0.25;
-    app_advice._runtime_minutes =
-        config._job_config._job_time_minutes / args.num_apps;
+  app_advice._io_size_mb = args.request_size * args.iteration * comm_size / MB;
+  app_advice._per_io_data = io_ops * 1.0 / (metadata_ops + io_ops);
+  app_advice._per_io_metadata = metadata_ops * 1.0 / (metadata_ops + io_ops);
+  app_advice._runtime_minutes =  config._job_config._job_time_minutes ;
+  if (args.request_size < 4 * KB) {
     app_advice._ts_distribution._0_4kb = 1.0;
-    /* Access Pattern */
+  } else if (args.request_size >= 4 * KB && args.request_size < 64 * KB ) {
+    app_advice._ts_distribution._4_64kb = 1.0;
+  } else if (args.request_size >= 64 * KB && args.request_size < 1 * MB ) {
+    app_advice._ts_distribution._64kb_1mb = 1.0;
+  } else if (args.request_size >= 1 * MB && args.request_size < 16 * MB ) {
+    app_advice._ts_distribution._1mb_16mb = 1.0;
+  } else if (args.request_size >= 16 * MB ){
+    app_advice._ts_distribution._16mb = 1.0;
+  }
+  /* Rank file map*/
+  for (int rank_index = 0; rank_index < comm_size; ++rank_index) {
+    app_advice._rank_file_dag.ranks.emplace(rank_index);
+  }
 
-    /* File access type*/
-
-    /* Rank file map*/
-    for (int rank_index = 0; rank_index < args.num_process_per_app;
-         ++rank_index) {
-      app_advice._rank_file_dag.ranks.emplace(rank_index);
-    }
-    int rank_in_app = 0;
-    for (uint32_t file_index = app_index * args.num_files_per_app;
-         file_index < (app_index + 1) * args.num_files_per_app; ++file_index) {
-
-      /* Rank file map*/
+  if (args.file_sharing == tailorfs::test::FileSharing::PER_PROCESS) {
+    for (int rank_index = 0; rank_index < comm_size; ++rank_index) {
+      auto file_index = rank_index % write_comm_size;
       app_advice._rank_file_dag.files.emplace(file_index);
-      /* App file dag */
+      app_advice._rank_file_dag.edges.emplace_back(rank_index, file_index);
+    }
+    for (int file_index = 0; file_index < NUM_FILES; ++file_index) {
       app_advice._application_file_dag.files.emplace(file_index);
       app_advice._application_file_dag.edges.emplace_back(app_index,
                                                           file_index);
-
-      workflow_advice._application_file_dag.files.emplace(file_index);
-      workflow_advice._application_file_dag.edges.emplace_back(app_index,
-                                                               file_index);
-      int num_files_seq = floor(1.0 * NUM_FILES * args.sequential_percentage);
-      int num_files_random = NUM_FILES - num_files_seq;
-      int num_files_strided = 0;
-      int wo_file = floor(NUM_FILES * args.wo_file_ptg);
-      int ro_file = floor(NUM_FILES * args.ro_file_ptg);
-      int raw_file = floor(NUM_FILES * args.raw_file_ptg);
-      int update_file = floor(NUM_FILES * args.update_file_ptg);
-      int worm_file = NUM_FILES - wo_file - ro_file - raw_file - update_file;
-      if (file_index < wo_file) {
-        app_advice._file_workload.emplace(file_index, WorkloadType::WRITE_ONLY_WORKLOAD);
-        workflow_advice._file_workload.emplace(file_index, WorkloadType::WRITE_ONLY_WORKLOAD);
-      } else if (file_index < ro_file) {
-        app_advice._file_workload.emplace(file_index, WorkloadType::READ_ONLY_WORKLOAD);
-        workflow_advice._file_workload.emplace(file_index, WorkloadType::READ_ONLY_WORKLOAD);
-      } else if (file_index < raw_file) {
-        app_advice._file_workload.emplace(file_index, WorkloadType::RAW_WORKLOAD);
-        workflow_advice._file_workload.emplace(file_index, WorkloadType::RAW_WORKLOAD);
-      } else if (file_index < update_file) {
-        app_advice._file_workload.emplace(file_index, WorkloadType::UPDATE_WORKLOAD);
-        workflow_advice._file_workload.emplace(file_index, WorkloadType::UPDATE_WORKLOAD);
-      } else if (file_index < worm_file) {
-        app_advice._file_workload.emplace(file_index, WorkloadType::WORM_WORKLOAD);
-        workflow_advice._file_workload.emplace(file_index, WorkloadType::WORM_WORKLOAD);
-      }
-      /* File access pattern */
-      if (file_index < num_files_seq) {
-        app_advice._file_access_pattern.emplace(file_index,
-                                                AccessPattern::SEQUENTIAL);
-        workflow_advice._file_access_pattern.emplace(file_index,
-                                                     AccessPattern::SEQUENTIAL);
-      } else if (file_index < num_files_seq + num_files_random) {
-        app_advice._file_access_pattern.emplace(file_index,
-                                                AccessPattern::RANDOM);
-        workflow_advice._file_access_pattern.emplace(file_index,
-                                                     AccessPattern::RANDOM);
-      } else {
-        app_advice._file_access_pattern.emplace(file_index,
-                                                AccessPattern::STRIDED);
-        workflow_advice._file_access_pattern.emplace(file_index,
-                                                     AccessPattern::STRIDED);
-      }
-      /* File access type*/
-      if (file_index < num_files_independent) {
-        app_advice._independent_files.push_back(file_index);
-        workflow_advice._independent_files.push_back(file_index);
-        /* Rank file map*/
-        app_advice._rank_file_dag.edges.push_back(
-            Edge<RankIndex, FileIndex>(rank_in_app, file_index));
-        auto interface_iter = app_advice._interfaces_used.find(file_index);
-        std::unordered_set<mimir::InterfaceType> app_interfaces;
-        if (interface_iter == app_advice._interfaces_used.end()) {
-          app_interfaces = std::unordered_set<mimir::InterfaceType>();
-        } else {
-          app_interfaces = interface_iter->second;
-        }
-        app_interfaces.emplace(mimir::InterfaceType::POSIX);
-        app_advice._interfaces_used.insert_or_assign(file_index, app_interfaces);
-      } else {
-        auto shared_file_apps = std::vector<ApplicationIndex>();
-        for (int shared_app_index = floor(file_index / args.num_files_per_app);
-             shared_app_index < args.num_apps; ++shared_app_index) {
-          shared_file_apps.push_back(shared_app_index);
-        }
-        workflow_advice._shared_files.emplace(file_index, shared_file_apps);
-
-        /* Rank file map*/
-        for (uint32_t rank_index = 0; rank_index < args.num_process_per_app;
-             ++rank_index) {
-          app_advice._rank_file_dag.edges.emplace_back(rank_index, file_index);
-        }
-        auto interface_iter = app_advice._interfaces_used.find(file_index);
-        std::unordered_set<mimir::InterfaceType> app_interfaces;
-        if (interface_iter == app_advice._interfaces_used.end()) {
-          app_interfaces = std::unordered_set<mimir::InterfaceType>();
-        } else {
-          app_interfaces = interface_iter->second;
-        }
-        app_interfaces.emplace(mimir::InterfaceType::MPIIO);
-        app_advice._interfaces_used.insert_or_assign(file_index, app_interfaces);
-      }
-      rank_in_app++;
-      rank_in_app = rank_in_app % args.num_process_per_app;
     }
-    config._app_repo.push_back(app_advice);
+
+  } else {
+    auto file_index = 0;
+    for (int rank_index = 0; rank_index < comm_size; ++rank_index) {
+      app_advice._rank_file_dag.files.emplace(file_index);
+      app_advice._rank_file_dag.edges.emplace_back(rank_index, file_index);
+
+    }
+    app_advice._application_file_dag.files.emplace(file_index);
+    app_advice._application_file_dag.edges.emplace_back(app_index,
+                                                        file_index);
   }
+  workflow_advice._application_file_dag = app_advice._application_file_dag;
+
+  for (int file_index = 0; file_index < NUM_FILES; ++file_index) {
+    if (args.usecase == tailorfs::test::UseCase::WRITE_ONLY) {
+      app_advice._file_workload.emplace(file_index, WorkloadType::WRITE_ONLY_WORKLOAD);
+      workflow_advice._file_workload.emplace(file_index, WorkloadType::WRITE_ONLY_WORKLOAD);
+    } else if (args.usecase == tailorfs::test::UseCase::READ_ONLY) {
+      app_advice._file_workload.emplace(file_index, WorkloadType::READ_ONLY_WORKLOAD);
+      workflow_advice._file_workload.emplace(file_index, WorkloadType::READ_ONLY_WORKLOAD);
+    } else if (args.usecase == tailorfs::test::UseCase::READ_AFTER_WRITE) {
+      app_advice._file_workload.emplace(file_index, WorkloadType::RAW_WORKLOAD);
+      workflow_advice._file_workload.emplace(file_index, WorkloadType::RAW_WORKLOAD);
+    }  else if (args.usecase == tailorfs::test::UseCase::UPDATE) {
+      app_advice._file_workload.emplace(file_index, WorkloadType::UPDATE_WORKLOAD);
+      workflow_advice._file_workload.emplace(file_index, WorkloadType::UPDATE_WORKLOAD);
+    } else if (args.usecase == tailorfs::test::UseCase::WORM) {
+      app_advice._file_workload.emplace(file_index, WorkloadType::WORM_WORKLOAD);
+      workflow_advice._file_workload.emplace(file_index, WorkloadType::WORM_WORKLOAD);
+    }
+
+    if (args.access_pattern == tailorfs::test::AccessPattern::SEQUENTIAL) {
+      app_advice._file_access_pattern.emplace(file_index,
+                                              AccessPattern::SEQUENTIAL);
+      workflow_advice._file_access_pattern.emplace(file_index,
+                                                   AccessPattern::SEQUENTIAL);
+    } else {
+      app_advice._file_access_pattern.emplace(file_index,
+                                              AccessPattern::RANDOM);
+      workflow_advice._file_access_pattern.emplace(file_index,
+                                                   AccessPattern::RANDOM);
+    }
+
+    if (args.file_sharing == tailorfs::test::FileSharing::PER_PROCESS) {
+      app_advice._independent_files.push_back(file_index);
+      workflow_advice._independent_files.push_back(file_index);
+      auto app_interfaces = std::unordered_set<mimir::InterfaceType>();
+      app_interfaces.emplace(mimir::InterfaceType::POSIX);
+      app_advice._interfaces_used.insert_or_assign(file_index, app_interfaces);
+    } else {
+      auto app_interfaces = std::unordered_set<mimir::InterfaceType>();
+      app_interfaces.emplace(mimir::InterfaceType::MPIIO);
+      app_advice._interfaces_used.insert_or_assign(file_index, app_interfaces);
+    }
+  }
+  config._app_repo.push_back(app_advice);
+
+
 
   for(const auto&app_advice:config._app_repo) {
     for(const auto&element:app_advice._interfaces_used) {
@@ -565,12 +637,12 @@ int create_config(mimir::Config &config) {
                                         config._job_config._num_cores_per_node;
   workflow_advice._num_gpus_used = config._job_config._node_names.size() *
                                    config._job_config._num_gpus_per_node;
-  workflow_advice._num_apps = args.num_apps;
-  workflow_advice._io_size_mb = args.io_size_per_app_mb * args.num_apps;
-  workflow_advice._per_io_data = 0.75;
-  workflow_advice._per_io_metadata = 0.25;
+  workflow_advice._num_apps = 1;
+  workflow_advice._io_size_mb = app_advice._io_size_mb;
+  workflow_advice._per_io_data = app_advice._per_io_data;
+  workflow_advice._per_io_metadata = app_advice._per_io_metadata;
   workflow_advice._runtime_minutes = config._job_config._job_time_minutes;
-  workflow_advice._ts_distribution._0_4kb = 1.0;
+  workflow_advice._ts_distribution = app_advice._ts_distribution;
   config._workflow = workflow_advice;
   return 0;
 }
@@ -580,20 +652,7 @@ int create_config(mimir::Config &config) {
  */
 TEST_CASE("GenerateConfig",
           CONVERT_VAL(ranks_per_node, args.ranks_per_node) +
-              CONVERT_ENUM(storage_type, args.storage_type) +
-              CONVERT_VAL(num_apps, args.num_apps) +
-              CONVERT_VAL(num_process_per_app, args.num_process_per_app) +
-              CONVERT_VAL(num_files_per_app, args.num_files_per_app) +
-              CONVERT_VAL(fpp_percentage, args.fpp_percentage) +
-              CONVERT_VAL(sequential_percentage, args.sequential_percentage) +
-              CONVERT_VAL(wo_file_ptg, args.wo_file_ptg) +
-              CONVERT_VAL(ro_file_ptg, args.ro_file_ptg) +
-              CONVERT_VAL(raw_file_ptg, args.raw_file_ptg) +
-              CONVERT_VAL(update_file_ptg, args.update_file_ptg) +
-              CONVERT_VAL(worm_file_ptg, args.worm_file_ptg) +
-              CONVERT_VAL(all_app_ptg, args.all_app_ptg) +
-              CONVERT_VAL(split_app_ptg, args.split_app_ptg) +
-              CONVERT_VAL(alt_app_ptg, args.alt_app_ptg)) {
+              CONVERT_ENUM(storage_type, args.storage_type)) {
   if (info.rank == 0) {
     REQUIRE(pretest() == 0);
     fs::path config_file = args.config_file;
@@ -604,18 +663,16 @@ TEST_CASE("GenerateConfig",
     json j = config;
     json conf = {{"ranks_per_node", args.ranks_per_node},
                  {"storage_type", args.storage_type},
-                 {"num_apps", args.num_apps},
-                 {"num_process_per_app", args.num_process_per_app},
-                 {"fpp_percentage", args.fpp_percentage},
-                 {"sequential_percentage", args.sequential_percentage},
-                 {"wo_file_ptg", args.wo_file_ptg},
-                 {"ro_file_ptg", args.ro_file_ptg},
-                 {"raw_file_ptg", args.raw_file_ptg},
-                 {"update_file_ptg", args.update_file_ptg},
-                 {"worm_file_ptg", args.worm_file_ptg},
-                 {"all_app_ptg", args.all_app_ptg},
-                 {"split_app_ptg", args.split_app_ptg},
-                 {"alt_app_ptg", args.alt_app_ptg}};
+                 {"request_size", args.request_size},
+                 {"usecase", args.usecase},
+                 {"iteration", args.iteration},
+                 {"process_grouping", args.process_grouping},
+                 {"num_nodes", args.num_nodes},
+                 {"file_sharing", args.file_sharing},
+                 {"config_file", args.config_file},
+                 {"filename", args.filename},
+                 {"access_pattern", args.access_pattern},
+                 {"binary_directory", args.binary_directory}};
     j["conf"] = conf;
     std::cout << j.dump() << std::endl;
     std::ofstream out(config_file.c_str());
@@ -643,20 +700,7 @@ TEST_CASE("GenerateConfig",
 
 TEST_CASE("LoadConfig",
           CONVERT_VAL(ranks_per_node, args.ranks_per_node) +
-              CONVERT_ENUM(storage_type, args.storage_type) +
-              CONVERT_VAL(num_apps, args.num_apps) +
-              CONVERT_VAL(num_process_per_app, args.num_process_per_app) +
-              CONVERT_VAL(num_files_per_app, args.num_files_per_app) +
-              CONVERT_VAL(fpp_percentage, args.fpp_percentage) +
-              CONVERT_VAL(sequential_percentage, args.sequential_percentage) +
-              CONVERT_VAL(wo_file_ptg, args.wo_file_ptg) +
-              CONVERT_VAL(ro_file_ptg, args.ro_file_ptg) +
-              CONVERT_VAL(raw_file_ptg, args.raw_file_ptg) +
-              CONVERT_VAL(update_file_ptg, args.update_file_ptg) +
-              CONVERT_VAL(worm_file_ptg, args.worm_file_ptg) +
-              CONVERT_VAL(all_app_ptg, args.all_app_ptg) +
-              CONVERT_VAL(split_app_ptg, args.split_app_ptg) +
-              CONVERT_VAL(alt_app_ptg, args.alt_app_ptg)) {
+              CONVERT_ENUM(storage_type, args.storage_type)) {
   REQUIRE(pretest() == 0);
 
   const char *MIMIR_CONFIG_PATH = std::getenv(mimir::MIMIR_CONFIG_PATH);
