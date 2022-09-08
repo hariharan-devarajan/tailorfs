@@ -24,7 +24,7 @@ class FSViewManager {
     size_t fastest_index = 0;
     for (auto& storage : storages) {
       uint64_t capacity_per_process = storage._capacity_mb;
-      if (!storage._is_shared) {
+      if (storage._is_shared) {
         capacity_per_process = storage._capacity_mb / mimir_intent_conf->_job_config._num_cores_per_node / mimir_intent_conf->_job_config._num_nodes;
       } else {
         capacity_per_process = storage._capacity_mb / mimir_intent_conf->_job_config._num_cores_per_node;

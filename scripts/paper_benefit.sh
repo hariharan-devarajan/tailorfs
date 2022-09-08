@@ -28,6 +28,7 @@ ctest -R test_generate_config_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
 #export TAILORFS_DIRECT=1
 #ctest -V -R test_baseline_mb_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
 
+#export TAILORFS_LOG_LEVEL=INFO
 echo "Timing, TailorFS"
 ctest -V -R test_tailor_mb_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
 

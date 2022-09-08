@@ -313,13 +313,28 @@ int clean_directories() {
   MPI_Barrier(MPI_COMM_WORLD);
   return 0;
 }
+std::vector<std::string> split_no_duplicates(std::string x, char delim = ' ') {
+  std::vector<std::string> tokens;
+  std::unordered_set<std::string> tokens_set;
+  std::string token;
+  std::stringstream ss(x);
+  while (getline(ss, token, delim)){
+    tailorfs::test::trim_utf8(token);
+    auto iter  = tokens_set.find(token);
+    if (iter == tokens_set.end()) {
+      tokens.push_back(token);
+      tokens_set.emplace(token);
+    }
+  }
+  return tokens;
+}
 std::vector<std::string> split(std::string x, char delim = ' ') {
   std::vector<std::string> tokens;
   std::string token;
   std::stringstream ss(x);
   while (getline(ss, token, delim)){
     tailorfs::test::trim_utf8(token);
-    tokens.push_back(token);
+      tokens.push_back(token);
   }
   return tokens;
 }
@@ -333,7 +348,7 @@ int create_config(mimir::Config &config) {
     node_names.emplace_back(LSB_HOSTS);
   } else {
     LSB_HOSTS = std::getenv("LSB_HOSTS");
-    node_names = split(LSB_HOSTS);
+    node_names = split_no_duplicates(LSB_HOSTS);
   }
   config._job_config._job_id = 0;
   config._job_config._devices.clear();
