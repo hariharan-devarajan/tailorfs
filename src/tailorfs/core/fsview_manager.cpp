@@ -57,7 +57,7 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
             } else {
               id = iter->second;
               id._id++;
-            }
+             }
             auto fastest_storage_index = get_fastest(file_intent._size_mb);
             STDIOInit init_args;
             if (file_intent._current_device != fastest_storage_index) {

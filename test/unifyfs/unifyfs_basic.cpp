@@ -1046,6 +1046,7 @@ TEST_CASE("Read-After-Write",
       close_time.pauseTime();
       REQUIRE(status == 0);
     }
+
     MPI_Barrier(MPI_COMM_WORLD);
     if (is_reader) {
       open_time.resumeTime();
@@ -1071,6 +1072,7 @@ TEST_CASE("Read-After-Write",
       close_time.pauseTime();
       REQUIRE(status == 0);
     }
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
     if (is_writer) {
       if (args.storage_type != tt::StorageType::PFS) {
@@ -1103,6 +1105,7 @@ TEST_CASE("Read-After-Write",
       close_time.pauseTime();
       REQUIRE(status == 0);
     }
+
     MPI_Barrier(MPI_COMM_WORLD);
     if (is_reader) {
       open_time.resumeTime();
