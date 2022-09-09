@@ -292,8 +292,8 @@ TailorFSStatus tailorfs::FSViewManager::initialize() {
         }
       }
     }
-    return TAILORFS_SUCCESS;
   }
+  return TAILORFS_SUCCESS;
 }
   TailorFSStatus tailorfs::FSViewManager::get_fsview(
       const std::string& filename, tailorfs::FSID& id) {
