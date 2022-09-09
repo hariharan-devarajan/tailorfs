@@ -45,28 +45,34 @@ void tfs_finalize(bool is_mpi) {
   }
 }
 void tailorfs_init(void) {
-  char* tailorfs_debug = getenv("TAILORFS_DEBUG");
-  if (tailorfs_debug != nullptr) {
-    if (strcmp(tailorfs_debug , "1") == 0) {
-      std::string sp;
-      std::ifstream("/proc/self/cmdline") >> sp;
-      std::replace( sp.begin(), sp.end() - 1, '\000', ' ');
-      fprintf(stderr, "Connect to pid %d %s\n", getpid(), sp.c_str());
-      fflush(stderr);
-      getchar();
+  char* tailorfs_init = getenv("TAILORFS_INIT");
+  if (tailorfs_init == nullptr || strcmp(tailorfs_init , "1") == 0) {
+    char* tailorfs_debug = getenv("TAILORFS_DEBUG");
+    if (tailorfs_debug != nullptr) {
+      if (strcmp(tailorfs_debug, "1") == 0) {
+        std::string sp;
+        std::ifstream("/proc/self/cmdline") >> sp;
+        std::replace(sp.begin(), sp.end() - 1, '\000', ' ');
+        fprintf(stderr, "Connect to pid %d %s\n", getpid(), sp.c_str());
+        fflush(stderr);
+        getchar();
+      }
     }
-  }
-  char* is_non_mpi = getenv("TAILORFS_NON_MPI");
-  if (is_non_mpi != nullptr && strcmp(is_non_mpi , "1") == 0) {
-    TAILORFS_LOGINFO("TAILORFS constructor for Non MPI\n","");
-    tfs_init();
-  } else {
-    TAILORFS_LOGINFO("TAILORFS constructor for MPI\n","");
-    init_mimir();
-    brahma_gotcha_wrap("tailorfs", 1);
-    brahma::MPITailorFS::get_instance();
+    char* is_non_mpi = getenv("TAILORFS_NON_MPI");
+    if (is_non_mpi != nullptr && strcmp(is_non_mpi, "1") == 0) {
+      TAILORFS_LOGINFO("TAILORFS constructor for Non MPI\n", "");
+      tfs_init();
+    } else {
+      TAILORFS_LOGINFO("TAILORFS constructor for MPI\n", "");
+      init_mimir();
+      brahma_gotcha_wrap("tailorfs", 1);
+      brahma::MPITailorFS::get_instance();
+    }
   }
 }
 void tailorfs_fini(void) {
-  tfs_finalize();
+  char* tailorfs_init = getenv("TAILORFS_INIT");
+  if (tailorfs_init == nullptr || strcmp(tailorfs_init , "1") == 0) {
+    tfs_finalize();
+  }
 }

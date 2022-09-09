@@ -5,6 +5,7 @@
 
 #include <experimental/filesystem>
 #include <iomanip>
+#include <fstream>
 
 namespace tailorfs::test {}
 
@@ -62,7 +63,7 @@ DEFINE_CLARA_OPS(tailorfs::test::AccessPattern)
 DEFINE_CLARA_OPS(tailorfs::test::FileSharing)
 DEFINE_CLARA_OPS(tailorfs::test::ProcessGrouping)
 
-#include <fstream>
+
 
 /**
  * Overridden methods for catch
