@@ -13,7 +13,7 @@ source /usr/workspace/iopp/install_scripts/bin/iopp-init
 NUM_NODES=$1
 RS_KB=$2
 TAILORFS_DIR=/usr/workspace/iopp/software/tailorfs
-export BBPATH=$pfs/bb/
+export BBPATH=/dev/shm/bb/
 mkdir -p $BBPATH
 
 pushd $TAILORFS_DIR

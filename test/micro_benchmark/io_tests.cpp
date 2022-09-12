@@ -150,9 +150,9 @@ int pretest() {
   MPI_Comm_rank(MPI_COMM_WORLD, &info.rank);
   MPI_Comm_size(MPI_COMM_WORLD, &info.comm_size);
   gethostname(info.hostname, 256);
-  info.pfs = fs::path(PFS_VAR) / "tailorfs" / "data";
-  info.bb = fs::path(BB_VAR) / "tailorfs" / "data";
-  info.shm = fs::path(SHM_VAR) / "tailorfs" / "data";
+  info.pfs = fs::path(PFS_VAR) / "tailorfs" / ("data_" + std::to_string(info.comm_size)) ;
+  info.bb = fs::path(BB_VAR) / "tailorfs" / ("data_" + std::to_string(info.comm_size)) ;
+  info.shm = fs::path(SHM_VAR) / "tailorfs" / ("data_" + std::to_string(info.comm_size)) ;
   return 0;
 }
 int posttest() {

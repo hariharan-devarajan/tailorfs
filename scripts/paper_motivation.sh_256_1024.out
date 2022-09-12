@@ -1,0 +1,294 @@
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@lassen710>
+Subject: Job 3898760: <paper_motivation.sh_256> in cluster <lassen> Exited
+
+Job <paper_motivation.sh_256> was submitted from host <lassen709> by user <haridev> in cluster <lassen> at Fri Sep  9 17:40:37 2022
+Job was executed on host(s) <1*lassen710>, in queue <pbatch>, as user <haridev> in cluster <lassen> at Fri Sep  9 20:52:01 2022
+                            <40*lassen737>
+                            <40*lassen581>
+                            <40*lassen408>
+                            <40*lassen252>
+                            <40*lassen738>
+                            <40*lassen582>
+                            <40*lassen409>
+                            <40*lassen253>
+                            <40*lassen739>
+                            <40*lassen583>
+                            <40*lassen254>
+                            <40*lassen584>
+                            <40*lassen255>
+                            <40*lassen585>
+                            <40*lassen256>
+                            <40*lassen586>
+                            <40*lassen426>
+                            <40*lassen270>
+                            <40*lassen755>
+                            <40*lassen427>
+                            <40*lassen428>
+                            <40*lassen429>
+                            <40*lassen758>
+                            <40*lassen274>
+                            <40*lassen759>
+                            <40*lassen275>
+                            <40*lassen276>
+                            <40*lassen277>
+                            <40*lassen278>
+                            <40*lassen100>
+                            <40*lassen101>
+                            <40*lassen431>
+                            <40*lassen102>
+                            <40*lassen760>
+                            <40*lassen432>
+                            <40*lassen105>
+                            <40*lassen763>
+                            <40*lassen106>
+                            <40*lassen436>
+                            <40*lassen107>
+                            <40*lassen283>
+                            <40*lassen768>
+                            <40*lassen284>
+                            <40*lassen769>
+                            <40*lassen288>
+                            <40*lassen443>
+                            <40*lassen444>
+                            <40*lassen773>
+                            <40*lassen445>
+                            <40*lassen446>
+                            <40*lassen447>
+                            <40*lassen448>
+                            <40*lassen449>
+                            <40*lassen451>
+                            <40*lassen452>
+                            <40*lassen608>
+                            <40*lassen781>
+                            <40*lassen453>
+                            <40*lassen609>
+                            <40*lassen782>
+                            <40*lassen454>
+                            <40*lassen783>
+                            <40*lassen126>
+                            <40*lassen455>
+                            <40*lassen784>
+                            <40*lassen127>
+                            <40*lassen456>
+                            <40*lassen785>
+                            <40*lassen128>
+                            <40*lassen457>
+                            <40*lassen786>
+                            <40*lassen129>
+                            <40*lassen458>
+                            <40*lassen787>
+                            <40*lassen459>
+                            <40*lassen788>
+                            <40*lassen610>
+                            <40*lassen611>
+                            <40*lassen612>
+                            <40*lassen613>
+                            <40*lassen614>
+                            <40*lassen615>
+                            <40*lassen460>
+                            <40*lassen616>
+                            <40*lassen461>
+                            <40*lassen617>
+                            <40*lassen790>
+                            <40*lassen618>
+                            <40*lassen791>
+                            <40*lassen463>
+                            <40*lassen619>
+                            <40*lassen792>
+                            <40*lassen464>
+                            <40*lassen793>
+                            <40*lassen465>
+                            <40*lassen794>
+                            <40*lassen466>
+                            <40*lassen795>
+                            <40*lassen796>
+                            <40*lassen139>
+                            <40*lassen468>
+                            <40*lassen797>
+                            <40*lassen469>
+                            <40*lassen798>
+                            <40*lassen799>
+                            <40*lassen620>
+                            <40*lassen624>
+                            <40*lassen140>
+                            <40*lassen625>
+                            <40*lassen141>
+                            <40*lassen470>
+                            <40*lassen142>
+                            <40*lassen471>
+                            <40*lassen627>
+                            <40*lassen143>
+                            <40*lassen472>
+                            <40*lassen628>
+                            <40*lassen144>
+                            <40*lassen473>
+                            <40*lassen145>
+                            <40*lassen474>
+                            <40*lassen146>
+                            <40*lassen475>
+                            <40*lassen147>
+                            <40*lassen476>
+                            <40*lassen148>
+                            <40*lassen477>
+                            <40*lassen149>
+                            <40*lassen478>
+                            <40*lassen479>
+                            <40*lassen631>
+                            <40*lassen632>
+                            <40*lassen633>
+                            <40*lassen634>
+                            <40*lassen150>
+                            <40*lassen635>
+                            <40*lassen151>
+                            <40*lassen307>
+                            <40*lassen480>
+                            <40*lassen636>
+                            <40*lassen152>
+                            <40*lassen308>
+                            <40*lassen481>
+                            <40*lassen637>
+                            <40*lassen153>
+                            <40*lassen309>
+                            <40*lassen482>
+                            <40*lassen638>
+                            <40*lassen154>
+                            <40*lassen155>
+                            <40*lassen156>
+                            <40*lassen485>
+                            <40*lassen157>
+                            <40*lassen486>
+                            <40*lassen158>
+                            <40*lassen487>
+                            <40*lassen159>
+                            <40*lassen488>
+                            <40*lassen489>
+                            <40*lassen640>
+                            <40*lassen311>
+                            <40*lassen641>
+                            <40*lassen312>
+                            <40*lassen642>
+                            <40*lassen313>
+                            <40*lassen315>
+                            <40*lassen645>
+                            <40*lassen316>
+                            <40*lassen160>
+                            <40*lassen646>
+                            <40*lassen490>
+                            <40*lassen317>
+                            <40*lassen161>
+                            <40*lassen647>
+                            <40*lassen491>
+                            <40*lassen318>
+                            <40*lassen162>
+                            <40*lassen648>
+                            <40*lassen492>
+                            <40*lassen319>
+                            <40*lassen163>
+                            <40*lassen649>
+                            <40*lassen493>
+                            <40*lassen164>
+                            <40*lassen494>
+                            <40*lassen165>
+                            <40*lassen495>
+                            <40*lassen166>
+                            <40*lassen496>
+                            <40*lassen167>
+                            <40*lassen497>
+                            <40*lassen168>
+                            <40*lassen169>
+                            <40*lassen499>
+                            <40*lassen320>
+                            <40*lassen806>
+                            <40*lassen650>
+                            <40*lassen807>
+                            <40*lassen322>
+                            <40*lassen652>
+                            <40*lassen323>
+                            <40*lassen809>
+                            <40*lassen655>
+                            <40*lassen326>
+                            <40*lassen170>
+                            <40*lassen327>
+                            <40*lassen171>
+                            <40*lassen657>
+                            <40*lassen328>
+                            <40*lassen172>
+                            <40*lassen658>
+                            <40*lassen173>
+                            <40*lassen174>
+                            <40*lassen175>
+                            <40*lassen176>
+                            <40*lassen177>
+                            <40*lassen178>
+                            <40*lassen663>
+                            <40*lassen664>
+                            <40*lassen180>
+                            <40*lassen666>
+                            <40*lassen337>
+                            <40*lassen181>
+                            <40*lassen667>
+                            <40*lassen186>
+                            <40*lassen187>
+                            <40*lassen188>
+                            <40*lassen189>
+                            <40*lassen824>
+                            <40*lassen340>
+                            <40*lassen671>
+                            <40*lassen672>
+                            <40*lassen673>
+                            <40*lassen675>
+                            <40*lassen676>
+                            <40*lassen677>
+                            <40*lassen679>
+                            <40*lassen507>
+                            <40*lassen404>
+                            <40*lassen400>
+                            <40*lassen369>
+                            <40*lassen79>
+                            <40*lassen520>
+                            <40*lassen522>
+                            <40*lassen378>
+                            <40*lassen579>
+                            <40*lassen578>
+                            <40*lassen248>
+                            <40*lassen247>
+                            <40*lassen246>
+                            <40*lassen245>
+                            <40*lassen206>
+                            <40*lassen535>
+                            <40*lassen208>
+                            <40*lassen537>
+                            <40*lassen209>
+</g/g92/haridev> was used as the home directory.
+</usr/workspace/iopp/software/tailorfs/scripts> was used as the working directory.
+Started at Fri Sep  9 20:52:01 2022
+Terminated at Fri Sep  9 21:30:41 2022
+Results reported at Fri Sep  9 21:30:41 2022
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/usr/workspace/iopp/software/tailorfs/scripts/paper_motivation.sh 256 1024
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 130.
+
+Resource usage summary:
+
+    CPU time :                                   121.00 sec.
+    Max Memory :                                 1161 MB
+    Average Memory :                             954.40 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   2551 MB
+    Max Processes :                              18
+    Max Threads :                                41
+    Run time :                                   2319 sec.
+    Turnaround time :                            13804 sec.
+
+The output (if any) is above this job summary.
+

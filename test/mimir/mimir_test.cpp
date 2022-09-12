@@ -267,9 +267,10 @@ int pretest() {
 
   TEST_LOGGER_INFO_ARGS("rank %d comm_size %d hostname %s", info.rank,
                         info.comm_size, info.hostname);
-  info.pfs = fs::path(PFS_VAR) / "tailorfs" / "data";
-  info.bb = fs::path(BB_VAR) / "tailorfs" / "data";
-  info.shm = fs::path(SHM_VAR) / "tailorfs" / "data";
+  int comm_size = args.num_nodes * args.ranks_per_node;
+  info.pfs = fs::path(PFS_VAR) / "tailorfs" / ("data_" + std::to_string(comm_size)) ;
+  info.bb = fs::path(BB_VAR) / "tailorfs" / ("data_" + std::to_string(comm_size)) ;
+  info.shm = fs::path(SHM_VAR) / "tailorfs" / ("data_" + std::to_string(comm_size)) ;
   TEST_LOGGER_INFO_ARGS("pfs %s bb %s shm %s", info.pfs.c_str(),
                         info.bb.c_str(), info.shm.c_str());
   /* Validate args */

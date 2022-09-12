@@ -245,16 +245,21 @@ int pretest() {
   MPI_Comm_rank(MPI_COMM_WORLD, &info.rank);
   MPI_Comm_size(MPI_COMM_WORLD, &info.comm_size);
   gethostname(info.hostname, 256);
-  info.pfs = fs::path(PFS_VAR) / "unifyfs" / "data";
-  info.bb = fs::path(BB_VAR) / "unifyfs" / "data";
-  info.shm = fs::path(SHM_VAR) / "unifyfs" / "data";
+  info.pfs = fs::path(PFS_VAR) / "tailorfs" / ("data_" + std::to_string(info.comm_size)) ;
+  info.bb = fs::path(BB_VAR) / "tailorfs" / ("data_" + std::to_string(info.comm_size)) ;
+  info.shm = fs::path(SHM_VAR) / "tailorfs" / ("data_" + std::to_string(info.comm_size)) ;
+
   return 0;
 }
 int posttest() {
   MPI_Barrier(MPI_COMM_WORLD);
-  fs::remove_all(info.pfs);
-  fs::remove_all(info.bb);
-  fs::remove_all(info.shm);
+  if (info.rank == 0) {
+    fs::remove_all(info.pfs);
+  }
+  if (info.rank % args.ranks_per_node == 0) {
+    fs::remove_all(info.shm);
+    fs::remove_all(info.bb);
+  }
   return 0;
 }
 int clean_directories() {
@@ -262,12 +267,13 @@ int clean_directories() {
     fs::remove_all(info.pfs);
   }
   fs::create_directories(info.pfs);
+
   if (info.rank % args.ranks_per_node == 0) {
     INFO("rank " << info.rank << " on node " << info.hostname << " with BB "
                  << info.bb.string().c_str());
     fs::remove_all(info.bb);
-    fs::remove_all(info.shm);
     fs::create_directories(info.bb);
+    fs::remove_all(info.shm);
     fs::create_directories(info.shm);
   }
   MPI_Barrier(MPI_COMM_WORLD);
