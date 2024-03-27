@@ -26,18 +26,18 @@ rm -rf *
 cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/usr/tce/packages/gcc/gcc-8.3.1/bin/gcc -DCMAKE_CXX_COMPILER=/usr/tce/packages/gcc/gcc-8.3.1/bin/g++ -G "CodeBlocks - Unix Makefiles" ${TAILORFS_DIR}
 cmake --build ${TAILORFS_DIR}/build_${NUM_NODES} --target all -- -j
 
-ctest -R test_generate_config_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
+ctest -R test_generate_config_lassen_${NUM_NODES}_32_1_${RS_KB}_262144_fpp
 #echo "Timing, DirectIO"
 #export TAILORFS_DIRECT=1
 #ctest -V -R test_baseline_mb_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
 
 #export TAILORFS_LOG_LEVEL=INFO
 echo "Timing, TailorFS"
-ctest -V -R test_tailor_mb_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
+ctest -V -R test_tailor_mb_lassen_${NUM_NODES}_32_1_${RS_KB}_262144_fpp
 
 echo "Timing, Baseline"
 export TAILORFS_DIRECT=0
-ctest -V -R test_baseline_mb_lassen_${NUM_NODES}_32_1_${RS_KB}_1024_fpp
+ctest -V -R test_baseline_mb_lassen_${NUM_NODES}_32_1_${RS_KB}_262144_fpp
 
 
 sleep 10

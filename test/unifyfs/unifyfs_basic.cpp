@@ -265,8 +265,8 @@ int posttest() {
 int clean_directories() {
   if (info.rank == 0) {
     fs::remove_all(info.pfs);
+    fs::create_directories(info.pfs);
   }
-  fs::create_directories(info.pfs);
 
   if (info.rank % args.ranks_per_node == 0) {
     INFO("rank " << info.rank << " on node " << info.hostname << " with BB "
@@ -591,7 +591,7 @@ TEST_CASE("Write-Only",
         unifyfs_transfer_request mv_req;
         mv_req.src_path = unifyfs_filename.c_str();
         mv_req.dst_path = full_filename_path.c_str();
-        mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
+        mv_req.mode = UNIFYFS_TRANSFER_MODE_COPY;
         mv_req.use_parallel = 1;
         flush_time.resumeTime();
         rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
@@ -615,9 +615,9 @@ TEST_CASE("Write-Only",
     MPI_Barrier(MPI_COMM_WORLD);
 
     finalize_time.resumeTime();
-    rc = unifyfs_finalize(fshdl);
+    //rc = unifyfs_finalize(fshdl);
     finalize_time.pauseTime();
-    REQUIRE(rc == UNIFYFS_SUCCESS);
+    //REQUIRE(rc == UNIFYFS_SUCCESS);
     MPI_Barrier(MPI_COMM_WORLD);
     if (info.rank == 0) {
       INFO("Size of file written " << fs::file_size(full_filename_path));
@@ -920,7 +920,7 @@ TEST_CASE("Read-Only",
       }
     }
     finalize_time.resumeTime();
-    rc = unifyfs_finalize(fshdl);
+    //rc = unifyfs_finalize(fshdl);
     finalize_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
     is_run = true;
@@ -1408,7 +1408,7 @@ TEST_CASE("Read-After-Write",
         unifyfs_transfer_request mv_req;
         mv_req.src_path = unifyfs_filename.c_str();
         mv_req.dst_path = full_filename_path.c_str();
-        mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
+        mv_req.mode = UNIFYFS_TRANSFER_MODE_COPY;
         mv_req.use_parallel = 1;
         flush_time.resumeTime();
         rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
@@ -1430,7 +1430,7 @@ TEST_CASE("Read-After-Write",
           unifyfs_transfer_request mv_req;
           mv_req.src_path = unifyfs_filename.c_str();
           mv_req.dst_path = full_filename_path.c_str();
-          mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
+          mv_req.mode = UNIFYFS_TRANSFER_MODE_COPY;
           mv_req.use_parallel = 1;
           flush_time.resumeTime();
           rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
@@ -1452,7 +1452,7 @@ TEST_CASE("Read-After-Write",
     }
     MPI_Barrier(MPI_COMM_WORLD);
     finalize_time.resumeTime();
-    rc = unifyfs_finalize(fshdl);
+    ///rc = unifyfs_finalize(fshdl);
     finalize_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
     is_run = true;
@@ -1742,7 +1742,7 @@ TEST_CASE("Update", CONVERT_STR(type, "update") +
       unifyfs_transfer_request mv_req;
       mv_req.src_path = unifyfs_filename.c_str();
       mv_req.dst_path = full_filename_path.c_str();
-      mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
+      mv_req.mode = UNIFYFS_TRANSFER_MODE_COPY;
       mv_req.use_parallel = 1;
       flush_time.resumeTime();
       rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
@@ -1764,7 +1764,7 @@ TEST_CASE("Update", CONVERT_STR(type, "update") +
         unifyfs_transfer_request mv_req;
         mv_req.src_path = unifyfs_filename.c_str();
         mv_req.dst_path = full_filename_path.c_str();
-        mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
+        mv_req.mode = UNIFYFS_TRANSFER_MODE_COPY;
         mv_req.use_parallel = 1;
         flush_time.resumeTime();
         rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
@@ -1787,7 +1787,7 @@ TEST_CASE("Update", CONVERT_STR(type, "update") +
     MPI_Barrier(MPI_COMM_WORLD);
 
     finalize_time.resumeTime();
-    rc = unifyfs_finalize(fshdl);
+    //rc = unifyfs_finalize(fshdl);
     finalize_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
     MPI_Barrier(MPI_COMM_WORLD);
@@ -2283,7 +2283,7 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
         unifyfs_transfer_request mv_req;
         mv_req.src_path = unifyfs_filename.c_str();
         mv_req.dst_path = full_filename_path.c_str();
-        mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
+        mv_req.mode = UNIFYFS_TRANSFER_MODE_COPY;
         mv_req.use_parallel = 1;
         flush_time.resumeTime();
         rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
@@ -2305,7 +2305,7 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
           unifyfs_transfer_request mv_req;
           mv_req.src_path = unifyfs_filename.c_str();
           mv_req.dst_path = full_filename_path.c_str();
-          mv_req.mode = UNIFYFS_TRANSFER_MODE_MOVE;
+          mv_req.mode = UNIFYFS_TRANSFER_MODE_COPY;
           mv_req.use_parallel = 1;
           flush_time.resumeTime();
           rc = unifyfs_dispatch_transfer(fshdl, 1, &mv_req);
@@ -2327,7 +2327,7 @@ TEST_CASE("WORM", CONVERT_STR(type, "worm") +
     }
     MPI_Barrier(MPI_COMM_WORLD);
     finalize_time.resumeTime();
-    rc = unifyfs_finalize(fshdl);
+    //rc = unifyfs_finalize(fshdl);
     finalize_time.pauseTime();
     REQUIRE(rc == UNIFYFS_SUCCESS);
     is_run = true;

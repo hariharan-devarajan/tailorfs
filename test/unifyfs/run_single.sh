@@ -33,7 +33,7 @@ if [ $error_ct -gt 0 ]; then
 fi
 
 
-export UNIFYFS_LOG_VERBOSITY=3
+#export UNIFYFS_LOG_VERBOSITY=5
 if [ "${MACHINE}" = "local" ]; then
     echo "Configuring test for local"
     echo "Run UnifyFS daemon"

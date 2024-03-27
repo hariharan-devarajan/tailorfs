@@ -1,0 +1,624 @@
+/usr/workspace/iopp/install_scripts/bin/iopp-init: line 11: module: command not found
+/usr/workspace/iopp/software/tailorfs /usr/workspace/iopp/software/tailorfs/scripts
+mkdir: cannot create directory 'build_1': File exists
+/usr/workspace/iopp/software/tailorfs/build_1 /usr/workspace/iopp/software/tailorfs /usr/workspace/iopp/software/tailorfs/scripts
+-- The C compiler identification is GNU 8.3.1
+-- The CXX compiler identification is GNU 8.3.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/tce/packages/gcc/gcc-8.3.1/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/tce/packages/gcc/gcc-8.3.1/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- /usr/local/bin
+-- /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/usr/workspace/iopp/software/tailorfs/build_1/lib/cmake/usr/workspace/iopp/software/tailorfs/external/brahma/dependency/.spack-env/view/usr/workspace/iopp/software/tailorfs/build_1/lib/cmake
+-- /usr/local/bin
+-- Found cpp-logger: TRUE  
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- [Gotcha] found gotcha at /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include/
+-- Found MPI_CXX: /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/lib/libmpiprofilesupport.so (found version "3.1") 
+-- Found MPI: TRUE (found version "3.1") found components: CXX 
+-- [MPI] found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- /usr/local/bin
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- Found nlohmann_json: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib64/cmake/nlohmann_json/nlohmann_jsonConfig.cmake (found suitable version "3.10.5", minimum required is "3.10.5") 
+-- found nlohmann_json
+-- found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found mimir: TRUE  
+-- [MIMIR] found mimir at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- Found brahma: TRUE  
+-- [BRAHMA] found brahma at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- UNIFYFS_INCLUDE_DIRS: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include
+-- UNIFYFS_ROOT_DIR: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view
+-- UNIFYFS_LIBRARY_PATH: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+-- Found unifyfs: TRUE  
+-- [UnifyFS] found headers at /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include
+-- [MPI] found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /usr/workspace/iopp/software/tailorfs/build_1
+[  4%] Building CXX object test/micro_benchmark/CMakeFiles/io_tests.dir/io_tests.cpp.o
+[  6%] Building CXX object test/unifyfs/CMakeFiles/unifyfs_basic.dir/unifyfs_basic.cpp.o
+[  6%] Building CXX object external/cpp-logger/CMakeFiles/cpp-logger.dir/src/cpp-logger/logger.cpp.o
+[  9%] Linking CXX shared library ../../lib/libcpp-logger.so
+[  9%] Built target cpp-logger
+[ 11%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/brahma.cpp.o
+[ 18%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/job_configuration.cpp.o
+[ 20%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interceptor.cpp.o
+[ 27%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/application.cpp.o
+[ 30%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/stdio.cpp.o
+[ 34%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/common/debug.cpp.o
+[ 34%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/mpiio.cpp.o
+[ 34%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/mpi.cpp.o
+[ 34%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/interface_utility.cpp.o
+[ 34%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/workflow.cpp.o
+[ 34%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/mimir_interceptor.cpp.o
+[ 39%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/posix.cpp.o
+[ 39%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/posix.cpp.o
+[ 44%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/interface.cpp.o
+[ 44%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/advice/advice.cpp.o
+[ 46%] Linking CXX shared library ../../lib/libbrahma.so
+[ 46%] Built target brahma
+[ 48%] Linking CXX executable ../../bin/io_tests
+[ 51%] Linking CXX executable ../../bin/unifyfs_basic
+[ 51%] Built target io_tests
+[ 51%] Built target unifyfs_basic
+[ 53%] Linking CXX shared library ../../lib/libmimir.so
+[ 53%] Built target mimir
+[ 55%] Building CXX object test/mimir/CMakeFiles/mimir_test.dir/mimir_test.cpp.o
+[ 58%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/posix.cpp.o
+[ 62%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview_manager.cpp.o
+[ 69%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/process_state.cpp.o
+[ 69%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/stdio.cpp.o
+[ 74%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/unifyfs_fsview.cpp.o
+[ 74%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/mpi.cpp.o
+[ 76%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/posix_fsview.cpp.o
+[ 79%] Building CXX object CMakeFiles/tailorfs.dir/main.cpp.o
+[ 79%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/stdio_fsview.cpp.o
+[ 79%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/util/unifyfs-stage-transfer.cpp.o
+[ 81%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/mpiio_fsview.cpp.o
+[ 83%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/tailorfs.cpp.o
+[ 86%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/mpiio.cpp.o
+[ 88%] Linking CXX shared library lib/libtailorfs.so
+[ 88%] Built target tailorfs
+[ 90%] Building CXX object CMakeFiles/tailorfs_exe.dir/main.cpp.o
+[ 93%] Building CXX object test/internal/CMakeFiles/internal_test.dir/internal_test.cpp.o
+[ 95%] Linking CXX executable ../../bin/mimir_test
+[ 95%] Built target mimir_test
+[ 97%] Linking CXX executable bin/tailorfs_exe
+[ 97%] Built target tailorfs_exe
+[100%] Linking CXX executable ../../bin/internal_test
+[100%] Built target internal_test
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@lassen710>
+Subject: Job 5740758: <paper_anatomy.sh_1_1> in cluster <lassen> Exited
+
+Job <paper_anatomy.sh_1_1> was submitted from host <lassen708> by user <haridev> in cluster <lassen> at Wed Mar 27 12:15:52 2024
+Job was executed on host(s) <1*lassen710>, in queue <pbatch>, as user <haridev> in cluster <lassen> at Wed Mar 27 12:16:42 2024
+                            <40*lassen480>
+</g/g92/haridev> was used as the home directory.
+</usr/workspace/iopp/software/tailorfs/scripts> was used as the working directory.
+Started at Wed Mar 27 12:16:42 2024
+Terminated at Wed Mar 27 12:20:54 2024
+Results reported at Wed Mar 27 12:20:54 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/usr/workspace/iopp/software/tailorfs/scripts/paper_anatomy.sh 1 1
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with signal termination: 14.
+
+Resource usage summary:
+
+    CPU time :                                   32.00 sec.
+    Max Memory :                                 197 MB
+    Average Memory :                             87.83 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   1388 MB
+    Max Processes :                              8
+    Max Threads :                                33
+    Run time :                                   257 sec.
+    Turnaround time :                            302 sec.
+
+The output (if any) is above this job summary.
+
+/usr/workspace/iopp/install_scripts/bin/iopp-init: line 11: module: command not found
+/usr/workspace/iopp/software/tailorfs /usr/workspace/iopp/software/tailorfs/scripts
+mkdir: cannot create directory 'build_1': File exists
+/usr/workspace/iopp/software/tailorfs/build_1 /usr/workspace/iopp/software/tailorfs /usr/workspace/iopp/software/tailorfs/scripts
+-- The C compiler identification is GNU 8.3.1
+-- The CXX compiler identification is GNU 8.3.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/tce/packages/gcc/gcc-8.3.1/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/tce/packages/gcc/gcc-8.3.1/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- /usr/local/bin
+-- /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/usr/workspace/iopp/software/tailorfs/build_1/lib/cmake/usr/workspace/iopp/software/tailorfs/external/brahma/dependency/.spack-env/view/usr/workspace/iopp/software/tailorfs/build_1/lib/cmake
+-- /usr/local/bin
+-- Found cpp-logger: TRUE  
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- [Gotcha] found gotcha at /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include/
+-- Found MPI_CXX: /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/lib/libmpiprofilesupport.so (found version "3.1") 
+-- Found MPI: TRUE (found version "3.1") found components: CXX 
+-- [MPI] found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- /usr/local/bin
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- Found nlohmann_json: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib64/cmake/nlohmann_json/nlohmann_jsonConfig.cmake (found suitable version "3.10.5", minimum required is "3.10.5") 
+-- found nlohmann_json
+-- found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found mimir: TRUE  
+-- [MIMIR] found mimir at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- Found brahma: TRUE  
+-- [BRAHMA] found brahma at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- UNIFYFS_INCLUDE_DIRS: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include
+-- UNIFYFS_ROOT_DIR: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view
+-- UNIFYFS_LIBRARY_PATH: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+-- Found unifyfs: TRUE  
+-- [UnifyFS] found headers at /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include
+-- [MPI] found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /usr/workspace/iopp/software/tailorfs/build_1
+[  2%] Building CXX object test/micro_benchmark/CMakeFiles/io_tests.dir/io_tests.cpp.o
+[  6%] Building CXX object test/unifyfs/CMakeFiles/unifyfs_basic.dir/unifyfs_basic.cpp.o
+[  6%] Building CXX object external/cpp-logger/CMakeFiles/cpp-logger.dir/src/cpp-logger/logger.cpp.o
+[  9%] Linking CXX shared library ../../lib/libcpp-logger.so
+[  9%] Built target cpp-logger
+[ 23%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/mpiio.cpp.o
+[ 25%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/application.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/stdio.cpp.o
+[ 32%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/common/debug.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/posix.cpp.o
+[ 32%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/job_configuration.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interceptor.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/brahma.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/mpi.cpp.o
+[ 32%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/advice/advice.cpp.o
+[ 34%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/mimir_interceptor.cpp.o
+[ 39%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/workflow.cpp.o
+[ 39%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/posix.cpp.o
+[ 44%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/interface.cpp.o
+[ 44%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/interface_utility.cpp.o
+[ 46%] Linking CXX shared library ../../lib/libbrahma.so
+[ 46%] Built target brahma
+[ 48%] Linking CXX executable ../../bin/io_tests
+[ 51%] Linking CXX executable ../../bin/unifyfs_basic
+[ 51%] Built target io_tests
+[ 51%] Built target unifyfs_basic
+[ 53%] Linking CXX shared library ../../lib/libmimir.so
+[ 53%] Built target mimir
+[ 55%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/stdio.cpp.o
+[ 60%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/mpi.cpp.o
+[ 60%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/util/unifyfs-stage-transfer.cpp.o
+[ 62%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/unifyfs_fsview.cpp.o
+[ 65%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/posix_fsview.cpp.o
+[ 67%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/tailorfs.cpp.o
+[ 74%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/posix.cpp.o
+[ 76%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/mpiio.cpp.o
+[ 76%] Building CXX object test/mimir/CMakeFiles/mimir_test.dir/mimir_test.cpp.o
+[ 86%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview_manager.cpp.o
+[ 86%] Building CXX object CMakeFiles/tailorfs.dir/main.cpp.o
+[ 86%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/mpiio_fsview.cpp.o
+[ 86%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/process_state.cpp.o
+[ 86%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/stdio_fsview.cpp.o
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@lassen710>
+Subject: Job 5740768: <paper_anatomy.sh_1_1> in cluster <lassen> Exited
+
+Job <paper_anatomy.sh_1_1> was submitted from host <lassen708> by user <haridev> in cluster <lassen> at Wed Mar 27 12:21:52 2024
+Job was executed on host(s) <1*lassen710>, in queue <pbatch>, as user <haridev> in cluster <lassen> at Wed Mar 27 12:21:57 2024
+                            <40*lassen57>
+</g/g92/haridev> was used as the home directory.
+</usr/workspace/iopp/software/tailorfs/scripts> was used as the working directory.
+Started at Wed Mar 27 12:21:57 2024
+Terminated at Wed Mar 27 12:22:00 2024
+Results reported at Wed Mar 27 12:22:00 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/usr/workspace/iopp/software/tailorfs/scripts/paper_anatomy.sh 1 1
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with signal termination: 2.
+
+Resource usage summary:
+
+    CPU time :                                   0.05 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   3 sec.
+    Turnaround time :                            8 sec.
+
+The output (if any) is above this job summary.
+
+[ 88%] Linking CXX shared library lib/libtailorfs.so
+[ 88%] Built target tailorfs
+[ 90%] Building CXX object test/internal/CMakeFiles/internal_test.dir/internal_test.cpp.o
+[ 93%] Building CXX object CMakeFiles/tailorfs_exe.dir/main.cpp.o
+[ 95%] Linking CXX executable ../../bin/mimir_test
+[ 95%] Built target mimir_test
+[ 97%] Linking CXX executable bin/tailorfs_exe
+[ 97%] Built target tailorfs_exe
+[100%] Linking CXX executable ../../bin/internal_test
+[100%] Built target internal_test
+[TAILORFS Print] Timing,ops,init,fin,mpiio_init,mpiio_fini,posix_init,posix_fin,stdio_init,stdio_fin
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+Test project /usr/workspace/iopp/software/tailorfs/build_1
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 19436
+    Start 19436: test_internal_lassen_anatomy_1_32_1000000
+
+19436: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/internal_test" "--num_of_ops" "1000000" "anatomy"
+19436: Environment variables: 
+19436:  pfs=/p/gpfs1/iopp
+19436:  BBPATH=/dev/shm/bb/
+19436:  TAILORFS_INIT=0
+19436:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19436: Test timeout computed to be: 10000000
+19436: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19436: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19436: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: Filters: anatomy
+19436: Randomness seeded to: 2006592275
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 2108225246
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 4088857213
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1518042521
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3548879810
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3848212806
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1529756620
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 4047228851
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3277178210
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3349723086
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1234711202
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1189852551
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3107788762
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1934477706
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3444822238
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 4282299546
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3050635637
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3348342241
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 2468787707
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1927135901
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1242211304
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 540711153
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3736880226
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: [TAILORFS PRINT]:     Timing,   1000000,  0.048715,  0.000048,  2.005409,  1.918744,  1.988194,  1.888077,  1.967590,  1.880926
+19436: 
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3241955621
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 2055124556
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 4133208517
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3024365050
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1141834508
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1159296890
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1906086612
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 2809108237
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1555903192
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+1/1 Test #19436: test_internal_lassen_anatomy_1_32_1000000 ...   Passed   24.47 sec
+
+The following tests passed:
+	test_internal_lassen_anatomy_1_32_1000000
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  28.01 sec
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@lassen710>
+Subject: Job 5740766: <paper_anatomy.sh_1_1> in cluster <lassen> Exited
+
+Job <paper_anatomy.sh_1_1> was submitted from host <lassen708> by user <haridev> in cluster <lassen> at Wed Mar 27 12:20:52 2024
+Job was executed on host(s) <1*lassen710>, in queue <pbatch>, as user <haridev> in cluster <lassen> at Wed Mar 27 12:21:19 2024
+                            <40*lassen480>
+</g/g92/haridev> was used as the home directory.
+</usr/workspace/iopp/software/tailorfs/scripts> was used as the working directory.
+Started at Wed Mar 27 12:21:19 2024
+Terminated at Wed Mar 27 12:27:38 2024
+Results reported at Wed Mar 27 12:27:38 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/usr/workspace/iopp/software/tailorfs/scripts/paper_anatomy.sh 1 1
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with signal termination: 14.
+
+Resource usage summary:
+
+    CPU time :                                   50.00 sec.
+    Max Memory :                                 478 MB
+    Average Memory :                             97.20 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   1582 MB
+    Max Processes :                              17
+    Max Threads :                                40
+    Run time :                                   380 sec.
+    Turnaround time :                            406 sec.
+
+The output (if any) is above this job summary.
+

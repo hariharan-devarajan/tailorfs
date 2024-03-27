@@ -1,0 +1,1301 @@
+/usr/workspace/iopp/install_scripts/bin/iopp-init: line 11: module: command not found
+/usr/workspace/iopp/software/tailorfs /usr/workspace/iopp/software/tailorfs/scripts
+mkdir: cannot create directory 'build_1': File exists
+/usr/workspace/iopp/software/tailorfs/build_1 /usr/workspace/iopp/software/tailorfs /usr/workspace/iopp/software/tailorfs/scripts
+-- The C compiler identification is GNU 8.3.1
+-- The CXX compiler identification is GNU 8.3.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/tce/packages/gcc/gcc-8.3.1/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/tce/packages/gcc/gcc-8.3.1/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- /usr/local/bin
+-- /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/usr/workspace/iopp/software/tailorfs/build_1/lib/cmake/usr/workspace/iopp/software/tailorfs/external/brahma/dependency/.spack-env/view/usr/workspace/iopp/software/tailorfs/build_1/lib/cmake
+-- /usr/local/bin
+-- Found cpp-logger: TRUE  
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- [Gotcha] found gotcha at /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include/
+-- Found MPI_CXX: /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/lib/libmpiprofilesupport.so (found version "3.1") 
+-- Found MPI: TRUE (found version "3.1") found components: CXX 
+-- [MPI] found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- /usr/local/bin
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- Found nlohmann_json: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib64/cmake/nlohmann_json/nlohmann_jsonConfig.cmake (found suitable version "3.10.5", minimum required is "3.10.5") 
+-- found nlohmann_json
+-- found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found mimir: TRUE  
+-- [MIMIR] found mimir at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- Found brahma: TRUE  
+-- [BRAHMA] found brahma at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- UNIFYFS_INCLUDE_DIRS: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include
+-- UNIFYFS_ROOT_DIR: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view
+-- UNIFYFS_LIBRARY_PATH: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+-- Found unifyfs: TRUE  
+-- [UnifyFS] found headers at /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include
+-- [MPI] found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /usr/workspace/iopp/software/tailorfs/build_1
+[  2%] Building CXX object test/micro_benchmark/CMakeFiles/io_tests.dir/io_tests.cpp.o
+[  4%] Building CXX object external/cpp-logger/CMakeFiles/cpp-logger.dir/src/cpp-logger/logger.cpp.o
+[  6%] Building CXX object test/unifyfs/CMakeFiles/unifyfs_basic.dir/unifyfs_basic.cpp.o
+[  9%] Linking CXX shared library ../../lib/libcpp-logger.so
+[  9%] Built target cpp-logger
+[ 18%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/mpi.cpp.o
+[ 30%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/interface_utility.cpp.o
+[ 30%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/job_configuration.cpp.o
+[ 32%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/application.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interceptor.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/mpiio.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/interface.cpp.o
+[ 32%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/posix.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/stdio.cpp.o
+[ 32%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/workflow.cpp.o
+[ 39%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/posix.cpp.o
+[ 39%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/brahma.cpp.o
+[ 39%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/common/debug.cpp.o
+[ 41%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/advice/advice.cpp.o
+[ 44%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/mimir_interceptor.cpp.o
+[ 46%] Linking CXX shared library ../../lib/libbrahma.so
+[ 46%] Built target brahma
+[ 48%] Linking CXX executable ../../bin/io_tests
+[ 51%] Linking CXX executable ../../bin/unifyfs_basic
+[ 51%] Built target io_tests
+[ 51%] Built target unifyfs_basic
+[ 53%] Linking CXX shared library ../../lib/libmimir.so
+[ 53%] Built target mimir
+[ 60%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/posix.cpp.o
+[ 62%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/mpi.cpp.o
+[ 72%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/stdio.cpp.o
+[ 72%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/posix_fsview.cpp.o
+[ 76%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/unifyfs_fsview.cpp.o
+[ 76%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview_manager.cpp.o
+[ 76%] Building CXX object CMakeFiles/tailorfs.dir/main.cpp.o
+[ 76%] Building CXX object test/mimir/CMakeFiles/mimir_test.dir/mimir_test.cpp.o
+[ 76%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/stdio_fsview.cpp.o
+[ 79%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/tailorfs.cpp.o
+[ 81%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/mpiio.cpp.o
+[ 81%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/mpiio_fsview.cpp.o
+[ 83%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/process_state.cpp.o
+[ 86%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/util/unifyfs-stage-transfer.cpp.o
+[ 88%] Linking CXX shared library lib/libtailorfs.so
+[ 88%] Built target tailorfs
+[ 90%] Building CXX object test/internal/CMakeFiles/internal_test.dir/internal_test.cpp.o
+[ 93%] Building CXX object CMakeFiles/tailorfs_exe.dir/main.cpp.o
+[ 95%] Linking CXX executable ../../bin/mimir_test
+[ 95%] Built target mimir_test
+[ 97%] Linking CXX executable bin/tailorfs_exe
+[ 97%] Built target tailorfs_exe
+[100%] Linking CXX executable ../../bin/internal_test
+[100%] Built target internal_test
+[TAILORFS PRINT] Timing,ops,init,fin,mpiio_init,mpiio_fini,posix_init,posix_fin,stdio_init,stdio_fin
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+Test project /usr/workspace/iopp/software/tailorfs/build_1
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 19433
+    Start 19433: test_internal_lassen_anatomy_1_32_1000
+
+19433: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/internal_test" "--num_of_ops" "1000" "anatomy"
+19433: Environment variables: 
+19433:  pfs=/p/gpfs1/iopp
+19433:  BBPATH=/dev/shm/bb/
+19433:  TAILORFS_INIT=0
+19433:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19433: Test timeout computed to be: 10000000
+19433: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19433: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19433: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19433: Filters: anatomy
+19433: Randomness seeded to: 3273337024
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: [TAILORFS PRINT]:     Timing,      1000,  0.049630,  0.000022,  0.002365,  0.001924,  0.002341,  0.001925,  0.002328,  0.001920
+19433: 
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 1000484034
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 48960878
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 4184250826
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 2004223299
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 1797466238
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 3822970962
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 9891410
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 3881818884
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 2519653643
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 932757121
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 127724375
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 3014943590
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 620051945
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 1985826000
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 2201372174
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 13176730
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 2506073495
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 3794011227
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 412041886
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 1565332704
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 3097782863
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 132329947
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 666889350
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 3341662911
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 2484284162
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 183962854
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 221224590
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 536898506
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 1427931543
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 3209418642
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+19433: Filters: anatomy
+19433: Randomness seeded to: 4095517936
+19433: [TAILORFS PRINT]: Enabling ERROR loggin
+19433: ===============================================================================
+19433: test cases: 1 | 1 passed
+19433: assertions: - none -
+19433: 
+1/1 Test #19433: test_internal_lassen_anatomy_1_32_1000 ...   Passed    2.65 sec
+
+The following tests passed:
+	test_internal_lassen_anatomy_1_32_1000
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   6.24 sec
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+Test project /usr/workspace/iopp/software/tailorfs/build_1
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 19434
+    Start 19434: test_internal_lassen_anatomy_1_32_10000
+
+19434: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/internal_test" "--num_of_ops" "10000" "anatomy"
+19434: Environment variables: 
+19434:  pfs=/p/gpfs1/iopp
+19434:  BBPATH=/dev/shm/bb/
+19434:  TAILORFS_INIT=0
+19434:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19434: Test timeout computed to be: 10000000
+19434: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19434: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19434: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19434: Filters: anatomy
+19434: Randomness seeded to: 3503625249
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 2575549066
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 1312747727
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 2429312281
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 2237044508
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 1294075943
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 1214313865
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 2905501470
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: [TAILORFS PRINT]:     Timing,     10000,  0.051208,  0.000023,  0.020678,  0.019062,  0.020394,  0.019119,  0.020334,  0.019102
+19434: 
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 2354600460
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 838591192
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 3165161874
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 1693150521
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 523346448
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 3511722927
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 1774197322
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 3905119608
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 3822061319
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 1083598954
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 3461270953
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 246045566
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 3562387521
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 2734964732
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 3761012824
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 856653516
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 2511550839
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 592929689
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 2226567170
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 459846364
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 2933335722
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 1655173420
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 1585049421
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+19434: Filters: anatomy
+19434: Randomness seeded to: 1776138438
+19434: [TAILORFS PRINT]: Enabling ERROR loggin
+19434: ===============================================================================
+19434: test cases: 1 | 1 passed
+19434: assertions: - none -
+19434: 
+1/1 Test #19434: test_internal_lassen_anatomy_1_32_10000 ...   Passed    2.10 sec
+
+The following tests passed:
+	test_internal_lassen_anatomy_1_32_10000
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   5.55 sec
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+Test project /usr/workspace/iopp/software/tailorfs/build_1
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 19435
+    Start 19435: test_internal_lassen_anatomy_1_32_100000
+
+19435: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/internal_test" "--num_of_ops" "100000" "anatomy"
+19435: Environment variables: 
+19435:  pfs=/p/gpfs1/iopp
+19435:  BBPATH=/dev/shm/bb/
+19435:  TAILORFS_INIT=0
+19435:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19435: Test timeout computed to be: 10000000
+19435: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19435: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19435: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19435: Filters: anatomy
+19435: Randomness seeded to: 2885028172
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 337055599
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: [TAILORFS PRINT]:     Timing,    100000,  0.051347,  0.000047,  0.209125,  0.213081,  0.237219,  0.196665,  0.222251,  0.205935
+19435: 
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 1109877208
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 3617832963
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 3518110430
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2424005490
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2901616728
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2682299548
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 3297335558
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 699264835
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 1308179607
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 1864263187
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 1674227725
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 1671027175
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 4290159419
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 166121770
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2589606590
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2909738832
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2600471035
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2681958749
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 731049938
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2893993375
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2376143281
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 1631077497
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 4028494208
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2464001672
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 3105531057
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 1777455271
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2862626573
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 2664741140
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 1928377322
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+19435: Filters: anatomy
+19435: Randomness seeded to: 481381671
+19435: [TAILORFS PRINT]: Enabling ERROR loggin
+19435: ===============================================================================
+19435: test cases: 1 | 1 passed
+19435: assertions: - none -
+19435: 
+1/1 Test #19435: test_internal_lassen_anatomy_1_32_100000 ...   Passed    4.09 sec
+
+The following tests passed:
+	test_internal_lassen_anatomy_1_32_100000
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   7.57 sec
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+Test project /usr/workspace/iopp/software/tailorfs/build_1
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 19436
+    Start 19436: test_internal_lassen_anatomy_1_32_1000000
+
+19436: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/internal_test" "--num_of_ops" "1000000" "anatomy"
+19436: Environment variables: 
+19436:  pfs=/p/gpfs1/iopp
+19436:  BBPATH=/dev/shm/bb/
+19436:  TAILORFS_INIT=0
+19436:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19436: Test timeout computed to be: 10000000
+19436: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19436: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19436: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: [MIMIR ERROR]: Environment variable MIMIR_CONFIG_PATH not present or path does not exist. Config not loaded.
+19436: Filters: anatomy
+19436: Randomness seeded to: 991343113
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3196755839
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 135257072
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3798706493
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: [TAILORFS PRINT]:     Timing,   1000000,  0.050369,  0.000056,  2.050283,  1.929834,  2.017932,  1.909697,  2.011168,  1.919926
+19436: 
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3053344273
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1937457312
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 864659546
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3389853699
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 2296802574
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1323966265
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 914072917
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1609749392
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1522052950
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3723816508
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 846897425
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3255948319
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 2897913289
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1485076458
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 2872018987
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1016679430
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3573056845
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1484872931
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 858037224
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1402919111
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3563685981
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 52903778
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 2344771080
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3462884589
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 1237057521
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 807767154
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 2468233095
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+19436: Filters: anatomy
+19436: Randomness seeded to: 3286086202
+19436: [TAILORFS PRINT]: Enabling ERROR loggin
+19436: ===============================================================================
+19436: test cases: 1 | 1 passed
+19436: assertions: - none -
+19436: 
+1/1 Test #19436: test_internal_lassen_anatomy_1_32_1000000 ...   Passed   24.82 sec
+
+The following tests passed:
+	test_internal_lassen_anatomy_1_32_1000000
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  28.29 sec
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@lassen710>
+Subject: Job 5740771: <paper_init_throughput.sh_1_1> in cluster <lassen> Exited
+
+Job <paper_init_throughput.sh_1_1> was submitted from host <lassen708> by user <haridev> in cluster <lassen> at Wed Mar 27 12:27:13 2024
+Job was executed on host(s) <1*lassen710>, in queue <pbatch>, as user <haridev> in cluster <lassen> at Wed Mar 27 12:27:39 2024
+                            <40*lassen786>
+</g/g92/haridev> was used as the home directory.
+</usr/workspace/iopp/software/tailorfs/scripts> was used as the working directory.
+Started at Wed Mar 27 12:27:39 2024
+Terminated at Wed Mar 27 12:34:02 2024
+Results reported at Wed Mar 27 12:34:02 2024
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/usr/workspace/iopp/software/tailorfs/scripts/paper_init_throughput.sh 1 1
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with signal termination: 14.
+
+Resource usage summary:
+
+    CPU time :                                   53.00 sec.
+    Max Memory :                                 774 MB
+    Average Memory :                             99.51 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   1582 MB
+    Max Processes :                              18
+    Max Threads :                                41
+    Run time :                                   384 sec.
+    Turnaround time :                            409 sec.
+
+The output (if any) is above this job summary.
+

@@ -1,0 +1,61 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /usr/workspace/iopp/software/tailorfs/reproduce/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/tcetmp/bin/gmake -f Makefile cmTC_fecbd/fast && /usr/tcetmp/bin/gmake  -f CMakeFiles/cmTC_fecbd.dir/build.make CMakeFiles/cmTC_fecbd.dir/build
+gmake[1]: Entering directory '/usr/WS2/iopp/software/tailorfs/reproduce/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_fecbd.dir/src.c.o
+/usr/tce/packages/gcc/gcc-8.3.1/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -fPIE -o CMakeFiles/cmTC_fecbd.dir/src.c.o -c /usr/workspace/iopp/software/tailorfs/reproduce/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_fecbd
+/usr/tce/packages/cmake/cmake-3.21.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fecbd.dir/link.txt --verbose=1
+/usr/tce/packages/gcc/gcc-8.3.1/bin/cc CMakeFiles/cmTC_fecbd.dir/src.c.o -o cmTC_fecbd 
+CMakeFiles/cmTC_fecbd.dir/src.c.o: In function `main':
+src.c:(.text+0x64): undefined reference to `pthread_create'
+src.c:(.text+0x74): undefined reference to `pthread_detach'
+src.c:(.text+0x84): undefined reference to `pthread_cancel'
+src.c:(.text+0x98): undefined reference to `pthread_join'
+src.c:(.text+0xac): undefined reference to `pthread_atfork'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_fecbd.dir/build.make:99: cmTC_fecbd] Error 1
+gmake[1]: Leaving directory '/usr/WS2/iopp/software/tailorfs/reproduce/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_fecbd/fast] Error 2
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /usr/workspace/iopp/software/tailorfs/reproduce/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/tcetmp/bin/gmake -f Makefile cmTC_7707a/fast && /usr/tcetmp/bin/gmake  -f CMakeFiles/cmTC_7707a.dir/build.make CMakeFiles/cmTC_7707a.dir/build
+gmake[1]: Entering directory '/usr/WS2/iopp/software/tailorfs/reproduce/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7707a.dir/CheckFunctionExists.c.o
+/usr/tce/packages/gcc/gcc-8.3.1/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create -fPIE -o CMakeFiles/cmTC_7707a.dir/CheckFunctionExists.c.o -c /usr/tce/packages/cmake/cmake-3.21.1/share/cmake/Modules/CheckFunctionExists.c
+Linking C executable cmTC_7707a
+/usr/tce/packages/cmake/cmake-3.21.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7707a.dir/link.txt --verbose=1
+/usr/tce/packages/gcc/gcc-8.3.1/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create CMakeFiles/cmTC_7707a.dir/CheckFunctionExists.c.o -o cmTC_7707a  -lpthreads 
+/usr/tce/packages/gcc/gcc-8.3.1/rh/usr/bin/../libexec/gcc/ppc64le-redhat-linux/8/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_7707a.dir/build.make:99: cmTC_7707a] Error 1
+gmake[1]: Leaving directory '/usr/WS2/iopp/software/tailorfs/reproduce/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_7707a/fast] Error 2
+
+
+

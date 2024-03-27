@@ -1,0 +1,3225 @@
+/usr/workspace/iopp/install_scripts/bin/iopp-init: line 11: module: command not found
+/usr/workspace/iopp/software/tailorfs /usr/workspace/iopp/software/tailorfs/scripts
+mkdir: cannot create directory 'build_1': File exists
+/usr/workspace/iopp/software/tailorfs/build_1 /usr/workspace/iopp/software/tailorfs /usr/workspace/iopp/software/tailorfs/scripts
+-- The C compiler identification is GNU 8.3.1
+-- The CXX compiler identification is GNU 8.3.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/tce/packages/gcc/gcc-8.3.1/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/tce/packages/gcc/gcc-8.3.1/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- /usr/local/bin
+-- /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/usr/workspace/iopp/software/tailorfs/build_1/lib/cmake/usr/workspace/iopp/software/tailorfs/external/brahma/dependency/.spack-env/view/usr/workspace/iopp/software/tailorfs/build_1/lib/cmake
+-- /usr/local/bin
+-- Found cpp-logger: TRUE  
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- [Gotcha] found gotcha at /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include/
+-- Found MPI_CXX: /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/lib/libmpiprofilesupport.so (found version "3.1") 
+-- Found MPI: TRUE (found version "3.1") found components: CXX 
+-- [MPI] found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- /usr/local/bin
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- Found nlohmann_json: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib64/cmake/nlohmann_json/nlohmann_jsonConfig.cmake (found suitable version "3.10.5", minimum required is "3.10.5") 
+-- found nlohmann_json
+-- found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found mimir: TRUE  
+-- [MIMIR] found mimir at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- [CPP_LOGGER] found cpp-logger at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- Found brahma: TRUE  
+-- [BRAHMA] found brahma at /usr/workspace/iopp/software/tailorfs/build_1/include
+-- UNIFYFS_INCLUDE_DIRS: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include
+-- UNIFYFS_ROOT_DIR: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view
+-- UNIFYFS_LIBRARY_PATH: /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+-- Found unifyfs: TRUE  
+-- [UnifyFS] found headers at /usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/include
+-- [MPI] found mpi.h at /usr/tce/packages/spectrum-mpi/ibm/spectrum-mpi-2020.08.19/include
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Number of nodes: 1
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /usr/workspace/iopp/software/tailorfs/build_1
+[  2%] Building CXX object test/unifyfs/CMakeFiles/unifyfs_basic.dir/unifyfs_basic.cpp.o
+[  4%] Building CXX object test/micro_benchmark/CMakeFiles/io_tests.dir/io_tests.cpp.o
+[  6%] Building CXX object external/cpp-logger/CMakeFiles/cpp-logger.dir/src/cpp-logger/logger.cpp.o
+[  9%] Linking CXX shared library ../../lib/libcpp-logger.so
+[  9%] Built target cpp-logger
+[ 11%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/mimir_interceptor.cpp.o
+[ 13%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/workflow.cpp.o
+[ 18%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/job_configuration.cpp.o
+[ 18%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/common/debug.cpp.o
+[ 20%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/advice/advice.cpp.o
+[ 23%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/mpi.cpp.o
+[ 25%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interceptor.cpp.o
+[ 27%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/application.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/mpiio.cpp.o
+[ 32%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/stdio.cpp.o
+[ 34%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/interface_utility.cpp.o
+[ 39%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/brahma.cpp.o
+[ 41%] Building CXX object external/mimir/CMakeFiles/mimir.dir/src/mimir/api/posix.cpp.o
+[ 41%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/posix.cpp.o
+[ 44%] Building CXX object external/brahma/CMakeFiles/brahma.dir/src/brahma/interface/interface.cpp.o
+[ 46%] Linking CXX shared library ../../lib/libbrahma.so
+[ 46%] Built target brahma
+[ 48%] Linking CXX executable ../../bin/io_tests
+[ 51%] Linking CXX executable ../../bin/unifyfs_basic
+[ 51%] Built target io_tests
+[ 51%] Built target unifyfs_basic
+[ 53%] Linking CXX shared library ../../lib/libmimir.so
+[ 53%] Built target mimir
+[ 60%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/process_state.cpp.o
+[ 60%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/posix.cpp.o
+[ 60%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/unifyfs_fsview.cpp.o
+[ 65%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/posix_fsview.cpp.o
+[ 65%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/mpiio_fsview.cpp.o
+[ 67%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview/stdio_fsview.cpp.o
+[ 69%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/util/unifyfs-stage-transfer.cpp.o
+[ 74%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/mpi.cpp.o
+[ 74%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/mpiio.cpp.o
+[ 79%] Building CXX object CMakeFiles/tailorfs.dir/main.cpp.o
+[ 79%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/brahma/stdio.cpp.o
+[ 81%] Building CXX object test/mimir/CMakeFiles/mimir_test.dir/mimir_test.cpp.o
+[ 83%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/tailorfs.cpp.o
+[ 86%] Building CXX object CMakeFiles/tailorfs.dir/src/tailorfs/core/fsview_manager.cpp.o
+[ 88%] Linking CXX shared library lib/libtailorfs.so
+[ 88%] Built target tailorfs
+[ 90%] Building CXX object CMakeFiles/tailorfs_exe.dir/main.cpp.o
+[ 93%] Building CXX object test/internal/CMakeFiles/internal_test.dir/internal_test.cpp.o
+[ 95%] Linking CXX executable ../../bin/mimir_test
+[ 95%] Built target mimir_test
+[ 97%] Linking CXX executable bin/tailorfs_exe
+[ 97%] Built target tailorfs_exe
+[100%] Linking CXX executable ../../bin/internal_test
+[100%] Built target internal_test
+Test project /usr/workspace/iopp/software/tailorfs/build_1
+      Start 18769: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_wo_all
+ 1/17 Test #18769: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_wo_all ..........   Passed    1.25 sec
+      Start 18771: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_ro_all
+ 2/17 Test #18771: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_ro_all ..........   Passed    0.81 sec
+      Start 18773: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_raw_all
+ 3/17 Test #18773: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_raw_all .........   Passed    0.80 sec
+      Start 18775: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_raw_split
+ 4/17 Test #18775: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_raw_split .......   Passed    0.91 sec
+      Start 18777: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_raw_alt
+ 5/17 Test #18777: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_raw_alt .........   Passed    0.84 sec
+      Start 18779: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_update_all
+ 6/17 Test #18779: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_update_all ......   Passed    0.84 sec
+      Start 18781: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_worm_all
+ 7/17 Test #18781: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_worm_all ........   Passed    0.77 sec
+      Start 18783: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_worm_split
+ 8/17 Test #18783: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_worm_split ......   Passed    0.77 sec
+      Start 18785: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_worm_alt
+ 9/17 Test #18785: test_generate_config_lassen_1_32_1_4_262144_fpp_seq_worm_alt ........   Passed    0.78 sec
+      Start 18787: test_generate_config_lassen_1_32_1_4_262144_fpp_random_ro_all
+10/17 Test #18787: test_generate_config_lassen_1_32_1_4_262144_fpp_random_ro_all .......   Passed    0.70 sec
+      Start 18789: test_generate_config_lassen_1_32_1_4_262144_fpp_random_raw_all
+11/17 Test #18789: test_generate_config_lassen_1_32_1_4_262144_fpp_random_raw_all ......   Passed    0.75 sec
+      Start 18791: test_generate_config_lassen_1_32_1_4_262144_fpp_random_raw_split
+12/17 Test #18791: test_generate_config_lassen_1_32_1_4_262144_fpp_random_raw_split ....   Passed    0.85 sec
+      Start 18793: test_generate_config_lassen_1_32_1_4_262144_fpp_random_raw_alt
+13/17 Test #18793: test_generate_config_lassen_1_32_1_4_262144_fpp_random_raw_alt ......   Passed    0.72 sec
+      Start 18795: test_generate_config_lassen_1_32_1_4_262144_fpp_random_update_all
+14/17 Test #18795: test_generate_config_lassen_1_32_1_4_262144_fpp_random_update_all ...   Passed    0.77 sec
+      Start 18797: test_generate_config_lassen_1_32_1_4_262144_fpp_random_worm_all
+15/17 Test #18797: test_generate_config_lassen_1_32_1_4_262144_fpp_random_worm_all .....   Passed    0.81 sec
+      Start 18799: test_generate_config_lassen_1_32_1_4_262144_fpp_random_worm_split
+16/17 Test #18799: test_generate_config_lassen_1_32_1_4_262144_fpp_random_worm_split ...   Passed    0.66 sec
+      Start 18801: test_generate_config_lassen_1_32_1_4_262144_fpp_random_worm_alt
+17/17 Test #18801: test_generate_config_lassen_1_32_1_4_262144_fpp_random_worm_alt .....   Passed    0.64 sec
+
+100% tests passed, 0 tests failed out of 17
+
+Total Test time (real) =  18.77 sec
+Timing, TailorFS
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+Test project /usr/workspace/iopp/software/tailorfs/build_1
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 19310
+    Start 19310: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_wo_all
+
+19310: Test command: /usr/bin/bash "/usr/workspace/iopp/software/tailorfs/test/scripts/main_unifyfs_wrapper.sh" "lassen" "32" "/usr/workspace/iopp/software/tailorfs" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "/g/g92/haridev/unifyfs/logs" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "0" "--reporter" "compact" "Write-Only"
+19310: Environment variables: 
+19310:  pfs=/p/gpfs1/iopp
+19310:  BBPATH=/dev/shm/bb/
+19310:  MIMIR_CONFIG_PATH=/usr/workspace/iopp/software/tailorfs/test/mimir/json_files/lassen/mimir_config_1_32_1_4_262144_fpp_seq_wo_all.json
+19310:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19310: Test timeout computed to be: 10000000
+19310: /usr/workspace/iopp/software/tailorfs/test/scripts/lassen /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19310: [TailorFS] Configuring test for lassen
+19310: [TailorFS] Run Test
+19310: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19310: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19310: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 398732150
+19310: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.003317,  0.886146,  5.039864,  0.000000,     POSIX,        wo,1,0,0,0
+19310: 
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 2398725178
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3574755658
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3343766833
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3507627239
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 2616014094
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 391458373
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3418850317
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 1392713411
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3834611318
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3388137528
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3843026106
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 2421048954
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3149637045
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 407929458
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3278343191
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3445125502
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3626358604
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 2464290868
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 2254082314
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 341496919
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 4291323102
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 2112444963
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 1344978218
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 4294764084
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3991833158
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 1448469922
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 3497750637
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 1734204559
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 4005675072
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 731052964
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: [TAILORFS PRINT]: Enabling ERROR loggin
+19310: Filters: Write-Only
+19310: RNG seed: 99413851
+19310: Passed 1 test case with 262156 assertions.
+19310: 
+19310: /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19310: Finishing test.
+19310: [TailorFS] Finishing test.
+1/9 Test #19310: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_wo_all .......   Passed    9.54 sec
+test 19312
+    Start 19312: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_ro_all
+
+19312: Test command: /usr/bin/bash "/usr/workspace/iopp/software/tailorfs/test/scripts/main_unifyfs_wrapper.sh" "lassen" "32" "/usr/workspace/iopp/software/tailorfs" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "/g/g92/haridev/unifyfs/logs" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "0" "--reporter" "compact" "Read-Only"
+19312: Environment variables: 
+19312:  pfs=/p/gpfs1/iopp
+19312:  BBPATH=/dev/shm/bb/
+19312:  MIMIR_CONFIG_PATH=/usr/workspace/iopp/software/tailorfs/test/mimir/json_files/lassen/mimir_config_1_32_1_4_262144_fpp_seq_ro_all.json
+19312:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19312: Test timeout computed to be: 10000000
+19312: /usr/workspace/iopp/software/tailorfs/test/scripts/lassen /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19312: [TailorFS] Configuring test for lassen
+19312: [TailorFS] Run Test
+19312: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19312: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19312: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1856236275
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 690184339
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 649248583
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 2630777496
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1339817852
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 3423346675
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1972223238
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1850316427
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 4091453848
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1782880414
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 4236191868
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1962128821
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 2129672099
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 2210759979
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1133672000
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 494664566
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 78748673
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 2613210829
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1150560040
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 3727449994
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 2869851138
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1460477389
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 431526429
+19312: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  2.998637,  0.009381,  0.000000,  3.976472,     POSIX,        ro,1,0,0,0
+19312: 
+19312: Passed 1 test case with 262159 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1669471741
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1546034755
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 3583090344
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1099268155
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 788802132
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 119752164
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 465284019
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 322369562
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: [TAILORFS PRINT]: Enabling ERROR loggin
+19312: Filters: Read-Only
+19312: RNG seed: 1501270123
+19312: Passed 1 test case with 262158 assertions.
+19312: 
+19312: /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19312: Finishing test.
+19312: [TailorFS] Finishing test.
+2/9 Test #19312: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_ro_all .......   Passed   13.33 sec
+test 19314
+    Start 19314: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_raw_all
+
+19314: Test command: /usr/bin/bash "/usr/workspace/iopp/software/tailorfs/test/scripts/main_unifyfs_wrapper.sh" "lassen" "32" "/usr/workspace/iopp/software/tailorfs" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "/g/g92/haridev/unifyfs/logs" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "0" "--reporter" "compact" "Read-After-Write"
+19314: Environment variables: 
+19314:  pfs=/p/gpfs1/iopp
+19314:  BBPATH=/dev/shm/bb/
+19314:  MIMIR_CONFIG_PATH=/usr/workspace/iopp/software/tailorfs/test/mimir/json_files/lassen/mimir_config_1_32_1_4_262144_fpp_seq_raw_all.json
+19314:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19314: Test timeout computed to be: 10000000
+19314: /usr/workspace/iopp/software/tailorfs/test/scripts/lassen /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19314: [TailorFS] Configuring test for lassen
+19314: [TailorFS] Run Test
+19314: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19314: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19314: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 1828019775
+19314: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  2.889483,  1.699059,  5.020129,  3.993395,     POSIX,       raw,1,0,0,0
+19314: 
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 2466451633
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 2686893956
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 2537273283
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 4005233852
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 3219249922
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 2260423180
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 1298612311
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 4059525953
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 1493293268
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 411611636
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 1120989859
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 173076867
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 3828130066
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 4265162454
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 294516968
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 3698189267
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 2524745379
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 4210489962
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 1513832533
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 2256426111
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 2193185058
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 1875673849
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 1585982067
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 233770021
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 3502870421
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 1177663453
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 3563004471
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 1712125051
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 2249151132
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 2252692364
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: [TAILORFS PRINT]: Enabling ERROR loggin
+19314: Filters: Read-After-Write
+19314: RNG seed: 3930087920
+19314: Passed 1 test case with 524298 assertions.
+19314: 
+19314: /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19314: Finishing test.
+19314: [TailorFS] Finishing test.
+3/9 Test #19314: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_raw_all ......   Passed   19.14 sec
+test 19316
+    Start 19316: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_raw_split
+
+19316: Test command: /usr/bin/bash "/usr/workspace/iopp/software/tailorfs/test/scripts/main_unifyfs_wrapper.sh" "lassen" "32" "/usr/workspace/iopp/software/tailorfs" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "/g/g92/haridev/unifyfs/logs" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "1" "--reporter" "compact" "Read-After-Write"
+19316: Environment variables: 
+19316:  pfs=/p/gpfs1/iopp
+19316:  BBPATH=/dev/shm/bb/
+19316:  MIMIR_CONFIG_PATH=/usr/workspace/iopp/software/tailorfs/test/mimir/json_files/lassen/mimir_config_1_32_1_4_262144_fpp_seq_raw_split.json
+19316:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19316: Test timeout computed to be: 10000000
+19316: /usr/workspace/iopp/software/tailorfs/test/scripts/lassen /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19316: [TailorFS] Configuring test for lassen
+19316: [TailorFS] Run Test
+19316: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19316: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19316: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 2834493339
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 3304453140
+19316: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.785725,  0.366095,  4.970797,  3.893225,     POSIX,       raw,1,0,0,1
+19316: 
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 2080516784
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 743996815
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 585893559
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 1540043566
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 1791915931
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 4102313722
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 1088633755
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 3755158981
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 1225931732
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 2820496489
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 2075094237
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 2375060863
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 750254279
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 4149652446
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 1274979551
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 911484901
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 3565751020
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 1753845843
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 4260675544
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 4154272831
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 140414061
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 526548379
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 329308761
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 2227094714
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 2365550999
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 724385379
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 4166895797
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 3260593781
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 892491314
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: [TAILORFS PRINT]: Enabling ERROR loggin
+19316: Filters: Read-After-Write
+19316: RNG seed: 190819258
+19316: Passed 1 test case with 262155 assertions.
+19316: 
+19316: /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19316: Finishing test.
+19316: [TailorFS] Finishing test.
+4/9 Test #19316: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_raw_split ....   Passed   19.12 sec
+test 19318
+    Start 19318: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_raw_alt
+
+19318: Test command: /usr/bin/bash "/usr/workspace/iopp/software/tailorfs/test/scripts/main_unifyfs_wrapper.sh" "lassen" "32" "/usr/workspace/iopp/software/tailorfs" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "/g/g92/haridev/unifyfs/logs" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "2" "--reporter" "compact" "Read-After-Write"
+19318: Environment variables: 
+19318:  pfs=/p/gpfs1/iopp
+19318:  BBPATH=/dev/shm/bb/
+19318:  MIMIR_CONFIG_PATH=/usr/workspace/iopp/software/tailorfs/test/mimir/json_files/lassen/mimir_config_1_32_1_4_262144_fpp_seq_raw_alt.json
+19318:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19318: Test timeout computed to be: 10000000
+19318: /usr/workspace/iopp/software/tailorfs/test/scripts/lassen /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19318: [TailorFS] Configuring test for lassen
+19318: [TailorFS] Run Test
+19318: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19318: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19318: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 2867396179
+19318: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.014670,  0.015163,  3.121372,  2.685145,     POSIX,       raw,1,0,0,2
+19318: 
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 3993526350
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1238332094
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 2126237555
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1966853997
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 2377635768
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 462853083
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 725974945
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 3953646178
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1286588446
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1707985996
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1753325480
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 534126175
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 3892757823
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1026305994
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 2682845205
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1763086453
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 402052039
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 38653957
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 2043361658
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 827431830
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 3355639476
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 538272404
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1505059953
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 795829600
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1278520524
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 644671581
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 2922415841
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1404679935
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 1353186581
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 3832086256
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: [TAILORFS PRINT]: Enabling ERROR loggin
+19318: Filters: Read-After-Write
+19318: RNG seed: 2278407437
+19318: Passed 1 test case with 262155 assertions.
+19318: 
+19318: /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19318: Finishing test.
+19318: [TailorFS] Finishing test.
+5/9 Test #19318: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_raw_alt ......   Passed   12.76 sec
+test 19320
+    Start 19320: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_update_all
+
+19320: Test command: /usr/bin/bash "/usr/workspace/iopp/software/tailorfs/test/scripts/main_unifyfs_wrapper.sh" "lassen" "32" "/usr/workspace/iopp/software/tailorfs" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "/g/g92/haridev/unifyfs/logs" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "0" "--reporter" "compact" "Update"
+19320: Environment variables: 
+19320:  pfs=/p/gpfs1/iopp
+19320:  BBPATH=/dev/shm/bb/
+19320:  MIMIR_CONFIG_PATH=/usr/workspace/iopp/software/tailorfs/test/mimir/json_files/lassen/mimir_config_1_32_1_4_262144_fpp_seq_update_all.json
+19320:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19320: Test timeout computed to be: 10000000
+19320: /usr/workspace/iopp/software/tailorfs/test/scripts/lassen /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19320: [TailorFS] Configuring test for lassen
+19320: [TailorFS] Run Test
+19320: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19320: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19320: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS ERROR]: Opening file using POSIX - failed
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 1356456512
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_0
+19320: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.005053,  0.000088,  4.592129,  0.000000,     POSIX,        up,1,0,0,0
+19320: 
+19320: Passed 1 test case with 262159 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 1652242265
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_7
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 1476746531
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_1
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 1851897337
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_4
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 4013483505
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_15
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 556319373
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_3
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 3887228174
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_12
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 3596803522
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_13
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 788027966
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_16
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 595965619
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_6
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 2391404451
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_5
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 523739681
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_11
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 2392869358
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_9
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 3480778270
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_10
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 1105670964
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_8
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 3615343592
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_19
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 3885910549
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_17
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 3946387209
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_14
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 2456593506
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_22
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 560773269
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_20
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 4239715549
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_2
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 2223454292
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_21
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 2300120379
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_18
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 2862343568
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_23
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 3201806480
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_24
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 508584223
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_25
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 1177273038
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_27
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 614115561
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_28
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 2701589117
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_26
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 3682649510
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_30
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 689949246
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_29
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: [TAILORFS PRINT]: Enabling ERROR loggin
+19320: Filters: Update
+19320: RNG seed: 1589616831
+19320: [TAILORFS PRINT]: tailorfs::POSIXFSView::Open for file /p/gpfs1/iopp/tailorfs/data_32/test.dat_31
+19320: Passed 1 test case with 262158 assertions.
+19320: 
+19320: /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19320: Finishing test.
+19320: [TailorFS] Finishing test.
+6/9 Test #19320: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_update_all ...   Passed    9.62 sec
+test 19322
+    Start 19322: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_worm_all
+
+19322: Test command: /usr/bin/bash "/usr/workspace/iopp/software/tailorfs/test/scripts/main_unifyfs_wrapper.sh" "lassen" "32" "/usr/workspace/iopp/software/tailorfs" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "/g/g92/haridev/unifyfs/logs" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "0" "--reporter" "compact" "WORM"
+19322: Environment variables: 
+19322:  pfs=/p/gpfs1/iopp
+19322:  BBPATH=/dev/shm/bb/
+19322:  MIMIR_CONFIG_PATH=/usr/workspace/iopp/software/tailorfs/test/mimir/json_files/lassen/mimir_config_1_32_1_4_262144_fpp_seq_worm_all.json
+19322:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19322: Test timeout computed to be: 10000000
+19322: /usr/workspace/iopp/software/tailorfs/test/scripts/lassen /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19322: [TailorFS] Configuring test for lassen
+19322: [TailorFS] Run Test
+19322: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19322: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19322: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 3827524382
+19322: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  3.075279,  1.596991,  0.558795,  4.014295,     POSIX,      worm,1,0,0,0
+19322: 
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 4159499519
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 323657024
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 3106295790
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2515337387
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 3126303698
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2629687714
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 407517138
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 29020400
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 3141150832
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2179379638
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 3548596870
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 641204034
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2797844975
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2509928880
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2950942283
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 3043558381
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2218271849
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 3833148034
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2480962330
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 987700103
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2690596030
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2482618151
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2644395522
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 3630478883
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2450327553
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 2844777717
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 470499773
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 1339626290
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 3317758121
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 3151322840
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: [TAILORFS PRINT]: Enabling ERROR loggin
+19322: Filters: WORM
+19322: RNG seed: 1022042936
+19322: Passed 1 test case with 262155 assertions.
+19322: 
+19322: /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19322: Finishing test.
+19322: [TailorFS] Finishing test.
+7/9 Test #19322: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_worm_all .....   Passed   13.50 sec
+test 19324
+    Start 19324: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_worm_split
+
+19324: Test command: /usr/bin/bash "/usr/workspace/iopp/software/tailorfs/test/scripts/main_unifyfs_wrapper.sh" "lassen" "32" "/usr/workspace/iopp/software/tailorfs" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "/g/g92/haridev/unifyfs/logs" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "1" "--reporter" "compact" "WORM"
+19324: Environment variables: 
+19324:  pfs=/p/gpfs1/iopp
+19324:  BBPATH=/dev/shm/bb/
+19324:  MIMIR_CONFIG_PATH=/usr/workspace/iopp/software/tailorfs/test/mimir/json_files/lassen/mimir_config_1_32_1_4_262144_fpp_seq_worm_split.json
+19324:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19324: Test timeout computed to be: 10000000
+19324: /usr/workspace/iopp/software/tailorfs/test/scripts/lassen /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19324: [TailorFS] Configuring test for lassen
+19324: [TailorFS] Run Test
+19324: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19324: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19324: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 2687961373
+19324: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.468411,  1.336652,  0.240251,  3.960143,     POSIX,      worm,1,0,0,1
+19324: 
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 1886747533
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 769628886
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 861740821
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 1893478028
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 1151176267
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 179645752
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 2977578976
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 766430468
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 2119284768
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 1477377004
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 876756223
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 3597019878
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 2600329870
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 1423364499
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 3796752191
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 2052164436
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 4087960260
+19324: Passed 1 test case with 12 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 1209748530
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 84990998
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 3913269300
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 712525882
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 2110572121
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 3959993135
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 4118933707
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 3313978003
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 821252571
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 1460973229
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 2550008854
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 2172744374
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 526355419
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: [TAILORFS PRINT]: Enabling ERROR loggin
+19324: Filters: WORM
+19324: RNG seed: 1468374875
+19324: Passed 1 test case with 262155 assertions.
+19324: 
+19324: /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19324: Finishing test.
+19324: [TailorFS] Finishing test.
+8/9 Test #19324: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_worm_split ...   Passed   11.67 sec
+test 19326
+    Start 19326: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_worm_alt
+
+19326: Test command: /usr/bin/bash "/usr/workspace/iopp/software/tailorfs/test/scripts/main_unifyfs_wrapper.sh" "lassen" "32" "/usr/workspace/iopp/software/tailorfs" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "/g/g92/haridev/unifyfs/logs" "/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "2" "--reporter" "compact" "WORM"
+19326: Environment variables: 
+19326:  pfs=/p/gpfs1/iopp
+19326:  BBPATH=/dev/shm/bb/
+19326:  MIMIR_CONFIG_PATH=/usr/workspace/iopp/software/tailorfs/test/mimir/json_files/lassen/mimir_config_1_32_1_4_262144_fpp_seq_worm_alt.json
+19326:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19326: Test timeout computed to be: 10000000
+19326: /usr/workspace/iopp/software/tailorfs/test/scripts/lassen /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19326: [TailorFS] Configuring test for lassen
+19326: [TailorFS] Run Test
+19326: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19326: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19326: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 2152233430
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 17092728
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 724629509
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 2055200574
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 3288088576
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 3916954375
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 2441618481
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 744127039
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 3498272344
+19326: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.021798,  0.057086,  1.540325,  2.829739,     POSIX,      worm,1,0,0,2
+19326: 
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 6516352
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 3153621780
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 3298220212
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 508777890
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 382623531
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 3115326212
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 3704806252
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 763624457
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 2702222974
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 2836798596
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 3354010966
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 444011641
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 4033725411
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 2586092253
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 1835486219
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 29835005
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 4290338629
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 4033193803
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 4048977844
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 3216972231
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 32758517
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 1855832474
+19326: Passed 1 test case with 12 assertions.
+19326: 
+19326: [TAILORFS PRINT]: Enabling ERROR loggin
+19326: Filters: WORM
+19326: RNG seed: 2814085057
+19326: Passed 1 test case with 262155 assertions.
+19326: 
+19326: /usr/WS2/iopp/software/tailorfs/build_1/test/micro_benchmark
+19326: Finishing test.
+19326: [TailorFS] Finishing test.
+9/9 Test #19326: test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_worm_alt .....   Passed    9.24 sec
+
+The following tests passed:
+	test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_wo_all
+	test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_ro_all
+	test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_raw_all
+	test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_raw_split
+	test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_raw_alt
+	test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_update_all
+	test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_worm_all
+	test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_worm_split
+	test_tailor_mb_lassen_1_32_1_4_262144_fpp_seq_worm_alt
+
+100% tests passed, 0 tests failed out of 9
+
+Total Test time (real) = 122.71 sec
+Timing, Baseline
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/usr/workspace/iopp/software/tailorfs/build_1/DartConfiguration.tcl
+Test project /usr/workspace/iopp/software/tailorfs/build_1
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 19309
+    Start 19309: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_wo_all
+
+19309: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "0" "--reporter" "compact" "Write-Only"
+19309: Environment variables: 
+19309:  pfs=/p/gpfs1/iopp
+19309:  BBPATH=/dev/shm/bb/
+19309:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19309: Test timeout computed to be: 10000000
+19309: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19309: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19309: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19309: Filters: Write-Only
+19309: RNG seed: 2105410910
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 827296802
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 646472911
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 2095806104
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 415725418
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 2189673883
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 4012668510
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 3806728698
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 2346943708
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 869746780
+19309: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.005095,  0.000097,  4.516813,  0.000000,     POSIX,        wo,1,0,0,0
+19309: 
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 39629788
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 4090823437
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 236604205
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 3489310358
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 1993969204
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 542777119
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 3558624794
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 430517286
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 3200405106
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 610025331
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 2821990140
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 3522566972
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 2315361158
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 775407944
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 2973663733
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 3669446739
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 2679239650
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 4132746698
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 2499222517
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 2652659671
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 2501089052
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+19309: Filters: Write-Only
+19309: RNG seed: 1613470849
+19309: Passed 1 test case with 262156 assertions.
+19309: 
+1/9 Test #19309: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_wo_all .......   Passed    7.95 sec
+test 19311
+    Start 19311: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_ro_all
+
+19311: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "0" "--reporter" "compact" "Read-Only"
+19311: Environment variables: 
+19311:  pfs=/p/gpfs1/iopp
+19311:  BBPATH=/dev/shm/bb/
+19311:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19311: Test timeout computed to be: 10000000
+19311: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19311: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19311: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19311: Filters: Read-Only
+19311: RNG seed: 1710158669
+19311: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.000050,  0.000021,  0.000000,  4.258597,     POSIX,        ro,1,0,0,0
+19311: 
+19311: Passed 1 test case with 262159 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 2972054427
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 100479292
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 1057006320
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 854749044
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 3064898936
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 1657596390
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 1371675641
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 2856392394
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 1064708617
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 4173973649
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 2972791632
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 7882285
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 4143420224
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 1803095577
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 3783325110
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 1429188369
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 4114894683
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 1527224332
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 1543751345
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 246487553
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 3785330391
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 2578180430
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 309914638
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 3863637850
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 4268633338
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 2108091022
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 3076237159
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 2490870270
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 1224906707
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 2530440576
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+19311: Filters: Read-Only
+19311: RNG seed: 305016878
+19311: Passed 1 test case with 262158 assertions.
+19311: 
+2/9 Test #19311: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_ro_all .......   Passed    9.00 sec
+test 19313
+    Start 19313: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_raw_all
+
+19313: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "0" "--reporter" "compact" "Read-After-Write"
+19313: Environment variables: 
+19313:  pfs=/p/gpfs1/iopp
+19313:  BBPATH=/dev/shm/bb/
+19313:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19313: Test timeout computed to be: 10000000
+19313: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19313: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19313: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19313: Filters: Read-After-Write
+19313: RNG seed: 3691635396
+19313: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.006797,  0.000110,  4.465889,  3.905797,     POSIX,       raw,1,0,0,0
+19313: 
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 2478451138
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 3799770631
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 291610620
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 3372734180
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 2235277588
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 986001996
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 4277522585
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 2631234742
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 3181287999
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 2592486925
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 1002191505
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 2729623781
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 1016383940
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 3488609171
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 1612835010
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 3056850794
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 2074356882
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 664964208
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 1158387210
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 2603127291
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 1400104478
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 1042515195
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 2687336361
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 2126365426
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 1382099878
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 2600174125
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 1316787249
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 3735318531
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 571809093
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 3944423342
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+19313: Filters: Read-After-Write
+19313: RNG seed: 252745791
+19313: Passed 1 test case with 524298 assertions.
+19313: 
+3/9 Test #19313: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_raw_all ......   Passed   12.76 sec
+test 19315
+    Start 19315: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_raw_split
+
+19315: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "1" "--reporter" "compact" "Read-After-Write"
+19315: Environment variables: 
+19315:  pfs=/p/gpfs1/iopp
+19315:  BBPATH=/dev/shm/bb/
+19315:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19315: Test timeout computed to be: 10000000
+19315: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19315: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19315: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19315: Filters: Read-After-Write
+19315: RNG seed: 2642550794
+19315: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.001653,  0.000054,  2.863335,  2.292932,     POSIX,       raw,1,0,0,1
+19315: 
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 2293115219
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 2937528580
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 3541832490
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 4239003234
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 2636643004
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 4062283257
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 810902144
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 3607178780
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 1477362513
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 2211682342
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 282514610
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 3769631667
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 255643405
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 314086248
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 833097976
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 2906094808
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 396688610
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 2877741894
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 1372922586
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 2390171435
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 2357944712
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 146478171
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 1056914514
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 1168604202
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 2313953781
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 1132263584
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 3982249228
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 3875508159
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 2161720966
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 4046425532
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+19315: Filters: Read-After-Write
+19315: RNG seed: 3606785300
+19315: Passed 1 test case with 262155 assertions.
+19315: 
+4/9 Test #19315: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_raw_split ....   Passed    8.94 sec
+test 19317
+    Start 19317: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_raw_alt
+
+19317: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "2" "--reporter" "compact" "Read-After-Write"
+19317: Environment variables: 
+19317:  pfs=/p/gpfs1/iopp
+19317:  BBPATH=/dev/shm/bb/
+19317:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19317: Test timeout computed to be: 10000000
+19317: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19317: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19317: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19317: Filters: Read-After-Write
+19317: RNG seed: 1445111400
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 517152524
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 846255414
+19317: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.001052,  0.000060,  2.912404,  2.581453,     POSIX,       raw,1,0,0,2
+19317: 
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 1968208818
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 697470767
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 3830305431
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 3107355939
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 2809506967
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 658461434
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 156741367
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 3121190206
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 3978643806
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 4211631306
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 135347702
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 1428857253
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 244073841
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 966732985
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 1205819796
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 1623401497
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 3817349169
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 3904544937
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 2909569141
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 176844027
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 1008487885
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 3910417637
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 2346643161
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 4084695518
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 3391465999
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 1147230711
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 1273832127
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 1371125878
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+19317: Filters: Read-After-Write
+19317: RNG seed: 3957312234
+19317: Passed 1 test case with 262155 assertions.
+19317: 
+5/9 Test #19317: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_raw_alt ......   Passed    9.54 sec
+test 19319
+    Start 19319: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_update_all
+
+19319: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "0" "--reporter" "compact" "Update"
+19319: Environment variables: 
+19319:  pfs=/p/gpfs1/iopp
+19319:  BBPATH=/dev/shm/bb/
+19319:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19319: Test timeout computed to be: 10000000
+19319: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19319: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19319: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19319: Filters: Update
+19319: RNG seed: 3321338598
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 3327072585
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 1330335926
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 466697803
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 2067211757
+19319: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.003716,  0.000094,  4.376412,  0.000000,     POSIX,        up,1,0,0,0
+19319: 
+19319: Passed 1 test case with 262159 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 1723780548
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 2256358324
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 519517748
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 2317495013
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 888698247
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 50192554
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 1826336818
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 1119470062
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 1554345481
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 1036894506
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 791957615
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 2530834336
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 127809753
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 3655791213
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 376492741
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 552559557
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 3769937183
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 3949939745
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 3196783582
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 2913215798
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 3923019678
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 1466071401
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 793044668
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 1630271718
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 1279620561
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 3090109024
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+19319: Filters: Update
+19319: RNG seed: 2926887769
+19319: Passed 1 test case with 262158 assertions.
+19319: 
+6/9 Test #19319: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_update_all ...   Passed    8.95 sec
+test 19321
+    Start 19321: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_worm_all
+
+19321: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "0" "--reporter" "compact" "WORM"
+19321: Environment variables: 
+19321:  pfs=/p/gpfs1/iopp
+19321:  BBPATH=/dev/shm/bb/
+19321:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19321: Test timeout computed to be: 10000000
+19321: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19321: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19321: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19321: Filters: WORM
+19321: RNG seed: 2602126961
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 154737987
+19321: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.005156,  0.000318,  0.987788,  3.899584,     POSIX,      worm,1,0,0,0
+19321: 
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 1533229144
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 2770570946
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 3799312205
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 3377301491
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 151575170
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 1553173256
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 3564461895
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 3576300744
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 1383057675
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 485158673
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 1803472539
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 2084432942
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 1917769076
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 4159161254
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 76238248
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 2940682185
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 3034871149
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 2612452223
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 1544525166
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 4068941649
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 3577627701
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 1832033212
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 2591204974
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 2006211948
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 3418789605
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 2449126171
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 2214102577
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 3620794186
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 1860499258
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+19321: Filters: WORM
+19321: RNG seed: 2355818939
+19321: Passed 1 test case with 262155 assertions.
+19321: 
+7/9 Test #19321: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_worm_all .....   Passed    9.15 sec
+test 19323
+    Start 19323: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_worm_split
+
+19323: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "1" "--reporter" "compact" "WORM"
+19323: Environment variables: 
+19323:  pfs=/p/gpfs1/iopp
+19323:  BBPATH=/dev/shm/bb/
+19323:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19323: Test timeout computed to be: 10000000
+19323: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19323: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19323: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19323: Filters: WORM
+19323: RNG seed: 2762463875
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 1080716049
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 1897286660
+19323: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.001047,  0.000123,  0.475045,  2.243234,     POSIX,      worm,1,0,0,1
+19323: 
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 4160842078
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 1394405426
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 2065132637
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 2040006598
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 1573764020
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 2137304394
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 841943190
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 2436640366
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 3098773032
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 3770741390
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 2574158366
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 4123522147
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 1922645817
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 2803441903
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 2485751726
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 286178013
+19323: Passed 1 test case with 12 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 2716923936
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 3039731976
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 1575130496
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 951536674
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 2165299931
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 3824141150
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 1315861399
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 1840828233
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 1157707417
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 2883262445
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 4262594947
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 880378370
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+19323: Filters: WORM
+19323: RNG seed: 4129992800
+19323: Passed 1 test case with 262155 assertions.
+19323: 
+8/9 Test #19323: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_worm_split ...   Passed    5.79 sec
+test 19325
+    Start 19325: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_worm_alt
+
+19325: Test command: /usr/tcetmp/bin/jsrun "-r" "1" "-a" "32" "-c" "32" "-d" "packed" "/usr/workspace/iopp/software/tailorfs/build_1/bin/io_tests" "--request_size" "4096" "--iteration" "262144" "--ranks_per_node" "32" "--access_pattern" "0" "--file_sharing" "0" "--process_grouping" "2" "--reporter" "compact" "WORM"
+19325: Environment variables: 
+19325:  pfs=/p/gpfs1/iopp
+19325:  BBPATH=/dev/shm/bb/
+19325:  LD_LIBRARY_PATH=/usr/workspace/iopp/software/tailorfs/build_1/lib:/usr/workspace/iopp/software/tailorfs/dependency/.spack-env/view/lib
+19325: Test timeout computed to be: 10000000
+19325: Warning: Overriding <MPI_ROOT UNEXPECTEDLY NOT SET> (module loaded must exactly match)
+19325: Warning: Using      spectrum-mpi/2020.08.19 to match app's MPI
+19325: Please tell John Gyllenhaal (gyllen@llnl.gov, 4-5485) if this MPI env fix doesn't work
+19325: Filters: WORM
+19325: RNG seed: 3571410929
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 727226222
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 1110616625
+19325: [TAILORFS PRINT]:     Timing,    262144,      4096,  0.000000,  0.000000,  0.000834,  0.000123,  0.510336,  2.671193,     POSIX,      worm,1,0,0,2
+19325: 
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 4257890831
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 2801666347
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 3288420306
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 281313306
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 3939998257
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 755595109
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 2927786690
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 639942832
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 1083635974
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 1213214330
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 3180868013
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 680223252
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 245367805
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 3831673764
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 2576496604
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 592425327
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 1085354312
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 1806611195
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 1047129266
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 1170728863
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 1770750966
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 2178816560
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 2310771615
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 2683540857
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 1060193414
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 2643574972
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 2558768902
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 929176886
+19325: Passed 1 test case with 12 assertions.
+19325: 
+19325: Filters: WORM
+19325: RNG seed: 1661393711
+19325: Passed 1 test case with 262155 assertions.
+19325: 
+9/9 Test #19325: test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_worm_alt .....   Passed    6.19 sec
+
+The following tests passed:
+	test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_wo_all
+	test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_ro_all
+	test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_raw_all
+	test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_raw_split
+	test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_raw_alt
+	test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_update_all
+	test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_worm_all
+	test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_worm_split
+	test_baseline_mb_lassen_1_32_1_4_262144_fpp_seq_worm_alt
+
+100% tests passed, 0 tests failed out of 9
+
+Total Test time (real) =  83.15 sec
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@lassen710>
+Subject: Job 3907896: <paper_benefit.sh_1_4> in cluster <lassen> Done
+
+Job <paper_benefit.sh_1_4> was submitted from host <lassen709> by user <haridev> in cluster <lassen> at Wed Sep 14 14:52:52 2022
+Job was executed on host(s) <1*lassen710>, in queue <pbatch>, as user <haridev> in cluster <lassen> at Wed Sep 14 14:52:54 2022
+                            <40*lassen100>
+</g/g92/haridev> was used as the home directory.
+</usr/workspace/iopp/software/tailorfs/scripts> was used as the working directory.
+Started at Wed Sep 14 14:52:54 2022
+Terminated at Wed Sep 14 16:04:43 2022
+Results reported at Wed Sep 14 16:04:43 2022
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/usr/workspace/iopp/software/tailorfs/scripts/paper_benefit.sh 1 4
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   193.00 sec.
+    Max Memory :                                 503 MB
+    Average Memory :                             60.17 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   1705 MB
+    Max Processes :                              38
+    Max Threads :                                61
+    Run time :                                   4308 sec.
+    Turnaround time :                            4311 sec.
+
+The output (if any) is above this job summary.
+

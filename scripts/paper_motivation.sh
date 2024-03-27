@@ -18,4 +18,5 @@ rm -rf *
 cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/usr/tce/packages/gcc/gcc-8.3.1/bin/gcc -DCMAKE_CXX_COMPILER=/usr/tce/packages/gcc/gcc-8.3.1/bin/g++ -G "CodeBlocks - Unix Makefiles" ${TAILORFS_DIR}
 cmake --build ${TAILORFS_DIR}/build_${NUM_NODES} --target all -- -j
 
-ctest -V -R "benchmark_lassen_${NUM_NODES}_32_${RS_KB}_1024_fpp_(posix|stdio|mpiio)"
+#ctest -V -R "benchmark_lassen_${NUM_NODES}_32_${RS_KB}_1024_fpp_(posix|stdio|mpiio)"
+ctest -V -R "benchmark_lassen_${NUM_NODES}_32_${RS_KB}_1024_shared"

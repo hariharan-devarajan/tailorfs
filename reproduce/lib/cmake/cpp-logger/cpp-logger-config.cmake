@@ -1,0 +1,20 @@
+set(CPP_LOGGER_FOUND TRUE)
+
+# Include directories
+set(CPP_LOGGER_INCLUDE_DIRS "/usr/workspace/iopp/software/tailorfs/reproduce/include")
+if (NOT IS_DIRECTORY "${CPP_LOGGER_INCLUDE_DIRS}")
+    set(CPP_LOGGER_FOUND FALSE)
+endif ()
+#message(STATUS "CPP_LOGGER_INCLUDE_DIRS: " ${CPP_LOGGER_INCLUDE_DIRS})
+get_filename_component(CPP_LOGGER_ROOT_DIR ${CPP_LOGGER_INCLUDE_DIRS}/.. ABSOLUTE)
+#message(STATUS "CPP_LOGGER_ROOT_DIR: " ${CPP_LOGGER_ROOT_DIR})
+set(CPP_LOGGER_LIBRARY_PATH "/usr/workspace/iopp/software/tailorfs/reproduce/lib")
+set(CPP_LOGGER_LIBRARIES "-L${CPP_LOGGER_LIBRARY_PATH} -lcpp-logger")
+#message(STATUS "CPP_LOGGER_LIBRARIES: " ${CPP_LOGGER_LIBRARIES})
+set(CPP_LOGGER_DEFINITIONS "")
+if (NOT TARGET cpp-logger::cpp-logger)
+    add_library(cpp-logger::cpp-logger ALIAS cpp-logger)
+    include(FindPackageHandleStandardArgs)
+    find_package_handle_standard_args(cpp-logger
+            REQUIRED_VARS CPP_LOGGER_FOUND CPP_LOGGER_INCLUDE_DIRS CPP_LOGGER_LIBRARIES)
+endif ()
