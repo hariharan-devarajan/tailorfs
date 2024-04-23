@@ -10,12 +10,19 @@ std::shared_ptr<brahma::POSIXTailorFS> brahma::POSIXTailorFS::instance = nullptr
 int brahma::POSIXTailorFS::open(const char *pathname, int flags, ...) {
   BRAHMA_MAP_OR_FAIL(open);
   int ret = -1;
+  bool is_create = false;
+  int mode;
+  if (flags & O_CREAT) {
+    va_list args;
+    va_start(args, flags);
+    mode = va_arg(args, int);
+    va_end(args);
+    is_create = true;
+  }
   if (is_traced(pathname)) {
-    if (flags & O_CREAT) {
-      va_list args;
-      va_start(args, flags);
-      int mode = va_arg(args, int);
-      va_end(args);
+    bool is_create = false;
+    int mode;
+    if (is_create) {
       ret = __real_open(pathname, flags, mode);
     } else {
       ret = __real_open(pathname, flags);
@@ -103,12 +110,20 @@ int brahma::POSIXTailorFS::open(const char *pathname, int flags, ...) {
       }
     } else {
       TAILORFS_LOGERROR("get_fsview - failed", "");
-      ret = __real_open(pathname, flags, mode);
+      if (is_create) {
+        ret = __real_open(pathname, flags, mode);
+      } else {
+        ret = __real_open(pathname, flags);
+      }
     }
     include_file(pathname);
 
   } else {
-    ret = __real_open(pathname, flags, mode);
+    if (is_create) {
+      ret = __real_open(pathname, flags, mode);
+    } else {
+      ret = __real_open(pathname, flags);
+    }
   }
   return ret;
 }
