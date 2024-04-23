@@ -82,7 +82,7 @@ class POSIXTailorFS : public POSIX {
       }
     }
   }
-  ~POSIXDLIOProfiler() {}
+  ~POSIXTailorFS() {}
   static std::shared_ptr<POSIXTailorFS> get_instance() {
     if (instance == nullptr) {
       instance = std::make_shared<POSIXTailorFS>();
