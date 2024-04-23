@@ -7,11 +7,20 @@
 #include "tailorfs/core/fsview_manager.h"
 
 std::shared_ptr<brahma::POSIXTailorFS> brahma::POSIXTailorFS::instance = nullptr;
-int brahma::POSIXTailorFS::open(const char *pathname, int flags, mode_t mode) {
+int brahma::POSIXTailorFS::open(const char *pathname, int flags, ...) {
   BRAHMA_MAP_OR_FAIL(open);
   int ret = -1;
   if (is_traced(pathname)) {
-    ret = __real_open(pathname, flags, mode);
+    if (flags & O_CREAT) {
+      va_list args;
+      va_start(args, flags);
+      int mode = va_arg(args, int);
+      va_end(args);
+      DLIO_LOGGER_UPDATE(mode)
+      ret = __real_open(pathname, flags, mode);
+    } else {
+      ret = __real_open(pathname, flags);
+    }
     exclude_file(pathname);
     FSID id;
     auto status = FSVIEW_MANAGER->get_fsview(pathname, id);
