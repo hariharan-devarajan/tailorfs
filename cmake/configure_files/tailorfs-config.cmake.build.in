@@ -1,0 +1,61 @@
+# This will create IMPORTED targets for TAILORFS. The executables will be
+# tailorfs::<exe-name>-bin (e.g., tailorfs::tailorfs-bin) and the library will
+# be tailorfs::tailorfs.
+
+include("${CMAKE_CURRENT_LIST_DIR}/TAILORFSConfigVersion.cmake")
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
+list(APPEND CMAKE_MODULE_PATH "@EXTRA_CMAKE_MODULE_DIR@")
+
+#include(GNUInstallDirs)
+include(ExternalProject)
+include(TAILORFSCMakeUtilities)
+include(CMakePackageConfigHelpers)
+
+
+set(TAILORFS_VERSION ${PACKAGE_VERSION})
+
+# Record compiler information
+set(TAILORFS_C_COMPILER "@CMAKE_C_COMPILER@")
+set(TAILORFS_CXX_COMPILER "@CMAKE_CXX_COMPILER@")
+
+set(TAILORFS_C_FLAGS "@CMAKE_C_FLAGS@")
+set(TAILORFS_CXX_FLAGS "@CMAKE_CXX_FLAGS@")
+
+set(TAILORFS_C_STANDARD "@CMAKE_C_STANDARD@")
+set(TAILORFS_CXX_STANDARD "@CMAKE_CXX_STANDARD@")
+
+set(CMAKE_C_STANDARD_REQUIRED TRUE)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
+# Record the various flags and switches accumlated in TAILORFS
+set(TAILORFS_GNU_LINUX @TAILORFS_GNU_LINUX@)
+set(TAILORFS_HAS_STD_FILESYSTEM @TAILORFS_HAS_STD_FILESYSTEM@)
+set(TAILORFS_HAS_STD_FSTREAM_FD @TAILORFS_HAS_STD_FSTREAM_FD@)
+
+# Setup dependencies
+
+
+@PACKAGE_INIT@
+
+# Now actually import the TAILORFS target
+set(_TMP_INCLUDE_DIRS "@CMAKE_INCLUDE_OUTPUT_DIRECTORY@")
+foreach (_DIR ${_TMP_INCLUDE_DIRS})
+  set_and_check(_INCLUDE_DIR "${_DIR}")
+  list(APPEND TAILORFS_INCLUDE_DIRS "${_INCLUDE_DIR}")
+endforeach (_DIR "${_TMP_INCLUDE_DIRS}")
+
+set(_TMP_LIBRARY_DIRS "@CMAKE_LIBRARY_OUTPUT_DIRECTORY@")
+foreach (_DIR ${_TMP_LIBRARY_DIRS})
+  set_and_check(_LIBRARY_DIR "${_DIR}")
+  list(APPEND TAILORFS_LIBRARY_DIRS "${_LIBRARY_DIR}")
+endforeach (_DIR ${_TMP_LIBRARY_DIRS})
+
+if (NOT TARGET tailorfs::tailorfs)
+  include(${CMAKE_CURRENT_LIST_DIR}/TAILORFSTargets.cmake)
+endif (NOT TARGET tailorfs::tailorfs)
+
+check_required_components(TAILORFS)
+
+set(TAILORFS_LIBRARIES tailorfs::tailorfs)
