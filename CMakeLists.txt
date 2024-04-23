@@ -51,7 +51,7 @@ if (MPI_FOUND)
     include_directories(${MPI_CXX_INCLUDE_DIRS})
     set(DEPENDENCY_LIB ${DEPENDENCY_LIB} ${MPI_CXX_LIBRARIES})
 endif ()
-
+add_definitions(-DCOMPILE_MPI)
 set(TAILORFS_SRC
         src/tailorfs/brahma/posix.cpp
         src/tailorfs/brahma/stdio.cpp
