@@ -16,7 +16,6 @@ int brahma::POSIXTailorFS::open(const char *pathname, int flags, ...) {
       va_start(args, flags);
       int mode = va_arg(args, int);
       va_end(args);
-      DLIO_LOGGER_UPDATE(mode)
       ret = __real_open(pathname, flags, mode);
     } else {
       ret = __real_open(pathname, flags);
