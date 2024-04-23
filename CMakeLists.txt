@@ -307,7 +307,6 @@ install(EXPORT
 
 # Install license and readme
 install(FILES
-        "${PROJECT_SOURCE_DIR}/NOTICE"
         "${PROJECT_SOURCE_DIR}/LICENSE"
         "${PROJECT_SOURCE_DIR}/README.md"
         DESTINATION
