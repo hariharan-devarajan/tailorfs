@@ -82,7 +82,7 @@ class POSIXTailorFS : public POSIX {
       }
     }
   }
-  ~POSIXTailorFS() override = default;
+  ~POSIXDLIOProfiler() {}
   static std::shared_ptr<POSIXTailorFS> get_instance() {
     if (instance == nullptr) {
       instance = std::make_shared<POSIXTailorFS>();
@@ -90,7 +90,7 @@ class POSIXTailorFS : public POSIX {
     }
     return instance;
   }
-  int open(const char *pathname, int flags, mode_t mode) override;
+  int open(const char *pathname, int flags, ...) override;
   int close(int fd) override;
   ssize_t write(int fd, const void *buf, size_t count) override;
   ssize_t read(int fd, void *buf, size_t count) override;
