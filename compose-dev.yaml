@@ -1,0 +1,19 @@
+name: "tailorfs"
+version: 0.0.1
+services:
+  node1:
+    hostname: node1
+    entrypoint:
+      - sleep
+      - infinity
+    build:
+      context: environment
+      target: master
+    init: true
+    volumes:
+      - shared:/mount/shared
+    ports:
+      - 80:80
+      - 22:22
+volumes:
+  shared:
