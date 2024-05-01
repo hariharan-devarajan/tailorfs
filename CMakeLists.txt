@@ -236,7 +236,7 @@ install(
 
 if(TAILORFS_ENABLE_TESTING)
   enable_testing()
-  add_subdirectory(tests)
+  add_subdirectory(test)
 endif()
 
 #-----------------------------------------------------------------------------

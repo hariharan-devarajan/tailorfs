@@ -30,3 +30,4 @@ unifyfsd.out.*
 /external/UnifyFS/util/unifyfs-stage/src/unifyfs-stage
 /external/UnifyFS/util/scripts/lsfcsm/unifyfs_lsfcsm_epilog
 /external/UnifyFS/util/scripts/lsfcsm/unifyfs_lsfcsm_prolog
+.cache
